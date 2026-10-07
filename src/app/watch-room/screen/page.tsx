@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
 
-import Toast, { ToastProps } from '@/components/Toast';
+import { showToast } from '@/lib/toast';
 import { useWatchRoomContext } from '@/components/WatchRoomProvider';
 import { screenShareQualityOptions, type ScreenShareQualityPreset, useScreenShare } from '@/hooks/useScreenShare';
 
@@ -47,7 +47,6 @@ export default function WatchRoomScreenPage() {
   const router = useRouter();
   const watchRoom = useWatchRoomContext();
   const { currentRoom, members, leaveRoom } = watchRoom;
-  const [toast, setToast] = useState<ToastProps | null>(null);
   const [qualityPreset, setQualityPreset] = useState<ScreenShareQualityPreset>('smooth');
   const {
     currentRoom: screenRoom,
@@ -61,15 +60,6 @@ export default function WatchRoomScreenPage() {
     startSharing,
     stopSharing,
   } = useScreenShare(qualityPreset);
-
-  const showToast = (message: string, type: ToastProps['type'] = 'info') => {
-    setToast({
-      message,
-      type,
-      duration: 3000,
-      onClose: () => setToast(null),
-    });
-  };
 
   const openDetachedPage = useCallback(() => {
     window.open('/', '_blank', 'noopener,noreferrer');
@@ -325,7 +315,6 @@ export default function WatchRoomScreenPage() {
           </div>
         </div>
       </div>
-      {toast && <Toast {...toast} />}
     </div>
   );
 }

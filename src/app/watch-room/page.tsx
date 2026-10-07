@@ -9,7 +9,7 @@ import { getAuthInfoFromBrowserCookie } from '@/lib/auth';
 import { getStoredRoomInfo } from '@/hooks/useWatchRoom';
 
 import PageLayout from '@/components/PageLayout';
-import Toast, { ToastProps } from '@/components/Toast';
+import { showToast } from '@/lib/toast';
 import { useWatchRoomContext } from '@/components/WatchRoomProvider';
 
 import type { Room, RoomType } from '@/types/watch-room';
@@ -93,16 +93,6 @@ function WatchRoomPageContent() {
   const [loading, setLoading] = useState(false);
   const [createLoading, setCreateLoading] = useState(false);
   const [joinLoading, setJoinLoading] = useState(false);
-  const [toast, setToast] = useState<ToastProps | null>(null);
-
-  const showToast = (message: string, type: ToastProps['type'] = 'info') => {
-    setToast({
-      message,
-      type,
-      duration: 3000,
-      onClose: () => setToast(null),
-    });
-  };
 
   const getAvatarText = (name?: string) => (name?.trim().charAt(0).toUpperCase() || '用');
 
@@ -956,7 +946,6 @@ function WatchRoomPageContent() {
           )}
         </div>
       </div>
-      {toast && <Toast {...toast} />}
     </PageLayout>
   );
 }

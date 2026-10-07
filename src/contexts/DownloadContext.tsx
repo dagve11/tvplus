@@ -3,7 +3,7 @@
 import React, { createContext, useCallback, useContext, useState, useEffect } from 'react';
 
 import { M3U8Downloader, M3U8DownloadTask } from '@/lib/m3u8-downloader';
-import Toast from '@/components/Toast';
+import { showToast } from '@/lib/toast';
 import { downloadDB } from '@/lib/download-db';
 import {
   buildIndexedDBVideoCacheKey,
@@ -42,7 +42,6 @@ export function DownloadProvider({ children }: { children: React.ReactNode }) {
   const [tasks, setTasks] = useState<M3U8DownloadTask[]>([]);
   const [showDownloadPanel, setShowDownloadPanel] = useState(false);
   const [startingTaskIds, setStartingTaskIds] = useState<Set<string>>(new Set());
-  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' | 'info' } | null>(null);
 
   // 自动启动下一个等待的任务
   const startNextPendingTask = useCallback((currentDownloader: M3U8Downloader) => {
@@ -400,7 +399,7 @@ export function DownloadProvider({ children }: { children: React.ReactNode }) {
 
           if (alreadyDownloaded) {
             console.log('视频已下载（文件系统检查），跳过:', title, metadata);
-            setToast({ message: `${title} 已经下载过了，无需重复下载`, type: 'info' });
+            showToast(`${title} 已经下载过了，无需重复下载`, 'info');
             return;
           }
         } catch (error) {
@@ -425,7 +424,7 @@ export function DownloadProvider({ children }: { children: React.ReactNode }) {
 
           if (alreadyDownloaded) {
             console.log('视频已下载（IndexedDB 缓存检查），跳过:', title, metadata);
-            setToast({ message: `${title} 已经缓存过了，无需重复下载`, type: 'info' });
+            showToast(`${title} 已经缓存过了，无需重复下载`, 'info');
             return;
           }
 
@@ -437,10 +436,7 @@ export function DownloadProvider({ children }: { children: React.ReactNode }) {
             const freeBytes = estimate.quota - estimate.usage;
             // 低于 512MB 时提示风险，但不阻塞下载（实际大小需解析后才准确）。
             if (freeBytes > 0 && freeBytes < 512 * 1024 * 1024) {
-              setToast({
-                message: '浏览器可用存储空间较低，IndexedDB 缓存可能失败',
-                type: 'info',
-              });
+              showToast('浏览器可用存储空间较低，IndexedDB 缓存可能失败', 'info');
             }
           }
         } catch (error) {
@@ -637,13 +633,6 @@ export function DownloadProvider({ children }: { children: React.ReactNode }) {
       }}
     >
       {children}
-      {toast && (
-        <Toast
-          message={toast.message}
-          type={toast.type}
-          onClose={() => setToast(null)}
-        />
-      )}
     </DownloadContext.Provider>
   );
 }

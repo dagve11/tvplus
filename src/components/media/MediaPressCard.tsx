@@ -6,9 +6,10 @@ import { useCallback, useState } from 'react';
 import { useLongPress } from '@/hooks/useLongPress';
 
 import ImageViewer from '@/components/ImageViewer';
-import MobileActionSheet, {
+import {
+  ActionSheet,
   type ActionItem,
-} from '@/components/MobileActionSheet';
+} from '@/components/ui/action-sheet';
 
 import { MediaCardItem } from './media-card.types';
 import MediaCard from './MediaCard';
@@ -99,7 +100,7 @@ export default function MediaPressCard({
         />
       </div>
 
-      <MobileActionSheet
+      <ActionSheet
         isOpen={menuOpen}
         onClose={() => setMenuOpen(false)}
         title={title}

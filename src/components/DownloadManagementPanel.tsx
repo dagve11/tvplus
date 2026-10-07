@@ -12,7 +12,7 @@ import {
   deleteIndexedDBVideoCacheByEpisode,
 } from '@/lib/indexeddb-video-cache';
 
-import { ConfirmDialog } from './ConfirmDialog';
+import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 
 interface DownloadManagementPanelProps {
   isOpen: boolean;

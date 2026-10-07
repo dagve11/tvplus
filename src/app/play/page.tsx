@@ -113,7 +113,7 @@ import DanmakuFilterSettings from '@/components/DanmakuFilterSettings';
 import DetailPanel from '@/components/DetailPanel';
 import DoubanComments from '@/components/DoubanComments';
 import DownloadEpisodeSelector from '@/components/DownloadEpisodeSelector';
-import Drawer from '@/components/Drawer';
+import { AppSheet } from '@/components/ui/app-sheet';
 import EpisodeSelector from '@/components/EpisodeSelector';
 import LoadingStyle, {
   LoadingErrorStyle,
@@ -124,7 +124,7 @@ import PansouSearch from '@/components/PansouSearch';
 import ProxyImage from '@/components/ProxyImage';
 import { useSite } from '@/components/SiteProvider';
 import SmartRecommendations from '@/components/SmartRecommendations';
-import Toast, { ToastProps } from '@/components/Toast';
+import { showError, showSuccess, showToast } from '@/lib/toast';
 import VideoCard from '@/components/VideoCard';
 
 import { useDownload } from '@/contexts/DownloadContext';
@@ -769,7 +769,6 @@ function PlayPageClient() {
   const [showDanmakuSourceSelector, setShowDanmakuSourceSelector] = useState(false);
   const [showDanmakuFilterSettings, setShowDanmakuFilterSettings] = useState(false);
   const [currentSearchKeyword, setCurrentSearchKeyword] = useState<string>(''); // 当前搜索使用的关键词
-  const [toast, setToast] = useState<ToastProps | null>(null);
   const [isTranscoding, setIsTranscoding] = useState(false);
 
   useEffect(() => {
@@ -2165,18 +2164,10 @@ function PlayPageClient() {
       setVideoLoadingStage('sourceChanging');
       setPlaybackSourceBadge(null);
       setVideoUrl(playUrl);
-      setToast({
-        message: '转码任务已创建，等待 3 秒后已切换到转码地址',
-        type: 'success',
-        onClose: () => setToast(null),
-      });
+      showSuccess('转码任务已创建，等待 3 秒后已切换到转码地址');
     } catch (error) {
       console.error('创建转码任务失败:', error);
-      setToast({
-        message: error instanceof Error ? error.message : '创建转码任务失败',
-        type: 'error',
-        onClose: () => setToast(null),
-      });
+      showError(error instanceof Error ? error.message : '创建转码任务失败');
     } finally {
       setIsTranscoding(false);
     }
@@ -2593,12 +2584,7 @@ function PlayPageClient() {
   const handleCreateWatchRoom = async () => {
     const watchRoom = watchRoomContext;
     if (!watchRoom || !watchRoom.isConnected) {
-      setToast({
-        message: '观影室服务未连接',
-        type: 'error',
-        duration: 3000,
-        onClose: () => setToast(null),
-      });
+      showError('观影室服务未连接');
       return;
     }
 
@@ -2611,19 +2597,9 @@ function PlayPageClient() {
         roomType: 'sync',
         userName: authInfo?.username || '游客',
       });
-      setToast({
-        message: `观影室已创建，房间号：${room.id}，快邀请好友加入吧`,
-        type: 'success',
-        duration: 5000,
-        onClose: () => setToast(null),
-      });
+      showSuccess(`观影室已创建，房间号：${room.id}，快邀请好友加入吧`);
     } catch (error: any) {
-      setToast({
-        message: error?.message || '创建观影室失败',
-        type: 'error',
-        duration: 3000,
-        onClose: () => setToast(null),
-      });
+      showError(error?.message || '创建观影室失败');
     } finally {
       setIsCreatingRoom(false);
     }
@@ -2899,12 +2875,7 @@ function PlayPageClient() {
         if (artPlayerRef.current) {
           artPlayerRef.current.notice.show = message;
         }
-        setToast({
-          message,
-          type: 'info',
-          duration: 5000,
-          onClose: () => setToast(null),
-        });
+        showToast(message, 'info');
       }
       return;
     }
@@ -2990,11 +2961,7 @@ function PlayPageClient() {
 
           void switchPromise.catch((error) => {
             console.warn('[Subtitle] 位图字幕切换失败:', error);
-            setToast({
-              message: error instanceof Error ? error.message : '位图字幕切换失败',
-              type: 'error',
-              onClose: () => setToast(null),
-            });
+            showError(error instanceof Error ? error.message : '位图字幕切换失败');
           });
           return item.html;
         }
@@ -3015,11 +2982,7 @@ function PlayPageClient() {
 
           void switchPromise.catch((error) => {
             console.warn('[Subtitle] 高级字幕切换失败:', error);
-            setToast({
-              message: error instanceof Error ? error.message : '高级字幕切换失败',
-              type: 'error',
-              onClose: () => setToast(null),
-            });
+            showError(error instanceof Error ? error.message : '高级字幕切换失败');
           });
           return item.html;
         }
@@ -3099,30 +3062,18 @@ function PlayPageClient() {
     try {
       if (isAdvancedSubtitleFormat(extension)) {
         await loadAdvancedCustomSubtitle(file, extension);
-        setToast({
-          message: `已加载高级字幕：${file.name}`,
-          type: 'success',
-          onClose: () => setToast(null),
-        });
+        showSuccess(`已加载高级字幕：${file.name}`);
         return;
       }
 
       if (BITSUB_SUBTITLE_FORMATS.has(extension)) {
         await loadBitsubCustomSubtitle(file, extension);
-        setToast({
-          message: `已加载位图字幕：${file.name}`,
-          type: 'success',
-          onClose: () => setToast(null),
-        });
+        showSuccess(`已加载位图字幕：${file.name}`);
         return;
       }
 
       const convertedSubtitle = await loadNativeCustomSubtitle(file);
-      setToast({
-        message: `已加载本地字幕：${convertedSubtitle.name}`,
-        type: 'success',
-        onClose: () => setToast(null),
-      });
+      showSuccess(`已加载本地字幕：${convertedSubtitle.name}`);
     } catch (error) {
       let displayError = error;
 
@@ -3131,12 +3082,7 @@ function PlayPageClient() {
 
         try {
           const convertedSubtitle = await loadNativeCustomSubtitle(file);
-          setToast({
-            message: `高级字幕渲染失败，已降级为普通字幕：${convertedSubtitle.name}`,
-            type: 'info',
-            duration: 5000,
-            onClose: () => setToast(null),
-          });
+          showToast(`高级字幕渲染失败，已降级为普通字幕：${convertedSubtitle.name}`, 'info');
           return;
         } catch (fallbackError) {
           console.warn('[Subtitle] 高级字幕降级加载失败:', fallbackError);
@@ -3145,11 +3091,7 @@ function PlayPageClient() {
       }
 
       console.warn('[Subtitle] 自定义字幕加载失败:', displayError);
-      setToast({
-        message: displayError instanceof Error ? displayError.message : '字幕加载失败',
-        type: 'error',
-        onClose: () => setToast(null),
-      });
+      showError(displayError instanceof Error ? displayError.message : '字幕加载失败');
     }
   };
 
@@ -3790,7 +3732,7 @@ function PlayPageClient() {
   const refreshXiaoyaUrl = async (
     preferredHls?: any,
     preferredVideo?: HTMLVideoElement,
-    isScheduled: boolean = false
+    isScheduled = false
   ) => {
     // 防抖：距离上次刷新不足3秒则不刷新
     const now = Date.now();
@@ -10246,7 +10188,7 @@ function PlayPageClient() {
               try {
                 const playPromise = fallbackVideo.play();
                 if (playPromise && typeof playPromise.catch === 'function') {
-                  playPromise.catch(() => {});
+                  playPromise.catch(() => undefined);
                 }
               } catch {
                 // ignore
@@ -11229,18 +11171,10 @@ function PlayPageClient() {
 
                             // 复制到剪贴板
                             navigator.clipboard.writeText(finalUrl).then(() => {
-                              setToast({
-                                message: '视频链接已复制到剪贴板',
-                                type: 'success',
-                                onClose: () => setToast(null),
-                              });
+                              showSuccess('视频链接已复制到剪贴板');
                             }).catch((err) => {
                               console.error('复制失败:', err);
-                              setToast({
-                                message: '复制失败，请重试',
-                                type: 'error',
-                                onClose: () => setToast(null),
-                              });
+                              showError('复制失败，请重试');
                             });
                           }}
                           className='group relative flex items-center justify-center gap-1 w-8 h-8 lg:w-auto lg:h-auto lg:px-2 lg:py-1.5 bg-blue-500 hover:bg-blue-600 text-white text-xs font-medium rounded-md transition-all duration-200 shadow-sm hover:shadow-md cursor-pointer overflow-hidden border border-blue-400 flex-shrink-0'
@@ -11745,9 +11679,7 @@ function PlayPageClient() {
                 onUploadDanmaku={handleUploadDanmaku}
                 episodeFilterConfig={episodeFilterConfig}
                 onFilterConfigUpdate={setEpisodeFilterConfig}
-                onShowToast={(message, type) => {
-                  setToast({ message, type, onClose: () => setToast(null) });
-                }}
+                onShowToast={showToast}
               />
             </div>
           </div>
@@ -12063,9 +11995,6 @@ function PlayPageClient() {
         )}
       </div>
 
-      {/* Toast通知 */}
-      {toast && <Toast {...toast} />}
-
       <input
         ref={customSubtitleInputRef}
         type='file'
@@ -12105,13 +12034,7 @@ function PlayPageClient() {
             }
           }
         }}
-        onShowToast={(message, type) => {
-          setToast({
-            message,
-            type,
-            onClose: () => setToast(null),
-          });
-        }}
+        onShowToast={showToast}
       />
 
       {/* 快捷键说明弹窗 */}
@@ -12194,7 +12117,7 @@ function PlayPageClient() {
       {/* 网盘搜索弹窗 */}
       {showPansouDialog && (
         isLargeScreen ? (
-          <Drawer
+          <AppSheet
             isOpen={showPansouDialog}
             onClose={() => setShowPansouDialog(false)}
             title={`搜索网盘资源: ${detail?.title || ''}`}
@@ -12206,7 +12129,7 @@ function PlayPageClient() {
                 triggerSearch={showPansouDialog}
               />
             </div>
-          </Drawer>
+          </AppSheet>
         ) : (
           <div
             className='fixed inset-0 z-[10000] flex items-center justify-center bg-black/50'

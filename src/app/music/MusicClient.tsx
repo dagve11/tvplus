@@ -26,7 +26,7 @@ import {
 import { CSS } from '@dnd-kit/utilities';
 import { GripVertical, ImageOff, ListMusic, SlidersHorizontal, Trash2, X } from 'lucide-react';
 import AddToPlaylistModal from '@/components/AddToPlaylistModal';
-import Toast, { ToastProps } from '@/components/Toast';
+import { showError, showSuccess, showToast } from '@/lib/toast';
 import LyricsPiPWindow from '@/components/LyricsPiPWindow';
 import MusicEmpty from '@/components/music/MusicEmpty';
 import MusicSidebarDrawer from '@/components/music/MusicSidebarDrawer';
@@ -459,8 +459,7 @@ export default function MusicClient({ children: _children }: { children?: React.
     }
   }, [router]);
 
-  // Toast 和 Confirm Modal 状态
-  const [toast, setToast] = useState<ToastProps | null>(null);
+  // Confirm Modal 状态
   const [confirmModal, setConfirmModal] = useState<{
     isOpen: boolean;
     title: string;
@@ -471,8 +470,8 @@ export default function MusicClient({ children: _children }: { children?: React.
     isOpen: false,
     title: '',
     message: '',
-    onConfirm: () => {},
-    onCancel: () => {},
+    onConfirm: () => undefined,
+    onCancel: () => undefined,
   });
 
   // PiP 相关状态
@@ -503,7 +502,9 @@ export default function MusicClient({ children: _children }: { children?: React.
       setSurroundEnabled(localStorage.getItem('musicSurroundEnabled') === '1');
       setSurroundSpeed(Math.max(5, Math.min(60, Number(localStorage.getItem('musicSurroundSpeed')) || 25)));
       setSurroundDistance(Math.max(1, Math.min(10, Number(localStorage.getItem('musicSurroundDistance')) || 5)));
-    } catch {}
+    } catch {
+      // 忽略读取失败
+    }
   }, []);
 
   useEffect(() => {
@@ -1003,7 +1004,7 @@ export default function MusicClient({ children: _children }: { children?: React.
   const handlePlayAllCurrentSongsWith = async (targetSongs: Song[], title: string) => {
     try {
       if (targetSongs.length === 0) {
-        setToast({ message: '当前列表为空', type: 'error', onClose: () => setToast(null) });
+        showError('当前列表为空');
         return;
       }
 
@@ -1043,10 +1044,10 @@ export default function MusicClient({ children: _children }: { children?: React.
       setPlaylist(targetSongs);
       setPlaylistIndex(0);
       await playSong(targetSongs[0], 0);
-      setToast({ message: `已开始播放 ${title}`, type: 'success', onClose: () => setToast(null) });
+      showSuccess(`已开始播放 ${title}`);
     } catch (error) {
       console.error('播放全部失败:', error);
-      setToast({ message: '播放全部失败', type: 'error', onClose: () => setToast(null) });
+      showError('播放全部失败');
     }
   };
 
@@ -1058,14 +1059,14 @@ export default function MusicClient({ children: _children }: { children?: React.
     const platform = song.platform || currentSource;
     const exists = playlist.some((item) => item.id === song.id && item.platform === platform);
     if (exists) {
-      setToast({ message: '歌曲已在播放列表中', type: 'info', onClose: () => setToast(null) });
+      showToast('歌曲已在播放列表中', 'info');
       return;
     }
     const record: PlayRecord = { platform, id: song.id, playTime: 0, duration: song.duration || 0, timestamp: Date.now() };
     setPlayRecords((prev) => [...prev, record]);
     setPlaylist((prev) => [...prev, { ...song, platform }]);
     saveHistoryRecordSafely(record, { ...song, platform }, 0, song.duration || 0);
-    setToast({ message: '已添加到稍后播放', type: 'success', onClose: () => setToast(null) });
+    showSuccess('已添加到稍后播放');
   };
 
   // 播放歌曲
@@ -1457,11 +1458,7 @@ export default function MusicClient({ children: _children }: { children?: React.
     } catch (error) {
       console.error('切换音质失败:', error);
       setIsBuffering(false);
-      setToast({
-        message: (error as Error).message || '切换音质失败',
-        type: 'error',
-        onClose: () => setToast(null),
-      });
+      showError((error as Error).message || '切换音质失败');
     } finally {
       endResolving();
     }
@@ -1515,7 +1512,7 @@ export default function MusicClient({ children: _children }: { children?: React.
       setPlaylist(prevPlaylist);
       setPlayRecords(prevRecords);
       setPlaylistIndex(prevIndex);
-      setToast({ message: '保存播放顺序失败', type: 'error', onClose: () => setToast(null) });
+      showError('保存播放顺序失败');
     }
   };
 
@@ -1553,25 +1550,17 @@ export default function MusicClient({ children: _children }: { children?: React.
           setPlaylist([]);
           setPlayRecords([]);
           setPlaylistIndex(-1);
-          setToast({
-            message: '播放记录已清空',
-            type: 'success',
-            onClose: () => setToast(null),
-          });
+          showSuccess('播放记录已清空');
         } catch (error) {
           console.error('清空播放记录失败:', error);
-          setToast({
-            message: '清空播放记录失败',
-            type: 'error',
-            onClose: () => setToast(null),
-          });
+          showError('清空播放记录失败');
         } finally {
           setConfirmModal({
             isOpen: false,
             title: '',
             message: '',
-            onConfirm: () => {},
-            onCancel: () => {},
+            onConfirm: () => undefined,
+            onCancel: () => undefined,
           });
         }
       },
@@ -1580,8 +1569,8 @@ export default function MusicClient({ children: _children }: { children?: React.
           isOpen: false,
           title: '',
           message: '',
-          onConfirm: () => {},
-          onCancel: () => {},
+          onConfirm: () => undefined,
+          onCancel: () => undefined,
         });
       },
     });
@@ -1930,20 +1919,14 @@ export default function MusicClient({ children: _children }: { children?: React.
   // PiP 窗口管理
   const togglePiPLyrics = () => {
     if (!('documentPictureInPicture' in window)) {
-      setToast({
-        message: '您的浏览器不支持画中画功能，请使用 Chrome 116+ 版本',
-        type: 'error',
-      });
+      showError('您的浏览器不支持画中画功能，请使用 Chrome 116+ 版本');
       // 降级方案：打开全屏歌词
       setShowLyrics(true);
       return;
     }
 
     if (!currentSong) {
-      setToast({
-        message: '请先播放歌曲',
-        type: 'info',
-      });
+      showToast('请先播放歌曲', 'info');
       return;
     }
 
@@ -2016,21 +1999,13 @@ export default function MusicClient({ children: _children }: { children?: React.
     setSleepTimerEndAt(endAt);
     setSleepTimerRemaining(minutes * 60);
     setShowSleepTimerMenu(false);
-    setToast({
-      message: `已设置 ${minutes} 分钟后暂停播放`,
-      type: 'success',
-      onClose: () => setToast(null),
-    });
+    showSuccess(`已设置 ${minutes} 分钟后暂停播放`);
   };
 
   const setCustomSleepTimer = () => {
     const totalMinutes = customSleepHours * 60 + customSleepMinutes;
     if (totalMinutes <= 0) {
-      setToast({
-        message: '请选择大于 0 的定时时长',
-        type: 'info',
-        onClose: () => setToast(null),
-      });
+      showToast('请选择大于 0 的定时时长', 'info');
       return;
     }
     setSleepTimer(totalMinutes);
@@ -2040,11 +2015,7 @@ export default function MusicClient({ children: _children }: { children?: React.
     setSleepTimerEndAt(null);
     setSleepTimerRemaining(0);
     setShowSleepTimerMenu(false);
-    setToast({
-      message: '已关闭睡眠定时',
-      type: 'info',
-      onClose: () => setToast(null),
-    });
+    showToast('已关闭睡眠定时', 'info');
   };
 
   const handleSleepHourScroll = (e: React.UIEvent<HTMLDivElement>) => {
@@ -2075,11 +2046,7 @@ export default function MusicClient({ children: _children }: { children?: React.
         savePlayState();
       }
 
-      setToast({
-        message: '睡眠定时结束，已暂停播放',
-        type: 'info',
-        onClose: () => setToast(null),
-      });
+      showToast('睡眠定时结束，已暂停播放', 'info');
     };
 
     updateSleepTimer();
@@ -3442,23 +3409,12 @@ export default function MusicClient({ children: _children }: { children?: React.
           setSongToAddToPlaylist(null);
         }}
         onSuccess={() => {
-          setToast({
-            message: '已添加到歌单',
-            type: 'success',
-            onClose: () => setToast(null),
-          });
+          showSuccess('已添加到歌单');
         }}
         onError={(message) => {
-          setToast({
-            message,
-            type: 'error',
-            onClose: () => setToast(null),
-          });
+          showError(message);
         }}
       />
-
-      {/* Toast */}
-      {toast && <Toast {...toast} />}
 
       {/* Confirm Modal */}
       {confirmModal.isOpen &&

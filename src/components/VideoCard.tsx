@@ -56,7 +56,7 @@ import AnimeSubscribeModal from '@/components/AnimeSubscribeModal';
 import DetailPanel from '@/components/DetailPanel';
 import { ImagePlaceholder } from '@/components/ImagePlaceholder';
 import ImageViewer from '@/components/ImageViewer';
-import MobileActionSheet from '@/components/MobileActionSheet';
+import { ActionSheet } from '@/components/ui/action-sheet';
 import TrailerPickerDialog from '@/components/TrailerPickerDialog';
 import type { TMDBVideoItem } from '@/lib/tmdb.client';
 
@@ -2147,7 +2147,7 @@ const VideoCard = forwardRef<VideoCardHandle, VideoCardProps>(
         </div>
 
         {/* 操作菜单 - 支持右键和长按触发 */}
-        <MobileActionSheet
+        <ActionSheet
           isOpen={showMobileActions}
           onClose={() => setShowMobileActions(false)}
           title={actualTitle}

@@ -15,7 +15,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { PansouLink, PansouSearchResult } from '@/lib/pansou.client';
 
-import Toast, { ToastProps } from '@/components/Toast';
+import { showError, showSuccess } from '@/lib/toast';
 
 interface PansouSearchProps {
   keyword: string;
@@ -188,7 +188,6 @@ export default function PansouSearch({
     useState<PansouLink | null>(null);
   const [customName, setCustomName] = useState('');
   const [downloadTool, setDownloadTool] = useState<DownloadTool>('aria2');
-  const [toast, setToast] = useState<ToastProps | null>(null);
   const [cooldownRemainingMs, setCooldownRemainingMs] = useState(0);
   const [checkStatesByType, setCheckStatesByType] = useState<
     Record<string, StoredCloudCheckState>
@@ -264,13 +263,9 @@ export default function PansouSearch({
       );
       updates.forEach((update) => {
         if (update.task.status === 'failed' && update.task.error) {
-          setToast({
-            message: `${
-              CLOUD_TYPE_NAMES[update.cloudType] || update.cloudType
-            }: ${update.task.error}`,
-            type: 'error',
-            onClose: () => setToast(null),
-          });
+          showError(`${
+            CLOUD_TYPE_NAMES[update.cloudType] || update.cloudType
+          }: ${update.task.error}`);
         }
       });
     }, 2000);
@@ -363,17 +358,9 @@ export default function PansouSearch({
         throw new Error(data.error || '转存失败');
       }
 
-      setToast({
-        message: `转存成功，已保存到：${data.targetPath}`,
-        type: 'success',
-        onClose: () => setToast(null),
-      });
+      showSuccess(`转存成功，已保存到：${data.targetPath}`);
     } catch (err: any) {
-      setToast({
-        message: err?.message || '转存失败',
-        type: 'error',
-        onClose: () => setToast(null),
-      });
+      showError(err?.message || '转存失败');
     } finally {
       setTransferingUrl(null);
     }
@@ -441,11 +428,7 @@ export default function PansouSearch({
         },
       }));
     } catch (err: any) {
-      setToast({
-        message: err?.message || '测活失败',
-        type: 'error',
-        onClose: () => setToast(null),
-      });
+      showError(err?.message || '测活失败');
     } finally {
       setMagnetHealthCheckingIds((prev) => {
         const next = { ...prev };
@@ -494,17 +477,9 @@ export default function PansouSearch({
         throw new Error(data.error || '添加下载任务失败');
       }
 
-      setToast({
-        message: data.message || '已添加到离线下载队列',
-        type: 'success',
-        onClose: () => setToast(null),
-      });
+      showSuccess(data.message || '已添加到离线下载队列');
     } catch (err: any) {
-      setToast({
-        message: err?.message || '添加下载任务失败',
-        type: 'error',
-        onClose: () => setToast(null),
-      });
+      showError(err?.message || '添加下载任务失败');
     } finally {
       setDownloadingUrl(null);
       setSelectedDownloadLink(null);
@@ -571,11 +546,7 @@ export default function PansouSearch({
         )}`
       );
     } catch (err: any) {
-      setToast({
-        message: err?.message || '播放失败',
-        type: 'error',
-        onClose: () => setToast(null),
-      });
+      showError(err?.message || '播放失败');
     } finally {
       setPlayingUrl(null);
     }
@@ -610,11 +581,7 @@ export default function PansouSearch({
       }));
       setCooldownRemainingMs(Number(data.cooldownRemainingMs || 0));
     } catch (err: any) {
-      setToast({
-        message: err?.message || '启动检测失败',
-        type: 'error',
-        onClose: () => setToast(null),
-      });
+      showError(err?.message || '启动检测失败');
     }
   };
 
@@ -641,11 +608,7 @@ export default function PansouSearch({
         },
       }));
     } catch (err: any) {
-      setToast({
-        message: err?.message || '停止检测失败',
-        type: 'error',
-        onClose: () => setToast(null),
-      });
+      showError(err?.message || '停止检测失败');
     }
   };
 
@@ -1180,7 +1143,6 @@ export default function PansouSearch({
           </div>
         </div>
       )}
-      {toast && <Toast {...toast} />}
     </>
   );
 }

@@ -31,7 +31,7 @@ import HttpWarningDialog from '@/components/HttpWarningDialog';
 import PageLayout from '@/components/PageLayout';
 import ScrollableRow from '@/components/ScrollableRow';
 import { useSite } from '@/components/SiteProvider';
-import Toast, { ToastProps } from '@/components/Toast';
+import { showError } from '@/lib/toast';
 import VideoCard from '@/components/VideoCard';
 
 // 首页模块配置接口
@@ -82,7 +82,6 @@ function HomeClient() {
   const [showDirectPlayDialog, setShowDirectPlayDialog] = useState(false);
   const [directPlayUrl, setDirectPlayUrl] = useState('');
   const [directPlaySubmitting, setDirectPlaySubmitting] = useState(false);
-  const [toast, setToast] = useState<ToastProps | null>(null);
 
   const detectNetdiskLink = (
     url: string
@@ -243,11 +242,7 @@ function HomeClient() {
       setDirectPlayUrl('');
       window.location.assign(targetUrl);
     } catch (error) {
-      setToast({
-        message: error instanceof Error ? error.message : '播放失败',
-        type: 'error',
-        onClose: () => setToast(null),
-      });
+      showError(error instanceof Error ? error.message : '播放失败');
     } finally {
       setDirectPlaySubmitting(false);
     }
@@ -1070,8 +1065,6 @@ function HomeClient() {
           </div>
         </div>
       )}
-
-      {toast && <Toast {...toast} />}
     </PageLayout>
   );
 }

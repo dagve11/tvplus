@@ -12,7 +12,7 @@ import {
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import CapsuleSwitch from '@/components/CapsuleSwitch';
-import Toast, { ToastProps } from '@/components/Toast';
+import { showError, showSuccess } from '@/lib/toast';
 
 interface AcgSearchItem {
   title: string;
@@ -127,7 +127,6 @@ export default function AcgSearch({
   const [selectedItem, setSelectedItem] = useState<AcgSearchItem | null>(null);
   const [customName, setCustomName] = useState('');
   const [downloadTool, setDownloadTool] = useState<DownloadTool>('aria2');
-  const [toast, setToast] = useState<ToastProps | null>(null);
   const [healthMap, setHealthMap] = useState<Record<string, MagnetHealthView>>(
     {}
   );
@@ -424,11 +423,7 @@ export default function AcgSearch({
         },
       }));
     } catch (err: any) {
-      setToast({
-        message: err.message || '测活失败',
-        type: 'error',
-        onClose: () => setToast(null),
-      });
+      showError(err.message || '测活失败');
     } finally {
       setHealthCheckingIds((prev) => {
         const next = { ...prev };
@@ -473,17 +468,9 @@ export default function AcgSearch({
         throw new Error(data.error || '添加下载任务失败');
       }
 
-      setToast({
-        message: data.message || '已添加到离线下载队列',
-        type: 'success',
-        onClose: () => setToast(null),
-      });
+      showSuccess(data.message || '已添加到离线下载队列');
     } catch (err: any) {
-      setToast({
-        message: err.message || '添加下载任务失败',
-        type: 'error',
-        onClose: () => setToast(null),
-      });
+      showError(err.message || '添加下载任务失败');
     } finally {
       setDownloadingId(null);
       setSelectedItem(null);
@@ -501,17 +488,9 @@ export default function AcgSearch({
     setCopyingId(itemId);
     try {
       await navigator.clipboard.writeText(link);
-      setToast({
-        message: '链接已复制',
-        type: 'success',
-        onClose: () => setToast(null),
-      });
+      showSuccess('链接已复制');
     } catch (err: any) {
-      setToast({
-        message: err.message || '复制失败',
-        type: 'error',
-        onClose: () => setToast(null),
-      });
+      showError(err.message || '复制失败');
     } finally {
       setCopyingId(null);
     }
@@ -781,9 +760,6 @@ export default function AcgSearch({
       {/* 搜索源切换 */}
       {showSourceSwitch && sourceSwitch}
       {renderBody()}
-
-      {/* Toast 提示 */}
-      {toast && <Toast {...toast} />}
     </div>
   );
 }

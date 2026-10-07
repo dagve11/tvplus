@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 'use client';
 
-import { AlertTriangle, ChevronRight } from 'lucide-react';
+import { ChevronRight } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 
@@ -14,6 +14,7 @@ import {
 } from '@/lib/db.client';
 
 import PlayRecordsPanel from '@/components/PlayRecordsPanel';
+import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import VideoCard from '@/components/VideoCard';
 import VirtualScrollableRow from '@/components/VirtualScrollableRow';
 
@@ -242,50 +243,15 @@ export default function ContinueWatching({ className }: ContinueWatchingProps) {
         )}
       </section>
 
-      {showConfirmDialog &&
-        createPortal(
-          <div
-            className='fixed inset-0 z-[9999] flex items-center justify-center bg-black bg-opacity-50 p-4 transition-opacity duration-300'
-            onClick={() => setShowConfirmDialog(false)}
-          >
-            <div
-              className='max-w-md w-full rounded-lg border border-red-200 bg-white shadow-xl transition-all duration-300 dark:border-red-800 dark:bg-gray-800'
-              onClick={(event) => event.stopPropagation()}
-            >
-              <div className='p-6'>
-                <div className='mb-4 flex items-start gap-4'>
-                  <div className='flex-shrink-0'>
-                    <AlertTriangle className='h-8 w-8 text-red-500' />
-                  </div>
-                  <div className='flex-1'>
-                    <h3 className='mb-2 text-lg font-semibold text-gray-900 dark:text-gray-100'>
-                      清空播放记录
-                    </h3>
-                    <p className='text-sm text-gray-600 dark:text-gray-400'>
-                      确定要清空所有播放记录吗？此操作不可恢复。
-                    </p>
-                  </div>
-                </div>
-
-                <div className='mt-6 flex gap-3'>
-                  <button
-                    onClick={() => setShowConfirmDialog(false)}
-                    className='flex-1 rounded-lg bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
-                  >
-                    取消
-                  </button>
-                  <button
-                    onClick={handleClearConfirm}
-                    className='flex-1 rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-red-700'
-                  >
-                    确定清空
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>,
-          document.body
-        )}
+      <ConfirmDialog
+        isOpen={showConfirmDialog}
+        title='清空播放记录'
+        message='确定要清空所有播放记录吗？此操作不可恢复。'
+        confirmText='确定清空'
+        onConfirm={handleClearConfirm}
+        onCancel={() => setShowConfirmDialog(false)}
+        variant='danger'
+      />
 
       {showPlayRecordsPanel &&
         createPortal(
