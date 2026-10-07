@@ -9372,7 +9372,7 @@ function PlayPageClient() {
 
                 <button
                   onClick={() => window.location.reload()}
-                  className='flex w-full items-center justify-center gap-2 rounded-xl bg-gray-100 px-6 py-3 font-medium text-gray-700 transition-colors duration-200 hover:bg-muted dark:text-gray-300 dark:hover:bg-gray-600'
+                  className='flex w-full items-center justify-center gap-2 rounded-xl bg-muted px-6 py-3 font-medium text-foreground transition-colors duration-200 hover:bg-accent'
                 >
                   <RefreshCw className='h-4 w-4 flex-shrink-0' />
                   重新尝试
@@ -9381,7 +9381,7 @@ function PlayPageClient() {
             </div>
 
             {hasCompletedSearchRequest && fallbackRecommendations.length > 0 && (
-              <div className='mt-4 w-full max-w-[calc(100vw-2rem)] overflow-hidden rounded-xl border border-gray-200 bg-white/70 p-3 text-left dark:border-gray-700 dark:bg-gray-800/70 sm:max-w-3xl lg:max-w-5xl'>
+              <div className='mt-4 w-full max-w-[calc(100vw-2rem)] overflow-hidden rounded-xl border border-border bg-card/70 p-3 text-left sm:max-w-3xl lg:max-w-5xl'>
                 <div className='mb-3 flex items-center gap-2'>
                   <Sparkles className='h-4 w-4 flex-shrink-0 text-muted-foreground' />
                   <h3 className='text-sm font-semibold text-foreground'>
@@ -9513,7 +9513,7 @@ function PlayPageClient() {
               onClick={() =>
                 setIsEpisodeSelectorCollapsed(!isEpisodeSelectorCollapsed)
               }
-              className='group relative flex items-center space-x-1.5 px-3 py-1.5 rounded-full bg-white/80 hover:bg-white dark:bg-gray-800/80 dark:hover:bg-gray-800 backdrop-blur-sm border border-border shadow-sm hover:shadow-md transition-all duration-200'
+              className='group relative flex items-center space-x-1.5 px-3 py-1.5 rounded-full bg-card/80 hover:bg-card dark:bg-card/80 dark:hover:bg-card backdrop-blur-sm border border-border shadow-sm hover:shadow-md transition-all duration-200'
               title={
                 isEpisodeSelectorCollapsed ? '显示选集面板' : '隐藏选集面板'
               }
@@ -9523,7 +9523,7 @@ function PlayPageClient() {
                   isEpisodeSelectorCollapsed ? 'rotate-180' : 'rotate-0'
                 }`}
               />
-              <span className='text-xs font-medium text-gray-600 dark:text-gray-300'>
+              <span className='text-xs font-medium text-foreground'>
                 {isEpisodeSelectorCollapsed ? '显示' : '隐藏'}
               </span>
 
@@ -9585,7 +9585,7 @@ function PlayPageClient() {
                             <p className='text-xl font-semibold text-white'>
                               播放失败
                             </p>
-                            <p className='mtv-err-box text-base text-gray-300'>
+                            <p className='mtv-err-box text-base text-foreground'>
                               {videoError}
                             </p>
                             <button
@@ -9934,17 +9934,17 @@ function PlayPageClient() {
             onClick={() => setShowPansouDialog(false)}
           >
             <div
-              className='relative w-full max-w-4xl max-h-[80vh] overflow-y-auto bg-white dark:bg-gray-900 rounded-lg shadow-xl m-4'
+              className='relative w-full max-w-4xl max-h-[80vh] overflow-y-auto bg-background rounded-lg shadow-xl m-4'
               onClick={(e) => e.stopPropagation()}
             >
               {/* 弹窗头部 */}
-              <div className='sticky top-0 z-10 flex items-center justify-between p-4 border-b border-border bg-white dark:bg-gray-900'>
+              <div className='sticky top-0 z-10 flex items-center justify-between p-4 border-b border-border bg-background'>
                 <h2 className='text-xl font-bold text-foreground'>
                   搜索网盘资源: {detail?.title || ''}
                 </h2>
                 <button
                   onClick={() => setShowPansouDialog(false)}
-                  className='p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors'
+                  className='p-2 hover:bg-accent hover:text-accent-foreground rounded-lg transition-colors'
                 >
                   <X className='h-5 w-5 text-muted-foreground' />
                 </button>
