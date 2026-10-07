@@ -379,7 +379,7 @@ function VinylTurntable({
           }}
         />
         <div className="pointer-events-none absolute left-[18%] top-[10%] h-[42%] w-[22%] rotate-[-28deg] rounded-full bg-white/10 blur-md" />
-        <div className="relative z-10 flex h-[158px] w-[158px] items-center justify-center overflow-hidden rounded-full border-[5px] border-black bg-zinc-800 md:h-[192px] md:w-[192px]">
+        <div className="relative z-10 flex h-[158px] w-[158px] items-center justify-center overflow-hidden rounded-full border-[5px] border-black bg-muted md:h-[192px] md:w-[192px]">
           {cover ? (
             <img
               src={cover}
@@ -390,12 +390,12 @@ function VinylTurntable({
               }}
             />
           ) : (
-            <svg className="h-14 w-14 text-zinc-500 md:h-16 md:w-16" fill="currentColor" viewBox="0 0 20 20">
+            <svg className="h-14 w-14 text-muted-foreground md:h-16 md:w-16" fill="currentColor" viewBox="0 0 20 20">
               <path d="M18 3a1 1 0 00-1.196-.98l-10 2A1 1 0 006 5v9.114A4.369 4.369 0 005 14c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V7.82l8-1.6v5.894A4.37 4.37 0 0015 12c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V3z" />
             </svg>
           )}
         </div>
-        <div className="pointer-events-none absolute z-20 h-3 w-3 rounded-full border border-white/30 bg-zinc-950" />
+        <div className="pointer-events-none absolute z-20 h-3 w-3 rounded-full border border-border bg-background" />
       </div>
     </div>
   );
@@ -2270,7 +2270,7 @@ export default function MusicClient({ children: _children }: { children?: React.
 
   return (
     // 底色和字色都不在这里兜底：`.music-theme` 的渐变底写在 app/music/music.css 里，
-    // 那份进 SSR 样式表、首帧就在。别往这加 bg-* ——原来那个 bg-zinc-950 就是
+    // 那份进 SSR 样式表、首帧就在。别往这加 bg-* ——原来那个 bg-background 就是
     // "先黑一下再变回来"的来源（styled-jsx 要等 hydration 才插进 head）。
     <div className="music-theme min-h-screen">
       <>
@@ -2468,18 +2468,18 @@ export default function MusicClient({ children: _children }: { children?: React.
       {resolvingCount > 0 && (
         <div className="fixed top-4 right-4 z-toast pointer-events-none">
           <div className="relative w-16 h-16 md:w-20 md:h-20">
-            <div className="absolute inset-0 rounded-full border-4 border-white/10" />
+            <div className="absolute inset-0 rounded-full border-4 border-border" />
             <div className="absolute inset-0 rounded-full border-4 border-transparent border-t-music-theme border-r-music-theme animate-spin" />
-            <div className="absolute inset-1 rounded-full bg-zinc-950/90 backdrop-blur-md border border-white/10 flex flex-col items-center justify-center">
-              <div className="text-[10px] md:text-xs text-zinc-400 leading-none mb-1">解析中</div>
-              <div className="text-lg md:text-xl font-bold text-white leading-none">{resolvingCount}</div>
+            <div className="absolute inset-1 rounded-full bg-background/90 backdrop-blur-md border border-border flex flex-col items-center justify-center">
+              <div className="text-[10px] md:text-xs text-muted-foreground leading-none mb-1">解析中</div>
+              <div className="text-lg md:text-xl font-bold text-foreground leading-none">{resolvingCount}</div>
             </div>
           </div>
         </div>
       )}
       {/* Header */}
       <header
-        className="fixed top-0 left-0 right-0 z-40 bg-zinc-950/95 backdrop-blur-md border-b border-white/10 px-4 md:px-6"
+        className="fixed top-0 left-0 right-0 z-40 bg-background/95 backdrop-blur-md border-b border-border px-4 md:px-6"
         style={{ paddingTop: 'env(safe-area-inset-top)' }}
       >
         <div className="w-full mx-auto flex items-center justify-between gap-3 md:gap-4 py-3">
@@ -2487,7 +2487,7 @@ export default function MusicClient({ children: _children }: { children?: React.
             <div className="flex items-center gap-3">
               <button
                 onClick={() => setShowSidebarDrawer(true)}
-                className="p-0 text-white transition-colors hover:text-music-theme"
+                className="p-0 text-foreground transition-colors hover:text-music-theme"
                 title="打开菜单"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -2499,7 +2499,7 @@ export default function MusicClient({ children: _children }: { children?: React.
                   <path d="M18 3a1 1 0 00-1.196-.98l-10 2A1 1 0 006 5v9.114A4.369 4.369 0 005 14c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V7.82l8-1.6v5.894A4.37 4.37 0 0015 12c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V3z" />
                 </svg>
               </div>
-              <span className="font-bold text-lg text-white">音乐</span>
+              <span className="font-bold text-lg text-foreground">音乐</span>
             </div>
           </div>
         </div>
@@ -2521,7 +2521,7 @@ export default function MusicClient({ children: _children }: { children?: React.
             </div>
           )}
 
-          <div className="relative bg-zinc-900/95 backdrop-blur-md rounded-xl p-4 pt-5 border border-white/10 shadow-2xl">
+          <div className="relative bg-background/95 backdrop-blur-md rounded-xl p-4 pt-5 border border-border shadow-2xl">
             {/* Progress Bar */}
             <div className="absolute left-0 right-0 top-0 h-1 bg-white/10 rounded-t-xl overflow-hidden">
               <div
@@ -2545,7 +2545,7 @@ export default function MusicClient({ children: _children }: { children?: React.
               {/* Song Info */}
               <div className="flex items-center gap-3 min-w-0 flex-1">
                 <div
-                  className="w-12 h-12 rounded-lg bg-zinc-800 overflow-hidden shrink-0 flex items-center justify-center cursor-pointer hover:opacity-80 transition-opacity"
+                  className="w-12 h-12 rounded-lg bg-muted overflow-hidden shrink-0 flex items-center justify-center cursor-pointer hover:opacity-80 transition-opacity"
                   onClick={() => setShowLyrics(true)}
                 >
                   {currentSong.pic ? (
@@ -2559,23 +2559,23 @@ export default function MusicClient({ children: _children }: { children?: React.
                       }}
                     />
                   ) : (
-                    <svg className="w-6 h-6 text-zinc-600" fill="currentColor" viewBox="0 0 20 20">
+                    <svg className="w-6 h-6 text-muted-foreground" fill="currentColor" viewBox="0 0 20 20">
                       <path d="M18 3a1 1 0 00-1.196-.98l-10 2A1 1 0 006 5v9.114A4.369 4.369 0 005 14c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V7.82l8-1.6v5.894A4.37 4.37 0 0015 12c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V3z" />
                     </svg>
                   )}
                 </div>
                 <div className="min-w-0 flex-1">
                   <div className="flex min-w-0 items-center gap-1.5">
-                    <div className="min-w-0 truncate text-sm font-bold text-white">{currentSong.name}</div>
+                    <div className="min-w-0 truncate text-sm font-bold text-foreground">{currentSong.name}</div>
                     <SourcePill source={currentSong.platform} variant="accent" className="hidden sm:inline-flex" />
                   </div>
-                  <div className="text-xs text-zinc-500 truncate">{currentSong.artist}</div>
+                  <div className="text-xs text-muted-foreground truncate">{currentSong.artist}</div>
                 </div>
               </div>
 
               {/* Controls */}
               <div className="relative flex items-center gap-4">
-                <button onClick={playPrev} className="text-zinc-500 hover:text-white transition-colors">
+                <button onClick={playPrev} className="text-muted-foreground hover:text-foreground transition-colors">
                   <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M6 6h2v12H6zm3.5 6l8.5 6V6z" />
                   </svg>
@@ -2594,7 +2594,7 @@ export default function MusicClient({ children: _children }: { children?: React.
                     </svg>
                   )}
                 </button>
-                <button onClick={playNext} className="text-zinc-500 hover:text-white transition-colors">
+                <button onClick={playNext} className="text-muted-foreground hover:text-foreground transition-colors">
                   <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z" />
                   </svg>
@@ -2619,7 +2619,7 @@ export default function MusicClient({ children: _children }: { children?: React.
                       setShowAddToPlaylistModal(true);
                     }
                   }}
-                  className="text-zinc-500 hover:text-white transition-colors"
+                  className="text-muted-foreground hover:text-foreground transition-colors"
                   title="添加到歌单"
                 >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -2628,7 +2628,7 @@ export default function MusicClient({ children: _children }: { children?: React.
                 </button>
                 <button
                   onClick={downloadSong}
-                  className="text-zinc-500 hover:text-white transition-colors"
+                  className="text-muted-foreground hover:text-foreground transition-colors"
                   title="下载歌曲"
                 >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -2637,7 +2637,7 @@ export default function MusicClient({ children: _children }: { children?: React.
                 </button>
                 <button
                   onClick={toggleMode}
-                  className="text-zinc-500 hover:text-white transition-colors"
+                  className="text-muted-foreground hover:text-foreground transition-colors"
                   title={playMode === 'loop' ? '列表循环' : playMode === 'single' ? '单曲循环' : '随机播放'}
                 >
                   {playMode === 'loop' && (
@@ -2680,20 +2680,20 @@ export default function MusicClient({ children: _children }: { children?: React.
           }}
         >
           <div
-            className="relative w-full max-w-6xl h-[90vh] bg-zinc-900/95 rounded-2xl overflow-hidden border border-white/10 shadow-2xl flex flex-col"
+            className="relative w-full max-w-6xl h-[90vh] bg-background/95 rounded-2xl overflow-hidden border border-border shadow-2xl flex flex-col"
             onClick={() => setShowVolumeSlider(false)}
           >
             <button
               onClick={() => setShowLyrics(false)}
               className="absolute top-2 right-2 md:top-4 md:right-4 z-10 w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors"
             >
-              <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-5 h-5 text-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
             <div className="flex flex-1 min-h-0 flex-col md:flex-row">
               {/* Cover / Meta */}
-              <div className="relative h-32 md:h-auto md:w-[380px] lg:w-[430px] xl:w-[480px] bg-gradient-to-b from-zinc-800 to-zinc-900 shrink-0 overflow-hidden">
+              <div className="relative h-32 md:h-auto md:w-[380px] lg:w-[430px] xl:w-[480px] bg-gradient-to-b from-muted to-background shrink-0 overflow-hidden">
                 {currentSong.pic && (
                   <div className="absolute inset-0">
                     <img
@@ -2718,8 +2718,8 @@ export default function MusicClient({ children: _children }: { children?: React.
                         className="w-full h-full object-cover"
                       />
                     ) : (
-                      <div className="w-full h-full bg-zinc-800 flex items-center justify-center">
-                        <svg className="w-8 h-8 text-zinc-600" fill="currentColor" viewBox="0 0 20 20">
+                      <div className="w-full h-full bg-muted flex items-center justify-center">
+                        <svg className="w-8 h-8 text-muted-foreground" fill="currentColor" viewBox="0 0 20 20">
                           <path d="M18 3a1 1 0 00-1.196-.98l-10 2A1 1 0 006 5v9.114A4.369 4.369 0 005 14c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V7.82l8-1.6v5.894A4.37 4.37 0 0015 12c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V3z" />
                         </svg>
                       </div>
@@ -2729,15 +2729,15 @@ export default function MusicClient({ children: _children }: { children?: React.
                     <VinylTurntable cover={currentSong.pic} title={currentSong.name} isPlaying={isPlaying} />
                   </div>
                   <div className="mb-1 flex min-w-0 items-center justify-center gap-1.5">
-                    <h2 className="min-w-0 truncate text-center text-base md:text-xl lg:text-2xl font-bold text-white">{currentSong.name}</h2>
+                    <h2 className="min-w-0 truncate text-center text-base md:text-xl lg:text-2xl font-bold text-foreground">{currentSong.name}</h2>
                     <SourcePill source={currentSong.platform} variant="accent" />
                   </div>
-                  <p className="pb-px text-center text-xs leading-5 text-zinc-400 line-clamp-1 md:text-sm md:leading-6 lg:text-base lg:leading-7">{currentSong.artist}</p>
+                  <p className="pb-px text-center text-xs leading-5 text-muted-foreground line-clamp-1 md:text-sm md:leading-6 lg:text-base lg:leading-7">{currentSong.artist}</p>
                 </div>
               </div>
 
               {mobileLyricsView === 'vinyl' && (
-                <div className="relative md:hidden flex-1 min-h-0 overflow-hidden bg-gradient-to-b from-zinc-800 to-zinc-900">
+                <div className="relative md:hidden flex-1 min-h-0 overflow-hidden bg-gradient-to-b from-muted to-background">
                   {currentSong.pic && (
                     <div className="absolute inset-0">
                       <img
@@ -2765,10 +2765,10 @@ export default function MusicClient({ children: _children }: { children?: React.
                         onClick={() => seekToLyric(line, index)}
                         className={`block w-full appearance-none border-0 bg-transparent p-0 text-center transition-all duration-300 outline-none ring-0 focus:outline-none focus:ring-0 active:outline-none active:ring-0 ${
                           index === currentLyricIndex
-                            ? 'text-white text-lg md:text-xl lg:text-2xl font-bold scale-110'
+                            ? 'text-foreground text-lg md:text-xl lg:text-2xl font-bold scale-110'
                             : index === currentLyricIndex - 1 || index === currentLyricIndex + 1
-                            ? 'text-zinc-400 text-base md:text-lg'
-                            : 'text-zinc-600 text-sm md:text-base'
+                            ? 'text-muted-foreground text-base md:text-lg'
+                            : 'text-muted-foreground text-sm md:text-base'
                         }`}
                       >
                         <div>{line.text}</div>
@@ -2776,8 +2776,8 @@ export default function MusicClient({ children: _children }: { children?: React.
                           <div
                             className={`mt-1 ${
                               index === currentLyricIndex
-                                ? 'text-zinc-300 text-sm md:text-base lg:text-lg font-normal'
-                                : 'text-zinc-500 text-xs md:text-sm lg:text-base font-normal'
+                                ? 'text-muted-foreground text-sm md:text-base lg:text-lg font-normal'
+                                : 'text-muted-foreground text-xs md:text-sm lg:text-base font-normal'
                             }`}
                           >
                             {line.translation}
@@ -2788,8 +2788,8 @@ export default function MusicClient({ children: _children }: { children?: React.
                   </div>
                 ) : (
                   <div className="text-center space-y-4 pt-10 md:pt-16 lg:pt-20">
-                    <p className="text-zinc-500 text-sm md:text-base">暂无歌词</p>
-                    <p className="text-zinc-600 text-xs md:text-sm">纯音乐或歌词获取失败</p>
+                    <p className="text-muted-foreground text-sm md:text-base">暂无歌词</p>
+                    <p className="text-muted-foreground text-xs md:text-sm">纯音乐或歌词获取失败</p>
                   </div>
                 )}
               </div>
@@ -2799,7 +2799,7 @@ export default function MusicClient({ children: _children }: { children?: React.
             <div className="border-t border-white/5 p-3 md:p-4 shrink-0">
               {/* 上排：播放控制按钮 */}
               <div className="relative flex items-center justify-center gap-4 md:gap-6 mb-2 md:mb-3">
-                <button onClick={playPrev} className="text-zinc-500 hover:text-white transition-colors">
+                <button onClick={playPrev} className="text-muted-foreground hover:text-foreground transition-colors">
                   <svg className="w-5 h-5 md:w-6 md:h-6" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M6 6h2v12H6zm3.5 6l8.5 6V6z" />
                   </svg>
@@ -2818,7 +2818,7 @@ export default function MusicClient({ children: _children }: { children?: React.
                     </svg>
                   )}
                 </button>
-                <button onClick={playNext} className="text-zinc-500 hover:text-white transition-colors">
+                <button onClick={playNext} className="text-muted-foreground hover:text-foreground transition-colors">
                   <svg className="w-5 h-5 md:w-6 md:h-6" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z" />
                   </svg>
@@ -2835,7 +2835,7 @@ export default function MusicClient({ children: _children }: { children?: React.
               <div className="flex items-center justify-center gap-3 md:gap-4 mb-2 md:mb-3">
                 <button
                   onClick={() => setShowPlaylist(true)}
-                  className="text-zinc-500 hover:text-white transition-colors relative"
+                  className="text-muted-foreground hover:text-foreground transition-colors relative"
                   title="播放列表"
                 >
                   <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -2849,7 +2849,7 @@ export default function MusicClient({ children: _children }: { children?: React.
                 </button>
                 <button
                   onClick={downloadSong}
-                  className="text-zinc-500 hover:text-white transition-colors"
+                  className="text-muted-foreground hover:text-foreground transition-colors"
                   title="下载歌曲"
                 >
                   <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -2869,7 +2869,7 @@ export default function MusicClient({ children: _children }: { children?: React.
                     setShowSleepTimerMenu(true);
                   }}
                   className={`relative transition-colors ${
-                    sleepTimerEndAt ? 'text-music-theme hover:text-music-theme-hover' : 'text-zinc-500 hover:text-white'
+                    sleepTimerEndAt ? 'text-music-theme hover:text-music-theme-hover' : 'text-muted-foreground hover:text-foreground'
                   }`}
                   title={sleepTimerEndAt ? `睡眠定时：${formatSleepTimer(sleepTimerRemaining)}` : '睡眠定时'}
                 >
@@ -2884,7 +2884,7 @@ export default function MusicClient({ children: _children }: { children?: React.
                 </button>
                 <button
                   onClick={toggleMode}
-                  className="text-zinc-500 hover:text-white transition-colors"
+                  className="text-muted-foreground hover:text-foreground transition-colors"
                   title={playMode === 'loop' ? '列表循环' : playMode === 'single' ? '单曲循环' : '随机播放'}
                 >
                   {playMode === 'loop' && (
@@ -2917,7 +2917,7 @@ export default function MusicClient({ children: _children }: { children?: React.
                       e.stopPropagation();
                       setShowVolumeSlider(!showVolumeSlider);
                     }}
-                    className="text-zinc-500 hover:text-white transition-colors"
+                    className="text-muted-foreground hover:text-foreground transition-colors"
                     title="音量"
                   >
                     <svg className="w-4 h-4 md:w-5 md:h-5" fill="currentColor" viewBox="0 0 20 20">
@@ -2929,9 +2929,9 @@ export default function MusicClient({ children: _children }: { children?: React.
                     className={`absolute bottom-full left-1/2 -translate-x-1/2 pb-2 transition-opacity ${showVolumeSlider ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
                     onClick={(e) => e.stopPropagation()}
                   >
-                    <div className="bg-zinc-800/95 backdrop-blur-sm rounded-lg p-3 shadow-xl border border-white/10">
+                    <div className="bg-muted/95 backdrop-blur-sm rounded-lg p-3 shadow-xl border border-border">
                       <div className="flex flex-col items-center gap-2">
-                        <span className="text-xs text-zinc-400 font-mono">{volume}</span>
+                        <span className="text-xs text-muted-foreground font-mono">{volume}</span>
                         <div
                           className="h-24 w-6 bg-white/10 rounded-full relative cursor-pointer select-none"
                           onMouseDown={handleVolumeSliderInteraction}
@@ -2946,12 +2946,12 @@ export default function MusicClient({ children: _children }: { children?: React.
                     </div>
                   </div>
                 </div>
-                <button onClick={(e) => { e.stopPropagation(); setShowAudioEffectsMenu(true); }} className={`transition-colors ${equalizerEnabled || loudnessEnabled || reverbEnabled || pitchRate !== 1 || surroundEnabled ? 'text-music-theme' : 'text-zinc-500 hover:text-white'}`} title="均衡器和音效" aria-label="均衡器和音效"><SlidersHorizontal className="h-4 w-4 md:h-5 md:w-5" /></button>
+                <button onClick={(e) => { e.stopPropagation(); setShowAudioEffectsMenu(true); }} className={`transition-colors ${equalizerEnabled || loudnessEnabled || reverbEnabled || pitchRate !== 1 || surroundEnabled ? 'text-music-theme' : 'text-muted-foreground hover:text-foreground'}`} title="均衡器和音效" aria-label="均衡器和音效"><SlidersHorizontal className="h-4 w-4 md:h-5 md:w-5" /></button>
                 {/* PiP 歌词按钮 */}
                 <button
                   onClick={toggleSpectrum}
                   className={`transition-colors ${
-                    showSpectrum ? 'text-music-theme hover:text-music-theme-hover' : 'text-zinc-500 hover:text-white'
+                    showSpectrum ? 'text-music-theme hover:text-music-theme-hover' : 'text-muted-foreground hover:text-foreground'
                   }`}
                   title={showSpectrum ? '隐藏音谱图' : '显示音谱图'}
                 >
@@ -2974,7 +2974,7 @@ export default function MusicClient({ children: _children }: { children?: React.
                   className={`transition-colors ${
                     showPiPLyrics
                       ? 'text-music-theme hover:text-music-theme-hover'
-                      : 'text-zinc-500 hover:text-white'
+                      : 'text-muted-foreground hover:text-foreground'
                   }`}
                   title={showPiPLyrics ? '关闭画中画歌词' : '画中画歌词'}
                   disabled={!currentSong}
@@ -2992,7 +2992,7 @@ export default function MusicClient({ children: _children }: { children?: React.
                       setShowAddToPlaylistModal(true);
                     }
                   }}
-                  className="text-zinc-500 hover:text-white transition-colors"
+                  className="text-muted-foreground hover:text-foreground transition-colors"
                   title="添加到歌单"
                 >
                   <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -3012,7 +3012,7 @@ export default function MusicClient({ children: _children }: { children?: React.
                     <span className="invisible">{formatTime(duration)}</span>
                   </div>
                 )}
-                <div className="flex items-center gap-2 text-xs text-zinc-500">
+                <div className="flex items-center gap-2 text-xs text-muted-foreground">
                   <span>{formatTime(currentTime)}</span>
                   <div className="flex-1 h-1 bg-white/10 rounded-full overflow-hidden relative">
                     <div
@@ -3123,22 +3123,22 @@ export default function MusicClient({ children: _children }: { children?: React.
           onClick={() => setShowSleepTimerMenu(false)}
         >
           <div
-            className="w-full max-w-md bg-zinc-900 rounded-t-2xl border-t border-white/10 shadow-2xl animate-slide-up"
+            className="w-full max-w-md bg-background rounded-t-2xl border-t border-border shadow-2xl animate-slide-up"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="relative p-4 border-b border-white/10">
-              <h3 className="text-lg font-bold text-white text-center">睡眠定时</h3>
+            <div className="relative p-4 border-b border-border">
+              <h3 className="text-lg font-bold text-foreground text-center">睡眠定时</h3>
               <button
                 type="button"
                 onClick={() => setShowSleepTimerMenu(false)}
-                className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full bg-white/10 text-zinc-300 transition-colors hover:bg-white/20 hover:text-white"
+                className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full bg-white/10 text-muted-foreground transition-colors hover:bg-white/20 hover:text-foreground"
                 title="关闭"
               >
                 <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>
-              <p className="mt-1 text-center text-xs text-zinc-500">
+              <p className="mt-1 text-center text-xs text-muted-foreground">
                 {sleepTimerEndAt ? `剩余 ${formatSleepTimer(sleepTimerRemaining)} 后暂停播放` : '选择倒计时时长，到点后自动暂停'}
               </p>
             </div>
@@ -3148,15 +3148,15 @@ export default function MusicClient({ children: _children }: { children?: React.
                 <button
                   key={minutes}
                   onClick={() => setSleepTimer(minutes)}
-                  className="rounded-lg bg-white/5 p-4 text-center text-sm font-medium text-white transition-colors hover:bg-white/10 hover:text-music-theme"
+                  className="rounded-lg bg-white/5 p-4 text-center text-sm font-medium text-foreground transition-colors hover:bg-white/10 hover:text-music-theme"
                 >
                   {minutes} 分钟
                 </button>
               ))}
             </div>
 
-            <div className="mx-4 mb-4 rounded-xl border border-white/10 bg-white/[0.03] p-4">
-              <div className="mb-3 text-center text-sm font-medium text-white">自定义时间</div>
+            <div className="mx-4 mb-4 rounded-xl border border-border bg-white/[0.03] p-4">
+              <div className="mb-3 text-center text-sm font-medium text-foreground">自定义时间</div>
               <div className="grid grid-cols-2 gap-3">
                 {[
                   {
@@ -3175,12 +3175,12 @@ export default function MusicClient({ children: _children }: { children?: React.
                   },
                 ].map((picker) => (
                   <div key={picker.label} className="block">
-                    <span className="mb-2 block text-center text-xs text-zinc-500">{picker.label}</span>
+                    <span className="mb-2 block text-center text-xs text-muted-foreground">{picker.label}</span>
                     <div className="relative">
                       <div
                         ref={picker.ref}
                         onScroll={picker.onScroll}
-                        className="scrollbar-hide overflow-y-auto rounded-xl border border-white/10 bg-zinc-800/80 py-[80px] text-white"
+                        className="scrollbar-hide overflow-y-auto rounded-xl border border-border bg-muted/80 py-[80px] text-foreground"
                         style={{
                           height: `${sleepPickerHeight}px`,
                           scrollbarWidth: 'none',
@@ -3214,7 +3214,7 @@ export default function MusicClient({ children: _children }: { children?: React.
                                 }
                               }}
                               className={`flex w-full items-center justify-center text-sm transition-colors ${
-                                isActive ? 'text-music-theme' : 'text-zinc-400'
+                                isActive ? 'text-music-theme' : 'text-muted-foreground'
                               }`}
                               style={{ height: `${sleepPickerItemHeight}px`, scrollSnapAlign: 'center' }}
                             >
@@ -3224,15 +3224,15 @@ export default function MusicClient({ children: _children }: { children?: React.
                         })}
                       </div>
                       <div className="pointer-events-none absolute inset-x-0 top-1/2 -translate-y-1/2 border-y border-music-theme bg-white/5" style={{ height: `${sleepPickerItemHeight}px` }} />
-                      <div className="pointer-events-none absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-zinc-900/95 to-transparent" />
-                      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-zinc-900/95 to-transparent" />
+                      <div className="pointer-events-none absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-background/95 to-transparent" />
+                      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-background/95 to-transparent" />
                     </div>
                   </div>
                 ))}
               </div>
               <button
                 onClick={setCustomSleepTimer}
-                className="mt-4 w-full rounded-lg bg-music-theme p-3 text-sm font-medium text-music-chip transition-colors hover:bg-music-theme-hover disabled:cursor-not-allowed disabled:bg-zinc-700 disabled:text-zinc-400"
+                className="mt-4 w-full rounded-lg bg-music-theme p-3 text-sm font-medium text-music-chip transition-colors hover:bg-music-theme-hover disabled:cursor-not-allowed disabled:bg-muted disabled:text-muted-foreground"
                 disabled={customSleepHours === 0 && customSleepMinutes === 0}
               >
                 {customSleepHours === 0 && customSleepMinutes === 0
@@ -3246,13 +3246,13 @@ export default function MusicClient({ children: _children }: { children?: React.
             <div className="grid grid-cols-2 gap-2 px-4 pb-4">
               <button
                 onClick={() => setShowSleepTimerMenu(false)}
-                className="w-full rounded-lg border border-white/10 bg-white/5 p-3 text-sm font-medium text-zinc-300 transition-colors hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-50"
+                className="w-full rounded-lg border border-border bg-white/5 p-3 text-sm font-medium text-muted-foreground transition-colors hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 返回
               </button>
               <button
                 onClick={cancelSleepTimer}
-                className="w-full rounded-lg border border-white/10 bg-white/5 p-3 text-sm font-medium text-zinc-300 transition-colors hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-50"
+                className="w-full rounded-lg border border-border bg-white/5 p-3 text-sm font-medium text-muted-foreground transition-colors hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-50"
                 disabled={!sleepTimerEndAt}
               >
                 关闭定时
@@ -3264,17 +3264,17 @@ export default function MusicClient({ children: _children }: { children?: React.
 
       {showAudioEffectsMenu && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-modal flex items-center justify-center p-4" onClick={() => setShowAudioEffectsMenu(false)}>
-          <div className="relative w-full max-w-5xl max-h-[90vh] bg-zinc-900 rounded-2xl border border-white/10 shadow-2xl overflow-hidden" onClick={(e) => e.stopPropagation()}>
-            <div className="p-5 border-b border-white/10 flex items-center justify-between"><div><h3 className="text-lg font-bold text-white">均衡器与音效调节</h3></div><button onClick={() => setShowAudioEffectsMenu(false)} className="w-8 h-8 rounded-lg text-zinc-400 hover:text-white hover:bg-white/10">✕</button></div>
+          <div className="relative w-full max-w-5xl max-h-[90vh] bg-background rounded-2xl border border-border shadow-2xl overflow-hidden" onClick={(e) => e.stopPropagation()}>
+            <div className="p-5 border-b border-border flex items-center justify-between"><div><h3 className="text-lg font-bold text-foreground">均衡器与音效调节</h3></div><button onClick={() => setShowAudioEffectsMenu(false)} className="w-8 h-8 rounded-lg text-muted-foreground hover:text-foreground hover:bg-white/10">✕</button></div>
             <div className="p-5 overflow-y-auto max-h-[calc(90vh-80px)]"><div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-8">
-              <section><div className="flex items-center justify-between mb-4"><div><h4 className="text-sm font-bold text-white">10 段均衡器</h4></div><label className="flex items-center gap-2 text-xs text-zinc-300"><input type="checkbox" checked={equalizerEnabled} onChange={(e) => setEqualizerEnabled(e.target.checked)} className="h-4 w-4 accent-music-theme" />启用 EQ</label></div>
-                <div className="rounded-xl border border-white/5 p-4 overflow-x-auto overscroll-x-contain"><div className="min-w-[760px] grid grid-cols-10 gap-3 items-end h-56 sm:h-64">{EQ_BANDS.map((band, index) => (<div key={band.frequency} className="h-full min-w-0 flex flex-col items-center gap-2"><span className="text-[10px] font-mono text-zinc-500">{(eqGains[index] || 0) > 0 ? '+' : ''}{(eqGains[index] || 0).toFixed(1)}</span><div className="flex-1 w-full min-h-0 flex items-center justify-center"><input type="range" min="-12" max="12" step="0.5" value={eqGains[index] || 0} onChange={(e) => { setEqPreset('自定义'); const value = Number(e.target.value); setEqGains(current => current.map((gain, i) => i === index ? value : gain)); }} disabled={!equalizerEnabled} className="w-40 sm:w-52 h-5 -rotate-90 accent-music-theme [direction:rtl] disabled:opacity-40" /></div><span className="text-[10px] font-mono text-zinc-400">{band.label}</span></div>))}</div></div>
-                <div className="mt-5"><div className="flex items-center justify-between mb-3"><h4 className="text-sm font-bold text-white">预设</h4><button onClick={() => applyEqPreset('Flat')} className="text-xs text-music-theme hover:text-music-theme-hover">Flat 重置</button></div><div className="flex flex-wrap gap-2">{Object.keys(EQ_PRESETS).map(name => (<button key={name} onClick={() => applyEqPreset(name)} className={`px-3 py-1.5 rounded-lg text-xs transition-colors ${eqPreset === name ? 'bg-white/10 text-music-theme border border-music-theme' : 'bg-white/5 text-zinc-300 border border-white/10 hover:bg-white/10'}`}>{name}</button>))}</div></div>
+              <section><div className="flex items-center justify-between mb-4"><div><h4 className="text-sm font-bold text-foreground">10 段均衡器</h4></div><label className="flex items-center gap-2 text-xs text-muted-foreground"><input type="checkbox" checked={equalizerEnabled} onChange={(e) => setEqualizerEnabled(e.target.checked)} className="h-4 w-4 accent-music-theme" />启用 EQ</label></div>
+                <div className="rounded-xl border border-white/5 p-4 overflow-x-auto overscroll-x-contain"><div className="min-w-[760px] grid grid-cols-10 gap-3 items-end h-56 sm:h-64">{EQ_BANDS.map((band, index) => (<div key={band.frequency} className="h-full min-w-0 flex flex-col items-center gap-2"><span className="text-[10px] font-mono text-muted-foreground">{(eqGains[index] || 0) > 0 ? '+' : ''}{(eqGains[index] || 0).toFixed(1)}</span><div className="flex-1 w-full min-h-0 flex items-center justify-center"><input type="range" min="-12" max="12" step="0.5" value={eqGains[index] || 0} onChange={(e) => { setEqPreset('自定义'); const value = Number(e.target.value); setEqGains(current => current.map((gain, i) => i === index ? value : gain)); }} disabled={!equalizerEnabled} className="w-40 sm:w-52 h-5 -rotate-90 accent-music-theme [direction:rtl] disabled:opacity-40" /></div><span className="text-[10px] font-mono text-muted-foreground">{band.label}</span></div>))}</div></div>
+                <div className="mt-5"><div className="flex items-center justify-between mb-3"><h4 className="text-sm font-bold text-foreground">预设</h4><button onClick={() => applyEqPreset('Flat')} className="text-xs text-music-theme hover:text-music-theme-hover">Flat 重置</button></div><div className="flex flex-wrap gap-2">{Object.keys(EQ_PRESETS).map(name => (<button key={name} onClick={() => applyEqPreset(name)} className={`px-3 py-1.5 rounded-lg text-xs transition-colors ${eqPreset === name ? 'bg-white/10 text-music-theme border border-music-theme' : 'bg-white/5 text-muted-foreground border border-border hover:bg-white/10'}`}>{name}</button>))}</div></div>
               </section>
-              <aside className="space-y-5"><section className="rounded-xl border border-white/10 bg-white/[0.03] p-4"><div className="flex items-center justify-between"><div><h4 className="text-sm font-bold text-white">响度增强</h4><p className="text-xs text-zinc-500 mt-1">轻微压缩，增强人声和细节</p></div><input type="checkbox" checked={loudnessEnabled} onChange={(e) => setLoudnessEnabled(e.target.checked)} className="h-4 w-4 accent-music-theme" /></div></section>
-                <section className="rounded-xl border border-white/10 bg-white/[0.03] p-4"><div className="flex items-center justify-between mb-3"><div><h4 className="text-sm font-bold text-white">环境混响音效</h4><p className="text-xs text-zinc-500 mt-1">模拟不同空间的回声效果</p></div><input type="checkbox" checked={reverbEnabled} onChange={(e) => setReverbEnabled(e.target.checked)} className="h-4 w-4 accent-music-theme" /></div><div className="flex flex-wrap gap-2">{Object.entries(REVERB_PRESETS).map(([id, preset]) => (<button key={id} onClick={() => { const selected = id as keyof typeof REVERB_PRESETS; const selectedPreset = REVERB_PRESETS[selected]; setReverbPreset(selected); setReverbEnabled(selected !== 'none'); setReverbMainGain(Math.round(selectedPreset.main * 100)); setReverbMix(Math.min(100, Math.round(selectedPreset.send * 30))); }} className={`rounded-lg border px-2.5 py-1 text-xs ${reverbPreset === id ? 'border-music-theme bg-white/10 text-music-theme' : 'border-white/10 bg-white/5 text-zinc-300 hover:bg-white/10'}`}>{preset.label}</button>))}</div><label className="mt-3 block text-xs text-zinc-400">原始音量 {reverbMainGain}%<input type="range" min="0" max="150" value={reverbMainGain} onChange={(e) => setReverbMainGain(Number(e.target.value))} disabled={!reverbEnabled} className="mt-2 w-full accent-music-theme disabled:opacity-40" /></label><label className="mt-3 block text-xs text-zinc-400">环境音效 {reverbMix}%<input type="range" min="0" max="100" value={reverbMix} onChange={(e) => setReverbMix(Number(e.target.value))} disabled={!reverbEnabled} className="mt-2 w-full accent-music-theme disabled:opacity-40" /></label></section>
-                <section className="rounded-xl border border-white/10 bg-white/[0.03] p-4"><div className="flex items-center justify-between mb-3"><div><h4 className="text-sm font-bold text-white">音调升降调节</h4><p className="text-xs text-zinc-500 mt-1">当前 {pitchRate.toFixed(2)}x</p></div><button onClick={() => setPitchRate(1)} className="text-xs text-music-theme">重置</button></div><input type="range" min="0.5" max="1.5" step="0.01" value={pitchRate} onChange={(e) => setPitchRate(Number(e.target.value))} className="w-full accent-music-theme" /><div className="mt-2 flex justify-between text-xs text-zinc-500"><span>低</span><span>原速</span><span>高</span></div></section>
-                <section className="rounded-xl border border-white/10 bg-white/[0.03] p-4"><div className="flex items-center justify-between mb-3"><div><h4 className="text-sm font-bold text-white">3D 立体环绕</h4><p className="text-xs text-zinc-500 mt-1">需使用耳机，模拟声源环绕移动</p></div><input type="checkbox" checked={surroundEnabled} onChange={(e) => setSurroundEnabled(e.target.checked)} className="h-4 w-4 accent-music-theme" /></div><label className="block text-xs text-zinc-400">旋转速度 {surroundSpeed}<input type="range" min="5" max="60" value={surroundSpeed} onChange={(e) => setSurroundSpeed(Number(e.target.value))} disabled={!surroundEnabled} className="mt-2 w-full accent-music-theme disabled:opacity-40" /></label><label className="block mt-3 text-xs text-zinc-400">声场距离 {surroundDistance}<input type="range" min="1" max="10" value={surroundDistance} onChange={(e) => setSurroundDistance(Number(e.target.value))} disabled={!surroundEnabled} className="mt-2 w-full accent-music-theme disabled:opacity-40" /></label></section>
+              <aside className="space-y-5"><section className="rounded-xl border border-border bg-white/[0.03] p-4"><div className="flex items-center justify-between"><div><h4 className="text-sm font-bold text-foreground">响度增强</h4><p className="text-xs text-muted-foreground mt-1">轻微压缩，增强人声和细节</p></div><input type="checkbox" checked={loudnessEnabled} onChange={(e) => setLoudnessEnabled(e.target.checked)} className="h-4 w-4 accent-music-theme" /></div></section>
+                <section className="rounded-xl border border-border bg-white/[0.03] p-4"><div className="flex items-center justify-between mb-3"><div><h4 className="text-sm font-bold text-foreground">环境混响音效</h4><p className="text-xs text-muted-foreground mt-1">模拟不同空间的回声效果</p></div><input type="checkbox" checked={reverbEnabled} onChange={(e) => setReverbEnabled(e.target.checked)} className="h-4 w-4 accent-music-theme" /></div><div className="flex flex-wrap gap-2">{Object.entries(REVERB_PRESETS).map(([id, preset]) => (<button key={id} onClick={() => { const selected = id as keyof typeof REVERB_PRESETS; const selectedPreset = REVERB_PRESETS[selected]; setReverbPreset(selected); setReverbEnabled(selected !== 'none'); setReverbMainGain(Math.round(selectedPreset.main * 100)); setReverbMix(Math.min(100, Math.round(selectedPreset.send * 30))); }} className={`rounded-lg border px-2.5 py-1 text-xs ${reverbPreset === id ? 'border-music-theme bg-white/10 text-music-theme' : 'border-border bg-white/5 text-muted-foreground hover:bg-white/10'}`}>{preset.label}</button>))}</div><label className="mt-3 block text-xs text-muted-foreground">原始音量 {reverbMainGain}%<input type="range" min="0" max="150" value={reverbMainGain} onChange={(e) => setReverbMainGain(Number(e.target.value))} disabled={!reverbEnabled} className="mt-2 w-full accent-music-theme disabled:opacity-40" /></label><label className="mt-3 block text-xs text-muted-foreground">环境音效 {reverbMix}%<input type="range" min="0" max="100" value={reverbMix} onChange={(e) => setReverbMix(Number(e.target.value))} disabled={!reverbEnabled} className="mt-2 w-full accent-music-theme disabled:opacity-40" /></label></section>
+                <section className="rounded-xl border border-border bg-white/[0.03] p-4"><div className="flex items-center justify-between mb-3"><div><h4 className="text-sm font-bold text-foreground">音调升降调节</h4><p className="text-xs text-muted-foreground mt-1">当前 {pitchRate.toFixed(2)}x</p></div><button onClick={() => setPitchRate(1)} className="text-xs text-music-theme">重置</button></div><input type="range" min="0.5" max="1.5" step="0.01" value={pitchRate} onChange={(e) => setPitchRate(Number(e.target.value))} className="w-full accent-music-theme" /><div className="mt-2 flex justify-between text-xs text-muted-foreground"><span>低</span><span>原速</span><span>高</span></div></section>
+                <section className="rounded-xl border border-border bg-white/[0.03] p-4"><div className="flex items-center justify-between mb-3"><div><h4 className="text-sm font-bold text-foreground">3D 立体环绕</h4><p className="text-xs text-muted-foreground mt-1">需使用耳机，模拟声源环绕移动</p></div><input type="checkbox" checked={surroundEnabled} onChange={(e) => setSurroundEnabled(e.target.checked)} className="h-4 w-4 accent-music-theme" /></div><label className="block text-xs text-muted-foreground">旋转速度 {surroundSpeed}<input type="range" min="5" max="60" value={surroundSpeed} onChange={(e) => setSurroundSpeed(Number(e.target.value))} disabled={!surroundEnabled} className="mt-2 w-full accent-music-theme disabled:opacity-40" /></label><label className="block mt-3 text-xs text-muted-foreground">声场距离 {surroundDistance}<input type="range" min="1" max="10" value={surroundDistance} onChange={(e) => setSurroundDistance(Number(e.target.value))} disabled={!surroundEnabled} className="mt-2 w-full accent-music-theme disabled:opacity-40" /></label></section>
                 <button onClick={() => setShowAudioEffectsMenu(false)} className="w-full rounded-xl bg-music-theme p-3 text-sm font-medium text-music-chip hover:bg-music-theme-hover">完成</button>
               </aside></div></div>
           </div>
@@ -3288,12 +3288,12 @@ export default function MusicClient({ children: _children }: { children?: React.
           onClick={() => setShowQualityMenu(false)}
         >
           <div
-            className="w-full max-w-md bg-zinc-900 rounded-t-2xl border-t border-white/10 shadow-2xl animate-slide-up"
+            className="w-full max-w-md bg-background rounded-t-2xl border-t border-border shadow-2xl animate-slide-up"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Header */}
-            <div className="p-4 border-b border-white/10">
-              <h3 className="text-lg font-bold text-white text-center">选择音质</h3>
+            <div className="p-4 border-b border-border">
+              <h3 className="text-lg font-bold text-foreground text-center">选择音质</h3>
             </div>
 
             {/* Quality Options */}
@@ -3309,10 +3309,10 @@ export default function MusicClient({ children: _children }: { children?: React.
                 }`}
               >
                 <div className="flex items-center gap-3">
-                  <div className={`w-2 h-2 rounded-full ${quality === '128k' ? 'bg-music-theme' : 'bg-zinc-600'}`} />
+                  <div className={`w-2 h-2 rounded-full ${quality === '128k' ? 'bg-music-theme' : 'bg-muted'}`} />
                   <div className="text-left">
-                    <div className="text-white font-medium">标准音质</div>
-                    <div className="text-xs text-zinc-500">128kbps</div>
+                    <div className="text-foreground font-medium">标准音质</div>
+                    <div className="text-xs text-muted-foreground">128kbps</div>
                   </div>
                 </div>
                 {quality === '128k' && (
@@ -3333,10 +3333,10 @@ export default function MusicClient({ children: _children }: { children?: React.
                 }`}
               >
                 <div className="flex items-center gap-3">
-                  <div className={`w-2 h-2 rounded-full ${quality === '320k' ? 'bg-music-theme' : 'bg-zinc-600'}`} />
+                  <div className={`w-2 h-2 rounded-full ${quality === '320k' ? 'bg-music-theme' : 'bg-muted'}`} />
                   <div className="text-left">
-                    <div className="text-white font-medium">高品质 HQ</div>
-                    <div className="text-xs text-zinc-500">320kbps</div>
+                    <div className="text-foreground font-medium">高品质 HQ</div>
+                    <div className="text-xs text-muted-foreground">320kbps</div>
                   </div>
                 </div>
                 {quality === '320k' && (
@@ -3357,10 +3357,10 @@ export default function MusicClient({ children: _children }: { children?: React.
                 }`}
               >
                 <div className="flex items-center gap-3">
-                  <div className={`w-2 h-2 rounded-full ${quality === 'flac' ? 'bg-music-theme' : 'bg-zinc-600'}`} />
+                  <div className={`w-2 h-2 rounded-full ${quality === 'flac' ? 'bg-music-theme' : 'bg-muted'}`} />
                   <div className="text-left">
-                    <div className="text-white font-medium">无损音质 SQ</div>
-                    <div className="text-xs text-zinc-500">FLAC</div>
+                    <div className="text-foreground font-medium">无损音质 SQ</div>
+                    <div className="text-xs text-muted-foreground">FLAC</div>
                   </div>
                 </div>
                 {quality === 'flac' && (
@@ -3381,10 +3381,10 @@ export default function MusicClient({ children: _children }: { children?: React.
                 }`}
               >
                 <div className="flex items-center gap-3">
-                  <div className={`w-2 h-2 rounded-full ${quality === 'flac24bit' ? 'bg-music-theme' : 'bg-zinc-600'}`} />
+                  <div className={`w-2 h-2 rounded-full ${quality === 'flac24bit' ? 'bg-music-theme' : 'bg-muted'}`} />
                   <div className="text-left">
-                    <div className="text-white font-medium">Hi-Res音质 HR</div>
-                    <div className="text-xs text-zinc-500">FLAC 24bit</div>
+                    <div className="text-foreground font-medium">Hi-Res音质 HR</div>
+                    <div className="text-xs text-muted-foreground">FLAC 24bit</div>
                   </div>
                 </div>
                 {quality === 'flac24bit' && (
@@ -3399,7 +3399,7 @@ export default function MusicClient({ children: _children }: { children?: React.
             <div className="p-4 pt-0">
               <button
                 onClick={() => setShowQualityMenu(false)}
-                className="w-full p-3 rounded-lg bg-white/5 hover:bg-white/10 text-white transition-colors"
+                className="w-full p-3 rounded-lg bg-white/5 hover:bg-white/10 text-foreground transition-colors"
               >
                 取消
               </button>
