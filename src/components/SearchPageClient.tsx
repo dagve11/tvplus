@@ -954,10 +954,10 @@ export function SearchPageClient({ searchBase = '/search' }: { searchBase?: stri
           savePartialCacheForPlayback();
           router.push(itemUrl);
         }}
-        className='group w-full rounded-2xl border border-gray-200/80 bg-white/90 p-3 text-left shadow-sm transition-all hover:border-green-300 hover:shadow-md dark:border-gray-700 dark:bg-gray-900/70 dark:hover:border-green-700'
+        className='group w-full rounded-2xl border border-border bg-card/90 p-3 text-left shadow-sm transition-all hover:bg-accent/40 hover:shadow-md dark:bg-card/70'
       >
         <div className='flex items-start gap-4'>
-          <div className='relative h-32 w-24 shrink-0 overflow-hidden rounded-xl bg-gray-100 dark:bg-gray-800'>
+          <div className='relative h-32 w-24 shrink-0 overflow-hidden rounded-xl bg-muted'>
             <ProxyImage
               originalSrc={item.poster}
               alt={item.title}
@@ -976,42 +976,42 @@ export function SearchPageClient({ searchBase = '/search' }: { searchBase?: stri
           <div className='min-w-0 flex-1'>
             <div className='flex items-start justify-between gap-3'>
               <div className='min-w-0'>
-                <h3 className='line-clamp-2 text-base font-semibold text-gray-900 dark:text-gray-100'>
+                <h3 className='line-clamp-2 text-base font-semibold text-foreground'>
                   {item.title}
                 </h3>
                 <div className='mt-2 flex flex-wrap gap-2'>
                   {renderTag(
                     item.type === 'movie' ? '电影' : '剧集',
-                    'bg-green-50 text-green-700 dark:bg-green-900/30 dark:text-green-300'
+                    'bg-muted text-muted-foreground'
                   )}
                   {yearText &&
                     renderTag(
                       yearText,
-                      'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300'
+                      'bg-muted text-muted-foreground'
                     )}
                   {item.episodes &&
                     item.episodes > 0 &&
                     renderTag(
                       `${item.episodes}集`,
-                      'bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300'
+                      'bg-muted text-muted-foreground'
                     )}
                   {item.vodRemarks &&
                     renderTag(
                       item.vodRemarks,
-                      'bg-amber-50 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300'
+                      'bg-muted text-muted-foreground'
                     )}
                   {item.doubanId &&
                     item.doubanId > 0 &&
                     renderTag(
                       '豆瓣',
-                      'bg-emerald-50 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300'
+                      'bg-muted text-muted-foreground'
                     )}
                 </div>
               </div>
             </div>
 
             {description && (
-              <p className='mt-3 line-clamp-3 text-sm leading-6 text-gray-600 dark:text-gray-400'>
+              <p className='mt-3 line-clamp-3 text-sm leading-6 text-muted-foreground'>
                 {description}
               </p>
             )}
@@ -1027,7 +1027,7 @@ export function SearchPageClient({ searchBase = '/search' }: { searchBase?: stri
             {visibleSourceTags.map((sourceName) => (
               <span
                 key={`${item.key}-${sourceName}`}
-                className='inline-flex max-w-full shrink-0 items-center truncate rounded-full border border-gray-200 bg-gray-50 px-2.5 py-1 text-xs text-gray-600 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300'
+                className='inline-flex max-w-full shrink-0 items-center truncate rounded-full border border-border bg-muted px-2.5 py-1 text-xs text-muted-foreground'
                 title={sourceName}
               >
                 {sourceName}
@@ -1043,7 +1043,7 @@ export function SearchPageClient({ searchBase = '/search' }: { searchBase?: stri
                     [item.key]: true,
                   }));
                 }}
-                className='inline-flex shrink-0 items-center rounded-full border border-green-200 bg-green-50 px-2.5 py-1 text-xs font-medium text-green-700 transition-colors hover:bg-green-100 dark:border-green-800 dark:bg-green-900/30 dark:text-green-300 dark:hover:bg-green-900/50'
+                className='inline-flex shrink-0 items-center rounded-full border border-border bg-muted px-2.5 py-1 text-xs font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground'
                 aria-label={`展开剩余${hiddenSourceCount}个来源`}
               >
                 +{hiddenSourceCount}
@@ -1791,7 +1791,7 @@ export function SearchPageClient({ searchBase = '/search' }: { searchBase?: stri
         <div className='mb-0'>
           <form onSubmit={handleSearch} className='max-w-2xl mx-auto'>
             <div className='relative'>
-              <Search className='absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400 dark:text-gray-500' />
+              <Search className='absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground' />
               <input
                 id='searchInput'
                 type='text'
@@ -1800,7 +1800,7 @@ export function SearchPageClient({ searchBase = '/search' }: { searchBase?: stri
                 onFocus={handleInputFocus}
                 placeholder='搜索电影、电视剧...'
                 autoComplete='off'
-                className='w-full h-12 rounded-lg bg-gray-50/80 py-3 pl-10 pr-12 text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-400 focus:bg-white border border-gray-200/50 shadow-sm dark:bg-gray-800 dark:text-gray-300 dark:placeholder-gray-500 dark:focus:bg-gray-700 dark:border-gray-700'
+                className='w-full h-12 rounded-lg bg-muted/80 py-3 pl-10 pr-12 text-sm text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:bg-background border border-border shadow-sm dark:bg-muted/60 dark:focus:bg-muted/80'
               />
 
               {/* 清除按钮 */}
@@ -1812,7 +1812,7 @@ export function SearchPageClient({ searchBase = '/search' }: { searchBase?: stri
                     setShowSuggestions(false);
                     document.getElementById('searchInput')?.focus();
                   }}
-                  className='absolute right-3 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors dark:text-gray-500 dark:hover:text-gray-300'
+                  className='absolute right-3 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors'
                   aria-label='清除搜索内容'
                 >
                   <X className='h-5 w-5' />
@@ -1897,7 +1897,7 @@ export function SearchPageClient({ searchBase = '/search' }: { searchBase?: stri
               <Link
                 href='/source-search?special=1'
                 prefetch={false}
-                className='inline-flex items-center gap-2 rounded-full border border-blue-200/60 bg-blue-50/80 px-4 py-2 text-sm font-medium text-blue-600 transition-colors hover:bg-blue-100/80 dark:border-blue-800/60 dark:bg-blue-900/20 dark:text-blue-400 dark:hover:bg-blue-900/40'
+                className='inline-flex items-center gap-2 rounded-full border border-border bg-muted px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent hover:text-accent-foreground'
               >
                 <ListVideo size={16} />
                 源站寻片
@@ -1926,8 +1926,8 @@ export function SearchPageClient({ searchBase = '/search' }: { searchBase?: stri
                   onClick={() => setAdvancedOpen((prev) => !prev)}
                   className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm transition-colors ${
                     advancedOpen
-                      ? 'bg-green-50 text-green-600 dark:bg-gray-700/70 dark:text-green-400'
-                      : 'text-gray-600 hover:bg-green-50 hover:text-green-600 dark:text-gray-400 dark:hover:bg-gray-700/50 dark:hover:text-green-400'
+                      ? 'bg-accent text-accent-foreground'
+                      : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground'
                   }`}
                   aria-expanded={advancedOpen}
                 >
@@ -1943,10 +1943,10 @@ export function SearchPageClient({ searchBase = '/search' }: { searchBase?: stri
                     ref={(el) => {
                       if (el) advancedDropdownRefs.current[0] = el;
                     }}
-                    className='absolute right-0 z-[70] mt-2 w-56 rounded-xl border border-gray-200 bg-white p-3 shadow-lg dark:border-gray-700 dark:bg-gray-900'
+                    className='absolute right-0 z-popover mt-2 w-56 rounded-xl border border-border bg-card p-3 shadow-lg'
                   >
                     <label className='flex cursor-pointer select-none items-center justify-between gap-3 rounded-lg px-1 py-2'>
-                      <span className='text-sm text-gray-700 dark:text-gray-300'>
+                      <span className='text-sm text-foreground'>
                         聚合
                       </span>
                       <div className='relative'>
@@ -1958,13 +1958,13 @@ export function SearchPageClient({ searchBase = '/search' }: { searchBase?: stri
                             setViewMode(viewMode === 'agg' ? 'all' : 'agg')
                           }
                         />
-                        <div className='h-5 w-9 rounded-full bg-gray-300 transition-colors peer-checked:bg-green-500 dark:bg-gray-600'></div>
-                        <div className='absolute left-0.5 top-0.5 h-4 w-4 rounded-full bg-white transition-transform peer-checked:translate-x-4'></div>
+                        <div className='h-5 w-9 rounded-full bg-input transition-colors peer-checked:bg-primary'></div>
+                        <div className='absolute left-0.5 top-0.5 h-4 w-4 rounded-full bg-background transition-transform peer-checked:translate-x-4'></div>
                       </div>
                     </label>
                     {privateLibrarySearchEnabled && !isSpecialEntry && (
                       <label className='flex cursor-pointer select-none items-center justify-between gap-3 rounded-lg px-1 py-2'>
-                        <span className='text-sm text-gray-700 dark:text-gray-300'>
+                        <span className='text-sm text-foreground'>
                           只搜私人影库
                         </span>
                         <div className='relative'>
@@ -1976,23 +1976,23 @@ export function SearchPageClient({ searchBase = '/search' }: { searchBase?: stri
                               setPrivateLibraryOnly(e.target.checked)
                             }
                           />
-                          <div className='h-5 w-9 rounded-full bg-gray-300 transition-colors peer-checked:bg-green-500 dark:bg-gray-600'></div>
-                          <div className='absolute left-0.5 top-0.5 h-4 w-4 rounded-full bg-white transition-transform peer-checked:translate-x-4'></div>
+                          <div className='h-5 w-9 rounded-full bg-input transition-colors peer-checked:bg-primary'></div>
+                          <div className='absolute left-0.5 top-0.5 h-4 w-4 rounded-full bg-background transition-transform peer-checked:translate-x-4'></div>
                         </div>
                       </label>
                     )}
-                    <div className='mt-2 border-t border-gray-200 pt-2 dark:border-gray-700'>
-                      <span className='px-1 text-sm text-gray-700 dark:text-gray-300'>
+                    <div className='mt-2 border-t border-border pt-2'>
+                      <span className='px-1 text-sm text-foreground'>
                         显示方式
                       </span>
-                      <div className='mt-2 grid grid-cols-2 gap-1 rounded-lg bg-gray-100 p-1 dark:bg-gray-800'>
+                      <div className='mt-2 grid grid-cols-2 gap-1 rounded-lg bg-muted p-1'>
                         <button
                           type='button'
                           onClick={() => setResultDisplayMode('card')}
                           className={`inline-flex items-center justify-center gap-1 rounded-md px-2 py-1.5 text-sm transition-colors ${
                             resultDisplayMode === 'card'
-                              ? 'bg-green-500 text-white'
-                              : 'text-gray-600 hover:bg-white dark:text-gray-300 dark:hover:bg-gray-700'
+                              ? 'bg-primary text-primary-foreground'
+                              : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground'
                           }`}
                           aria-label='切换为卡片视图'
                         >
@@ -2004,8 +2004,8 @@ export function SearchPageClient({ searchBase = '/search' }: { searchBase?: stri
                           onClick={() => setResultDisplayMode('list')}
                           className={`inline-flex items-center justify-center gap-1 rounded-md px-2 py-1.5 text-sm transition-colors ${
                             resultDisplayMode === 'list'
-                              ? 'bg-green-500 text-white'
-                              : 'text-gray-600 hover:bg-white dark:text-gray-300 dark:hover:bg-gray-700'
+                              ? 'bg-primary text-primary-foreground'
+                              : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground'
                           }`}
                           aria-label='切换为列表视图'
                         >
@@ -2040,22 +2040,22 @@ export function SearchPageClient({ searchBase = '/search' }: { searchBase?: stri
                   {/* 标题 */}
                   <div className='mb-4 flex items-start justify-between gap-4'>
                     <div className='min-w-0'>
-                      <h2 className='flex flex-wrap items-start gap-x-3 gap-y-1 text-xl font-bold text-gray-800 dark:text-gray-200'>
+                      <h2 className='flex flex-wrap items-start gap-x-3 gap-y-1 text-xl font-bold text-foreground'>
                         <span className='inline-flex items-center gap-2'>
                           搜索结果
                           {isFromCache && (
-                            <span className='rounded-md bg-green-50 px-2 py-0.5 text-xs font-medium text-green-600 dark:bg-green-900/30 dark:text-green-400'>
+                            <span className='rounded-md bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground'>
                               缓存
                             </span>
                           )}
                         </span>
-                        <span className='flex flex-col text-xs font-medium leading-5 text-gray-500 dark:text-gray-400'>
+                        <span className='flex flex-col text-xs font-medium leading-5 text-muted-foreground'>
                           <span>
                             {resultCountMeta.modeLabel}{' '}
                             {resultCountMeta.visibleCount.toLocaleString()}{' '}
                             {resultCountMeta.unit}
                             {resultCountMeta.isFiltered && (
-                              <span className='ml-1 text-gray-400 dark:text-gray-500'>
+                              <span className='ml-1 text-muted-foreground'>
                                 / 筛选前{' '}
                                 {resultCountMeta.totalCount.toLocaleString()}{' '}
                                 {resultCountMeta.unit}
@@ -2066,7 +2066,7 @@ export function SearchPageClient({ searchBase = '/search' }: { searchBase?: stri
                             <span className='inline-flex items-center gap-1'>
                               源 {completedSources}/{totalSources}
                               {isLoading && (
-                                <span className='inline-block h-3 w-3 animate-spin rounded-full border-2 border-gray-300 border-t-green-500'></span>
+                                <span className='inline-block h-3 w-3 animate-spin rounded-full border-2 border-border border-t-foreground'></span>
                               )}
                             </span>
                           )}
@@ -2080,7 +2080,7 @@ export function SearchPageClient({ searchBase = '/search' }: { searchBase?: stri
                             setForceRefresh(true);
                           }}
                           disabled={isLoading}
-                          className='flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm text-gray-600 transition-colors hover:bg-green-50 hover:text-green-600 disabled:cursor-not-allowed disabled:opacity-50 dark:text-gray-400 dark:hover:bg-gray-700/50 dark:hover:text-green-400'
+                          className='flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground disabled:cursor-not-allowed disabled:opacity-50'
                           aria-label='强制刷新搜索结果'
                         >
                           <RefreshCw
@@ -2118,8 +2118,8 @@ export function SearchPageClient({ searchBase = '/search' }: { searchBase?: stri
                         onClick={() => setAdvancedOpen((prev) => !prev)}
                         className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm transition-colors ${
                           advancedOpen
-                            ? 'bg-green-50 text-green-600 dark:bg-gray-700/70 dark:text-green-400'
-                            : 'text-gray-600 hover:bg-green-50 hover:text-green-600 dark:text-gray-400 dark:hover:bg-gray-700/50 dark:hover:text-green-400'
+                            ? 'bg-accent text-accent-foreground'
+                            : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground'
                         }`}
                         aria-expanded={advancedOpen}
                       >
@@ -2135,10 +2135,10 @@ export function SearchPageClient({ searchBase = '/search' }: { searchBase?: stri
                           ref={(el) => {
                             if (el) advancedDropdownRefs.current[1] = el;
                           }}
-                          className='absolute right-0 top-full z-[70] mt-2 w-56 rounded-xl border border-gray-200 bg-white p-3 shadow-lg dark:border-gray-700 dark:bg-gray-900'
+                          className='absolute right-0 top-full z-popover mt-2 w-56 rounded-xl border border-border bg-card p-3 shadow-lg'
                         >
                           <label className='flex cursor-pointer select-none items-center justify-between gap-3 rounded-lg px-1 py-2'>
-                            <span className='text-sm text-gray-700 dark:text-gray-300'>
+                            <span className='text-sm text-foreground'>
                               聚合
                             </span>
                             <div className='relative'>
@@ -2150,13 +2150,13 @@ export function SearchPageClient({ searchBase = '/search' }: { searchBase?: stri
                                   setViewMode(viewMode === 'agg' ? 'all' : 'agg')
                                 }
                               />
-                              <div className='h-5 w-9 rounded-full bg-gray-300 transition-colors peer-checked:bg-green-500 dark:bg-gray-600'></div>
-                              <div className='absolute left-0.5 top-0.5 h-4 w-4 rounded-full bg-white transition-transform peer-checked:translate-x-4'></div>
+                              <div className='h-5 w-9 rounded-full bg-input transition-colors peer-checked:bg-primary'></div>
+                              <div className='absolute left-0.5 top-0.5 h-4 w-4 rounded-full bg-background transition-transform peer-checked:translate-x-4'></div>
                             </div>
                           </label>
                           {privateLibrarySearchEnabled && !isSpecialEntry && (
                             <label className='flex cursor-pointer select-none items-center justify-between gap-3 rounded-lg px-1 py-2'>
-                              <span className='text-sm text-gray-700 dark:text-gray-300'>
+                              <span className='text-sm text-foreground'>
                                 只搜私人影库
                               </span>
                               <div className='relative'>
@@ -2168,23 +2168,23 @@ export function SearchPageClient({ searchBase = '/search' }: { searchBase?: stri
                                     setPrivateLibraryOnly(e.target.checked)
                                   }
                                 />
-                                <div className='h-5 w-9 rounded-full bg-gray-300 transition-colors peer-checked:bg-green-500 dark:bg-gray-600'></div>
-                                <div className='absolute left-0.5 top-0.5 h-4 w-4 rounded-full bg-white transition-transform peer-checked:translate-x-4'></div>
+                                <div className='h-5 w-9 rounded-full bg-input transition-colors peer-checked:bg-primary'></div>
+                                <div className='absolute left-0.5 top-0.5 h-4 w-4 rounded-full bg-background transition-transform peer-checked:translate-x-4'></div>
                               </div>
                             </label>
                           )}
-                          <div className='mt-2 border-t border-gray-200 pt-2 dark:border-gray-700'>
-                            <span className='px-1 text-sm text-gray-700 dark:text-gray-300'>
+                          <div className='mt-2 border-t border-border pt-2'>
+                            <span className='px-1 text-sm text-foreground'>
                               显示方式
                             </span>
-                            <div className='mt-2 grid grid-cols-2 gap-1 rounded-lg bg-gray-100 p-1 dark:bg-gray-800'>
+                            <div className='mt-2 grid grid-cols-2 gap-1 rounded-lg bg-muted p-1'>
                               <button
                                 type='button'
                                 onClick={() => setResultDisplayMode('card')}
                                 className={`inline-flex items-center justify-center gap-1 rounded-md px-2 py-1.5 text-sm transition-colors ${
                                   resultDisplayMode === 'card'
-                                    ? 'bg-green-500 text-white'
-                                    : 'text-gray-600 hover:bg-white dark:text-gray-300 dark:hover:bg-gray-700'
+                                    ? 'bg-primary text-primary-foreground'
+                                    : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground'
                                 }`}
                                 aria-label='切换为卡片视图'
                               >
@@ -2196,8 +2196,8 @@ export function SearchPageClient({ searchBase = '/search' }: { searchBase?: stri
                                 onClick={() => setResultDisplayMode('list')}
                                 className={`inline-flex items-center justify-center gap-1 rounded-md px-2 py-1.5 text-sm transition-colors ${
                                   resultDisplayMode === 'list'
-                                    ? 'bg-green-500 text-white'
-                                    : 'text-gray-600 hover:bg-white dark:text-gray-300 dark:hover:bg-gray-700'
+                                    ? 'bg-primary text-primary-foreground'
+                                    : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground'
                                 }`}
                                 aria-label='切换为列表视图'
                               >
@@ -2213,10 +2213,10 @@ export function SearchPageClient({ searchBase = '/search' }: { searchBase?: stri
                   {searchResults.length === 0 ? (
                     isLoading ? (
                       <div className='flex justify-center items-center h-40'>
-                        <div className='animate-spin rounded-full h-8 w-8 border-b-2 border-green-500'></div>
+                        <div className='animate-spin rounded-full h-8 w-8 border-b-2 border-foreground'></div>
                       </div>
                     ) : (
-                      <div className='text-center text-gray-500 py-8 dark:text-gray-400'>
+                      <div className='text-center text-muted-foreground py-8'>
                         未找到相关结果
                       </div>
                     )
@@ -2408,7 +2408,7 @@ export function SearchPageClient({ searchBase = '/search' }: { searchBase?: stri
                 <>
                   {/* 网盘搜索结果 */}
                   <div className='mb-4'>
-                    <h2 className='text-xl font-bold text-gray-800 dark:text-gray-200'>
+                    <h2 className='text-xl font-bold text-foreground'>
                       网盘搜索结果
                     </h2>
                   </div>
@@ -2422,7 +2422,7 @@ export function SearchPageClient({ searchBase = '/search' }: { searchBase?: stri
                 <>
                   {/* ACG 磁力搜索结果 */}
                   <div className='mb-4'>
-                    <h2 className='text-xl font-bold text-gray-800 dark:text-gray-200'>
+                    <h2 className='text-xl font-bold text-foreground'>
                       动漫磁力搜索结果
                     </h2>
                   </div>
@@ -2443,14 +2443,14 @@ export function SearchPageClient({ searchBase = '/search' }: { searchBase?: stri
               {searchHistory.length > 0 && (
             // 搜索历史
             <section className='mb-12'>
-              <h2 className='mb-4 text-xl font-bold text-gray-800 text-left dark:text-gray-200'>
+              <h2 className='mb-4 text-xl font-bold text-foreground text-left'>
                 搜索历史
                 {searchHistory.length > 0 && (
                   <button
                     onClick={() => {
                       clearSearchHistory(); // 事件监听会自动更新界面
                     }}
-                    className='ml-3 text-sm text-gray-500 hover:text-red-500 transition-colors dark:text-gray-400 dark:hover:text-red-500'
+                    className='ml-3 text-sm text-muted-foreground hover:text-destructive transition-colors'
                   >
                     清空
                   </button>
@@ -2492,7 +2492,7 @@ export function SearchPageClient({ searchBase = '/search' }: { searchBase?: stri
                           setTriggerAcgSearch((prev) => !prev);
                         }
                       }}
-                      className='px-4 py-2 bg-gray-500/10 hover:bg-gray-300 rounded-full text-sm text-gray-700 transition-colors duration-200 dark:bg-gray-700/50 dark:hover:bg-gray-600 dark:text-gray-300'
+                      className='px-4 py-2 bg-muted hover:bg-accent rounded-full text-sm text-foreground transition-colors duration-200'
                     >
                       {item}
                     </button>
@@ -2504,7 +2504,7 @@ export function SearchPageClient({ searchBase = '/search' }: { searchBase?: stri
                         e.preventDefault();
                         deleteSearchHistory(item); // 事件监听会自动更新界面
                       }}
-                      className='absolute -top-1 -right-1 w-4 h-4 opacity-0 group-hover:opacity-100 bg-gray-400 hover:bg-red-500 text-white rounded-full flex items-center justify-center text-[10px] transition-colors'
+                      className='absolute -top-1 -right-1 w-4 h-4 opacity-0 group-hover:opacity-100 bg-muted-foreground hover:bg-destructive text-background rounded-full flex items-center justify-center text-[10px] transition-colors'
                     >
                       <X className='w-3 h-3' />
                     </button>
@@ -2530,7 +2530,7 @@ export function SearchPageClient({ searchBase = '/search' }: { searchBase?: stri
       {/* 返回顶部悬浮按钮 */}
       <button
         onClick={scrollToTop}
-        className={`fixed bottom-20 md:bottom-6 right-6 z-[500] w-12 h-12 bg-green-500/90 hover:bg-green-500 text-white rounded-full shadow-lg backdrop-blur-sm transition-all duration-300 ease-in-out flex items-center justify-center group ${
+        className={`fixed bottom-20 md:bottom-6 right-6 z-toast w-12 h-12 bg-primary/90 hover:bg-primary text-primary-foreground rounded-full shadow-lg backdrop-blur-sm transition-all duration-300 ease-in-out flex items-center justify-center group ${
           showBackToTop
             ? 'opacity-100 translate-y-0 pointer-events-auto'
             : 'opacity-0 translate-y-4 pointer-events-none'
