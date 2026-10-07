@@ -15,9 +15,7 @@ const optimizedPackageImports = [
   '@dnd-kit/modifiers',
   '@dnd-kit/sortable',
   '@dnd-kit/utilities',
-  '@heroicons/react',
   'lucide-react',
-  'react-icons',
 ];
 
 const createNextConfig = (phase) => {
