@@ -7,20 +7,17 @@ import {
   Gauge,
   Headphones,
   Loader2,
-  Moon,
   Pause,
   Play,
   SkipBack,
   SkipForward,
   Square,
-  Sun,
   Volume2,
   Waves,
   X,
 } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { createPortal } from 'react-dom';
 
 import { saveBookReadRecord } from '@/lib/book.db.client';
 import {
@@ -55,6 +52,17 @@ import {
 } from '@/lib/book-tts-progress.client';
 import { cn } from '@/lib/cn';
 
+import ChapterListPanel, {
+  flattenToc,
+  isSameTocTarget,
+  normalizeHrefForMatch,
+  TocItem,
+} from '@/components/books/ChapterListPanel';
+import ReaderSettingsPanel, {
+  ReaderMode,
+  ReaderSettings,
+  ReaderTheme,
+} from '@/components/books/ReaderSettingsPanel';
 import {
   LIBRARY_BUTTON,
   LIBRARY_FIELD,
@@ -79,13 +87,6 @@ declare global {
 interface EpubLocation {
   start?: { cfi?: string; href?: string; displayed?: { chapter?: string } };
   end?: { cfi?: string };
-}
-
-interface TocItem {
-  id?: string;
-  label: string;
-  href: string;
-  subitems?: TocItem[];
 }
 
 interface EpubNavigation {
@@ -125,21 +126,12 @@ interface EpubRendition {
   themes?: EpubThemes;
 }
 
-type ReaderTheme = 'light' | 'sepia' | 'dark';
-type ReaderMode = 'paginated' | 'scrolled';
 type FileLoadState =
   | 'preparing'
   | 'checking-cache'
   | 'downloading'
   | 'opening'
   | 'ready';
-
-interface ReaderSettings {
-  fontSize: number;
-  lineHeight: number;
-  theme: ReaderTheme;
-  mode: ReaderMode;
-}
 
 interface TtsChunk {
   index: number;
@@ -199,7 +191,8 @@ const THEME_STYLES: Record<
   ReaderTheme,
   { bodyBg: string; bodyColor: string; panelBg: string }
 > = {
-  // 与 tailwind 的 colors.library 同一套暖纸色：浅色是纸，护眼是更暖的纸，深色是墨。
+  // 注入 EPUB 正文的纸张色板（inline style，不走 tailwind token）：
+  // 浅色是纸，护眼是更暖的纸，深色是墨。
   light: { bodyBg: '#fdfbf6', bodyColor: '#2a241d', panelBg: '#fdfbf6' },
   sepia: { bodyBg: '#f5f0e6', bodyColor: '#3b322a', panelBg: '#f5f0e6' },
   dark: { bodyBg: '#13100d', bodyColor: '#ece3d5', panelBg: '#13100d' },
@@ -565,19 +558,6 @@ function setChapterScrollTop(node: HTMLDivElement | null, top: number) {
     return;
   }
   node?.scrollTo({ top: targetTop, behavior: 'auto' });
-}
-
-function flattenToc(items: TocItem[]): TocItem[] {
-  return items.flatMap((item) => [item, ...flattenToc(item.subitems || [])]);
-}
-
-function tocItemIsActive(item: TocItem, currentHref: string): boolean {
-  return (
-    isSameTocTarget(currentHref, item.href) ||
-    (item.subitems || []).some((subitem) =>
-      tocItemIsActive(subitem, currentHref)
-    )
-  );
 }
 
 function findTocLabelByHref(items: TocItem[], currentHref: string): string {
@@ -1296,7 +1276,7 @@ function ChapterReader({ manifest }: { manifest: BookReadManifest }) {
           <div className='reader-book-loader'>
             <BookOpen className='h-10 w-10' strokeWidth={1.75} />
           </div>
-          <div className='text-sm text-library-muted dark:text-library-night-muted'>
+          <div className='text-sm text-muted-foreground'>
             章节加载中...
           </div>
         </div>
@@ -1306,7 +1286,7 @@ function ChapterReader({ manifest }: { manifest: BookReadManifest }) {
   if (!chapters.length) {
     return (
       <div className='mx-auto max-w-2xl p-4'>
-        <div className='rounded-md border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800 dark:border-amber-800 dark:bg-amber-900/20 dark:text-amber-200'>
+        <div className='rounded-md border border-border bg-muted/40 p-4 text-sm'>
           暂无章节。该 Legado 源返回的是章节/图片接口，不是 EPUB
           文件；如果详情接口显示章节数为
           0，说明源站当前还没放出可读章节，请换一本有章节的结果再试。
@@ -1320,179 +1300,29 @@ function ChapterReader({ manifest }: { manifest: BookReadManifest }) {
       className='relative h-[calc(100vh-3.5rem)] overflow-hidden'
       style={{ backgroundColor: palette.panelBg, color: palette.bodyColor }}
     >
-      {tocOpen && typeof document !== 'undefined'
-        ? createPortal(
-            <div
-              className='fixed inset-0 z-40 bg-black/30'
-              onClick={() => setTocOpen(false)}
-            >
-              <div
-                className='absolute right-0 top-0 h-screen w-[22rem] max-w-[88vw] overflow-y-auto border-l border-library-edge bg-library-card shadow-xl dark:border-library-night-edge dark:bg-library-night-card'
-                onClick={(event) => event.stopPropagation()}
-              >
-                <div className='space-y-2 p-4'>
-                  {chapters.map((item, index) => {
-                    const active = index === currentIndex;
-                    return (
-                      <button
-                        key={`${item.href}-${item.order}-${index}`}
-                        onClick={() => {
-                          persistChapterProgress();
-                          setCurrentIndex(index);
-                          setTocOpen(false);
-                        }}
-                        className={`block w-full rounded-md border px-4 py-3 text-left text-sm transition-colors duration-200 ${
-                          active
-                            ? 'border-library-ochre bg-library-ochre text-white dark:border-library-night-ochre dark:bg-library-night-ochre'
-                            : 'border-library-edge text-library-ink hover:bg-library-ochre-tint hover:text-library-ochre dark:border-library-night-edge dark:text-library-night-ink dark:hover:bg-library-night-ochre-tint dark:hover:text-library-night-ochre'
-                        }`}
-                        title={item.title}
-                      >
-                        {item.title}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-            </div>,
-            document.body
-          )
-        : null}
+      <ChapterListPanel
+        open={tocOpen}
+        onOpenChange={setTocOpen}
+        chapters={chapters.map((item, index) => ({
+          key: `${item.href}-${item.order}-${index}`,
+          title: item.title,
+          active: index === currentIndex,
+        }))}
+        onSelectChapter={(index) => {
+          persistChapterProgress();
+          setCurrentIndex(index);
+        }}
+      />
 
-      {settingsOpen && typeof document !== 'undefined'
-        ? createPortal(
-            <div
-              className='fixed inset-0 z-40 flex items-center justify-center bg-black/40 px-4'
-              onClick={() => setSettingsOpen(false)}
-            >
-              <div
-                className={cn(READER_SHEET, 'w-full max-w-sm p-5')}
-                onClick={(event) => event.stopPropagation()}
-              >
-                <div className='mb-4'>
-                  <div className='text-base font-semibold text-library-ink dark:text-library-night-ink'>
-                    阅读设置
-                  </div>
-                  <div className='mt-1 text-xs text-library-muted'>
-                    Legado 源支持翻页和滚动阅读
-                  </div>
-                </div>
-                <div className='space-y-6 p-1 text-sm'>
-                  <div>
-                    <div className='mb-2 font-medium'>阅读模式</div>
-                    <div className='grid grid-cols-2 gap-2'>
-                      {(
-                        [
-                          {
-                            key: 'paginated',
-                            label: '翻页模式',
-                            desc: '左右点击翻页/章节',
-                          },
-                          {
-                            key: 'scrolled',
-                            label: '滚动模式',
-                            desc: '上下连续滚动',
-                          },
-                        ] as { key: ReaderMode; label: string; desc: string }[]
-                      ).map((mode) => (
-                        <button
-                          key={mode.key}
-                          onClick={() =>
-                            setSettings((prev) => ({ ...prev, mode: mode.key }))
-                          }
-                          className={`rounded-md border px-3 py-3 text-left ${
-                            settings.mode === mode.key
-                              ? 'border-library-ochre bg-library-ochre-tint text-library-ochre dark:border-library-night-ochre dark:bg-library-night-ochre-tint dark:text-library-night-ochre'
-                              : 'border-library-edge dark:border-library-night-edge'
-                          }`}
-                        >
-                          <div className='font-medium'>{mode.label}</div>
-                          <div className='mt-1 text-xs opacity-70'>
-                            {mode.desc}
-                          </div>
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                  <div>
-                    <div className='mb-2 font-medium'>主题</div>
-                    <div className='grid grid-cols-3 gap-2'>
-                      {(['light', 'sepia', 'dark'] as ReaderTheme[]).map(
-                        (theme) => (
-                          <button
-                            key={theme}
-                            onClick={() =>
-                              setSettings((prev) => ({ ...prev, theme }))
-                            }
-                            className={`rounded-md border px-3 py-2 ${
-                              settings.theme === theme
-                                ? 'border-library-ochre bg-library-ochre-tint text-library-ochre dark:border-library-night-ochre dark:bg-library-night-ochre-tint dark:text-library-night-ochre'
-                                : 'border-library-edge dark:border-library-night-edge'
-                            }`}
-                          >
-                            {theme === 'light'
-                              ? '浅色'
-                              : theme === 'sepia'
-                              ? '护眼'
-                              : '深色'}
-                          </button>
-                        )
-                      )}
-                    </div>
-                  </div>
-                  <div>
-                    <div className='mb-2 flex items-center justify-between font-medium'>
-                      字号 <span>{settings.fontSize}%</span>
-                    </div>
-                    <input
-                      type='range'
-                      min='85'
-                      max='140'
-                      step='5'
-                      value={settings.fontSize}
-                      onChange={(e) =>
-                        setSettings((prev) => ({
-                          ...prev,
-                          fontSize: Number(e.target.value),
-                        }))
-                      }
-                      className={READER_SLIDER}
-                    />
-                  </div>
-                  <div>
-                    <div className='mb-2 flex items-center justify-between font-medium'>
-                      行距 <span>{settings.lineHeight.toFixed(1)}</span>
-                    </div>
-                    <input
-                      type='range'
-                      min='1.4'
-                      max='2.2'
-                      step='0.1'
-                      value={settings.lineHeight}
-                      onChange={(e) =>
-                        setSettings((prev) => ({
-                          ...prev,
-                          lineHeight: Number(e.target.value),
-                        }))
-                      }
-                      className={READER_SLIDER}
-                    />
-                  </div>
-                  <div className='flex justify-end'>
-                    <button
-                      type='button'
-                      className={cn(LIBRARY_BUTTON, 'px-4 py-2')}
-                      onClick={() => setSettingsOpen(false)}
-                    >
-                      完成
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>,
-            document.body
-          )
-        : null}
+      <ReaderSettingsPanel
+        open={settingsOpen}
+        onOpenChange={setSettingsOpen}
+        settings={settings}
+        onModeChange={(mode) => setSettings((prev) => ({ ...prev, mode }))}
+        onSettingsPatch={(patch) => setSettings((prev) => ({ ...prev, ...patch }))}
+        description='Legado 源支持翻页和滚动阅读'
+        paginatedDesc='左右点击翻页/章节'
+      />
 
       {settings.mode === 'paginated' && !tocOpen && !settingsOpen ? (
         <>
@@ -1518,7 +1348,7 @@ function ChapterReader({ manifest }: { manifest: BookReadManifest }) {
         }}
       >
         <article
-          className='mx-auto max-w-3xl text-library-ink dark:text-library-night-ink'
+          className='mx-auto max-w-3xl text-foreground'
           style={{
             fontSize: `${settings.fontSize}%`,
             lineHeight: settings.lineHeight,
@@ -1528,8 +1358,8 @@ function ChapterReader({ manifest }: { manifest: BookReadManifest }) {
           {loading ? (
             <div className='flex min-h-[45vh] items-center justify-center px-4'>
               <div className={cn(READER_SHEET, 'px-6 py-5 text-center shadow-sm')}>
-                <Loader2 className='mx-auto h-6 w-6 animate-spin text-library-ochre dark:text-library-night-ochre' />
-                <div className='mt-3 text-sm font-medium text-library-muted dark:text-library-night-muted'>
+                <Loader2 className='mx-auto h-6 w-6 animate-spin text-foreground' />
+                <div className='mt-3 text-sm font-medium text-muted-foreground'>
                   加载中...
                 </div>
               </div>
@@ -1544,8 +1374,8 @@ function ChapterReader({ manifest }: { manifest: BookReadManifest }) {
           ) : (
             <div className='flex min-h-[45vh] items-center justify-center px-4'>
               <div className={cn(READER_SHEET, 'border-dashed px-6 py-5 text-center shadow-sm')}>
-                <BookOpen className='mx-auto h-7 w-7 text-library-ochre dark:text-library-night-ochre' />
-                <div className='mt-3 text-sm font-medium text-library-muted dark:text-library-night-muted'>
+                <BookOpen className='mx-auto h-7 w-7 text-foreground' />
+                <div className='mt-3 text-sm font-medium text-muted-foreground'>
                   本章暂无内容
                 </div>
               </div>
@@ -1613,10 +1443,10 @@ function ChapterReader({ manifest }: { manifest: BookReadManifest }) {
                     )}
                   </button>
                   <div className='min-w-0 flex-1'>
-                    <div className='truncate text-sm font-medium text-library-ink dark:text-library-night-ink'>
+                    <div className='truncate text-sm font-medium text-foreground'>
                       {currentChapterTitle || '语音朗读'}
                     </div>
-                    <div className='mt-0.5 flex items-center gap-2 text-[11px] text-library-muted dark:text-library-night-muted'>
+                    <div className='mt-0.5 flex items-center gap-2 text-[11px] text-muted-foreground'>
                       <span>
                         {!ttsAvailable
                           ? '服务异常'
@@ -1647,7 +1477,7 @@ function ChapterReader({ manifest }: { manifest: BookReadManifest }) {
                     />
                   </button>
                 </div>
-                <div className='mt-2 flex items-center justify-between text-[11px] text-library-muted'>
+                <div className='mt-2 flex items-center justify-between text-[11px] text-muted-foreground'>
                   <span>{selectedVoice?.displayName || '默认音色'}</span>
                   <span>
                     {formatDurationTime(displayedTtsTime)} /{' '}
@@ -1661,8 +1491,8 @@ function ChapterReader({ manifest }: { manifest: BookReadManifest }) {
             <div className='absolute inset-x-0 bottom-20 z-30 mx-auto w-[min(94vw,34rem)]'>
               <div className={cn(READER_SHEET, 'p-4 shadow-2xl')}>
                 <div className='mb-3 flex items-center justify-between'>
-                  <div className='flex items-center gap-2 text-sm font-medium text-library-ink dark:text-library-night-ink'>
-                    <Headphones className='h-4 w-4 text-library-ochre dark:text-library-night-ochre' />
+                  <div className='flex items-center gap-2 text-sm font-medium text-foreground'>
+                    <Headphones className='h-4 w-4 text-foreground' />
                     听书控制
                   </div>
                   <button
@@ -1752,7 +1582,7 @@ function ChapterReader({ manifest }: { manifest: BookReadManifest }) {
                     </option>
                   ))}
                 </select>
-                <label className='mb-3 block text-xs text-library-muted'>
+                <label className='mb-3 block text-xs text-muted-foreground'>
                   语速 {ttsSettings.rate}
                   <input
                     type='range'
@@ -1773,7 +1603,7 @@ function ChapterReader({ manifest }: { manifest: BookReadManifest }) {
                     className={READER_SLIDER}
                   />
                 </label>
-                <label className='mb-3 block text-xs text-library-muted'>
+                <label className='mb-3 block text-xs text-muted-foreground'>
                   音调 {ttsSettings.pitch}
                   <input
                     type='range'
@@ -1794,7 +1624,7 @@ function ChapterReader({ manifest }: { manifest: BookReadManifest }) {
                     className={READER_SLIDER}
                   />
                 </label>
-                <label className='block text-xs text-library-muted'>
+                <label className='block text-xs text-muted-foreground'>
                   音量 {ttsSettings.volume}
                   <input
                     type='range'
@@ -1827,34 +1657,6 @@ function ChapterReader({ manifest }: { manifest: BookReadManifest }) {
         </>
       ) : null}
     </div>
-  );
-}
-
-function normalizeHrefForMatch(href?: string) {
-  if (!href) return '';
-  try {
-    const normalized = decodeURIComponent(href).replace(/\\/g, '/').trim();
-    return normalized
-      .split('#')[0]
-      .split('?')[0]
-      .replace(/^\.\//, '')
-      .replace(/^\//, '');
-  } catch {
-    return href
-      .split('#')[0]
-      .split('?')[0]
-      .replace(/^\.\//, '')
-      .replace(/^\//, '')
-      .trim();
-  }
-}
-
-function isSameTocTarget(currentHref?: string, tocHref?: string) {
-  const current = normalizeHrefForMatch(currentHref);
-  const target = normalizeHrefForMatch(tocHref);
-  if (!current || !target) return false;
-  return (
-    current === target || current.endsWith(target) || target.endsWith(current)
   );
 }
 
@@ -2032,9 +1834,6 @@ export default function BookReadPage() {
   const [cacheHit, setCacheHit] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [tocOpen, setTocOpen] = useState(false);
-  const [tocExpandOverrides, setTocExpandOverrides] = useState<
-    Record<string, boolean>
-  >({});
   const [settings, setSettings] = useState<ReaderSettings>(DEFAULT_SETTINGS);
   const [ttsSettings, setTtsSettings] = useState<TtsSettings>(() =>
     loadTtsSettings()
@@ -2075,8 +1874,6 @@ export default function BookReadPage() {
   const nextChapterHrefRef = useRef('');
   const bindScrolledIframeListenerRef = useRef<() => void>(() => undefined);
   const applyPendingScrolledRestoreRef = useRef<() => void>(() => undefined);
-  const tocScrollRef = useRef<HTMLDivElement | null>(null);
-  const tocItemRefs = useRef<Record<string, HTMLButtonElement | null>>({});
   const bookRef = useRef<EpubBookInstance | null>(null);
   const renditionRef = useRef<EpubRendition | null>(null);
   const pendingRecordRef = useRef<BookReadRecord | null>(null);
@@ -3156,12 +2953,6 @@ export default function BookReadPage() {
   }, [tocItems]);
 
   const flatToc = useMemo(() => flattenToc(tocItems), [tocItems]);
-  const activeTocHref = useMemo(
-    () =>
-      flatToc.find((item) => isSameTocTarget(currentHref, item.href))?.href ||
-      '',
-    [flatToc, currentHref]
-  );
 
   const currentTocLabel = useMemo(
     () => findTocLabelByHref(tocItems, currentHref),
@@ -3187,12 +2978,6 @@ export default function BookReadPage() {
     );
   }, [manifest, currentChapter, currentTocLabel, settings.mode]);
 
-  useEffect(() => {
-    if (!tocOpen || !activeTocHref) return;
-    const activeNode = tocItemRefs.current[activeTocHref];
-    if (!activeNode) return;
-    activeNode.scrollIntoView({ block: 'center', behavior: 'smooth' });
-  }, [tocOpen, activeTocHref]);
   const nextChapterHref = useMemo(() => {
     const index = flatToc.findIndex((item) =>
       isSameTocTarget(currentHref, item.href)
@@ -3220,6 +3005,24 @@ export default function BookReadPage() {
     setScrolledBottomReached(false);
     void navigateToTarget(nextChapterHref);
   }, [nextChapterHref, navigateToTarget, persistScrolledPosition]);
+
+  // 目录里点某一章：先记一下当前滚动位置，再标记新章从顶部开始，最后跳转。
+  const handleTocNavigate = useCallback(
+    (href: string) => {
+      persistScrolledPosition();
+      pendingScrolledRestoreRef.current = {
+        href,
+        scrollTop: 0,
+        scrollHeight: 1,
+        clientHeight: 1,
+        updatedAt: Date.now(),
+      };
+      restoreTargetRef.current = href;
+      void navigateToTarget(href);
+    },
+    [navigateToTarget, persistScrolledPosition]
+  );
+
   const bindScrolledIframeListener = useCallback(() => {
     scrollListenerCleanupRef.current?.();
     scrollListenerCleanupRef.current = null;
@@ -3366,99 +3169,6 @@ export default function BookReadPage() {
     bindScrolledIframeListenerRef.current = bindScrolledIframeListener;
   }, [bindScrolledIframeListener]);
 
-  // 翻到别的章节后，重新按「当前卷摊开」来折叠，上一次的手动开合不再沿用。
-  useEffect(() => {
-    setTocExpandOverrides((prev) =>
-      Object.keys(prev).length === 0 ? prev : {}
-    );
-  }, [currentHref]);
-
-  const renderTocItems = useCallback(
-    (items: TocItem[], depth = 0) =>
-      items.map((item, index) => {
-        const key = `${item.href || item.label}-${depth}-${index}`;
-        const active = tocItemIsActive(item, currentHref);
-        const children = item.subitems || [];
-        const expandable = children.length > 0;
-        // 卷默认收起来，只有当前章节所在的那一卷摊开；手动开合过的按手动的来。
-        const expanded = expandable
-          ? tocExpandOverrides[key] ?? active
-          : false;
-        const clickable = !!item.href;
-        return (
-          <div key={key} className='space-y-2'>
-            <button
-              ref={(node) => {
-                if (!item.href) return;
-                // 折叠会把子项卸载掉，别把已经不在页面上的节点留在表里。
-                if (node) tocItemRefs.current[item.href] = node;
-                else delete tocItemRefs.current[item.href];
-              }}
-              type='button'
-              aria-expanded={expandable ? expanded : undefined}
-              onClick={() => {
-                if (expandable) {
-                  setTocExpandOverrides((prev) => ({
-                    ...prev,
-                    [key]: !expanded,
-                  }));
-                  return;
-                }
-                if (!clickable) return;
-                persistScrolledPosition();
-                pendingScrolledRestoreRef.current = {
-                  href: item.href,
-                  scrollTop: 0,
-                  scrollHeight: 1,
-                  clientHeight: 1,
-                  updatedAt: Date.now(),
-                };
-                restoreTargetRef.current = item.href;
-                void navigateToTarget(item.href);
-                setTocOpen(false);
-              }}
-              disabled={!expandable && !clickable}
-              className={`group relative flex w-full items-center gap-2 rounded-md border px-4 py-3 text-left text-sm transition-colors duration-200 ${
-                expandable
-                  ? `font-medium ${
-                      active
-                        ? 'border-library-ochre text-library-ochre dark:border-library-night-ochre dark:text-library-night-ochre'
-                        : 'border-library-edge text-library-ink hover:bg-library-ochre-tint dark:border-library-night-edge dark:text-library-night-ink dark:hover:bg-library-night-ochre-tint'
-                    }`
-                  : active
-                  ? 'border-library-ochre bg-library-ochre text-white dark:border-library-night-ochre dark:bg-library-night-ochre'
-                  : 'border-library-edge text-library-ink hover:bg-library-ochre-tint hover:text-library-ochre dark:border-library-night-edge dark:text-library-night-ink dark:hover:bg-library-night-ochre-tint dark:hover:text-library-night-ochre'
-              } ${!expandable && !clickable ? 'cursor-default opacity-80' : ''}`}
-              style={{ paddingLeft: `${16 + depth * 14}px` }}
-            >
-              {expandable ? (
-                <ChevronRight
-                  className={`h-4 w-4 shrink-0 transition-transform duration-200 ${
-                    expanded ? 'rotate-90' : ''
-                  }`}
-                />
-              ) : null}
-              <span className='min-w-0 flex-1 truncate'>{item.label}</span>
-              <div className='pointer-events-none absolute bottom-full left-1/2 z-[100] mb-2 -translate-x-1/2 rounded-lg bg-library-ink px-3 py-2 text-sm text-library-paper opacity-0 invisible shadow-xl transition-all duration-200 ease-out group-hover:visible group-hover:opacity-100 dark:bg-library-night-card dark:text-library-night-ink whitespace-nowrap'>
-                <div className='text-sm'>{item.label}</div>
-              </div>
-            </button>
-            {expandable && expanded ? (
-              <div className='ml-2 space-y-2 border-l border-library-edge pl-2 dark:border-library-night-edge'>
-                {renderTocItems(children, depth + 1)}
-              </div>
-            ) : null}
-          </div>
-        );
-      }),
-    [
-      currentHref,
-      navigateToTarget,
-      persistScrolledPosition,
-      tocExpandOverrides,
-    ]
-  );
-
   const showScrolledNextChapter =
     ready &&
     settings.mode === 'scrolled' &&
@@ -3491,7 +3201,7 @@ export default function BookReadPage() {
           <div className='reader-book-loader'>
             <BookOpen className='h-10 w-10' strokeWidth={1.75} />
           </div>
-          <div className='text-sm text-library-muted dark:text-library-night-muted'>
+          <div className='text-sm text-muted-foreground'>
             准备阅读器中...
           </div>
         </div>
@@ -3506,14 +3216,14 @@ export default function BookReadPage() {
   if (manifest.format === 'pdf') {
     if (!pdfBlobUrl)
       return (
-        <div className='p-4 text-sm text-library-muted'>
+        <div className='p-4 text-sm text-muted-foreground'>
           PDF 加载中... {progressLabel}
         </div>
       );
     return (
       <iframe
         src={pdfBlobUrl}
-        className='h-[calc(100vh-4rem)] w-full bg-library-card dark:bg-library-night'
+        className='h-[calc(100vh-4rem)] w-full bg-card'
         title={manifest.book.title}
       />
     );
@@ -3522,7 +3232,7 @@ export default function BookReadPage() {
   return (
     <div className={cn('flex h-[calc(100vh-3.5rem)] flex-col', LIBRARY_PAGE)}>
       {restoredMessage ? (
-        <div className='absolute left-1/2 top-[4.5rem] z-30 -translate-x-1/2 rounded-full bg-library-ochre px-4 py-2 text-xs text-white shadow-lg dark:bg-library-night-ochre'>
+        <div className='absolute left-1/2 top-[4.5rem] z-30 -translate-x-1/2 rounded-full bg-foreground px-4 py-2 text-xs text-background shadow-lg'>
           {restoredMessage}
         </div>
       ) : null}
@@ -3531,7 +3241,7 @@ export default function BookReadPage() {
         <div className='absolute inset-x-0 top-[3.5rem] z-10 p-4'>
           <div className='mx-auto max-w-3xl space-y-4'>
             <div className={cn(READER_SHEET, 'space-y-2 p-5 shadow-sm')}>
-              <div className='text-sm font-medium text-library-ink dark:text-library-night-ink'>
+              <div className='text-sm font-medium text-foreground'>
                 {fileLoadState === 'checking-cache'
                   ? '检查本地缓存'
                   : fileLoadState === 'downloading'
@@ -3557,7 +3267,7 @@ export default function BookReadPage() {
                   }}
                 />
               </div>
-              <div className='flex items-center justify-between text-xs text-library-muted dark:text-library-night-muted'>
+              <div className='flex items-center justify-between text-xs text-muted-foreground'>
                 <span>
                   {cacheHit ? '已命中本地缓存' : '首次打开将缓存到当前浏览器'}
                 </span>
@@ -3570,17 +3280,17 @@ export default function BookReadPage() {
                   <div className='reader-book-loader'>
                     <BookOpen className='h-10 w-10' strokeWidth={1.75} />
                   </div>
-                  <div className='text-sm text-library-muted dark:text-library-night-muted'>
+                  <div className='text-sm text-muted-foreground'>
                     正在打开电子书...
                   </div>
                 </div>
               ) : (
                 <div className='space-y-3 animate-pulse'>
-                  <div className='h-4 w-full rounded-sm bg-library-edge dark:bg-library-night-edge' />
-                  <div className='h-4 w-11/12 rounded-sm bg-library-edge dark:bg-library-night-edge' />
-                  <div className='h-4 w-10/12 rounded-sm bg-library-edge dark:bg-library-night-edge' />
-                  <div className='h-4 w-full rounded-sm bg-library-edge dark:bg-library-night-edge' />
-                  <div className='h-4 w-9/12 rounded-sm bg-library-edge dark:bg-library-night-edge' />
+                  <div className='h-4 w-full rounded-sm bg-muted' />
+                  <div className='h-4 w-11/12 rounded-sm bg-muted' />
+                  <div className='h-4 w-10/12 rounded-sm bg-muted' />
+                  <div className='h-4 w-full rounded-sm bg-muted' />
+                  <div className='h-4 w-9/12 rounded-sm bg-muted' />
                 </div>
               )}
             </div>
@@ -3588,182 +3298,38 @@ export default function BookReadPage() {
         </div>
       ) : null}
 
-      {tocOpen && typeof document !== 'undefined'
-        ? createPortal(
-            <div
-              className='fixed inset-0 z-40 bg-black/30'
-              onClick={() => setTocOpen(false)}
-            >
-              <div
-                className='absolute right-0 top-0 h-screen w-[22rem] max-w-[88vw] overflow-y-auto border-l border-library-edge bg-library-card shadow-xl dark:border-library-night-edge dark:bg-library-night-card'
-                onClick={(event) => event.stopPropagation()}
-              >
-                <div className='p-4'>
-                  <div className='space-y-2' ref={tocScrollRef}>
-                    {tocItems.length === 0 ? (
-                      <div className='p-3 text-sm text-library-muted'>
-                        当前 EPUB 未提供目录
-                      </div>
-                    ) : (
-                      renderTocItems(tocItems)
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>,
-            document.body
-          )
-        : null}
+      <ChapterListPanel
+        open={tocOpen}
+        onOpenChange={setTocOpen}
+        tocItems={tocItems}
+        currentHref={currentHref}
+        onNavigate={handleTocNavigate}
+      />
 
-      {settingsOpen && typeof document !== 'undefined'
-        ? createPortal(
-            <div
-              className='fixed inset-0 z-40 flex items-center justify-center bg-black/40 px-4'
-              onClick={() => setSettingsOpen(false)}
-            >
-              <div
-                className={cn(READER_SHEET, 'w-full max-w-sm p-5')}
-                onClick={(event) => event.stopPropagation()}
-              >
-                <div className='mb-4'>
-                  <div className='text-base font-semibold text-library-ink dark:text-library-night-ink'>
-                    阅读设置
-                  </div>
-                  <div className='mt-1 text-xs text-library-muted'>
-                    可切换翻页或滚动阅读，默认翻页模式
-                  </div>
-                </div>
-                <div className='space-y-6 p-1 text-sm'>
-                  <div>
-                    <div className='mb-2 font-medium'>阅读模式</div>
-                    <div className='grid grid-cols-2 gap-2'>
-                      {(
-                        [
-                          {
-                            key: 'paginated',
-                            label: '翻页模式',
-                            desc: '左右点击翻页',
-                          },
-                          {
-                            key: 'scrolled',
-                            label: '滚动模式',
-                            desc: '上下连续滚动',
-                          },
-                        ] as { key: ReaderMode; label: string; desc: string }[]
-                      ).map((mode) => (
-                        <button
-                          key={mode.key}
-                          onClick={() => switchReaderMode(mode.key)}
-                          className={`rounded-md border px-3 py-3 text-left ${
-                            settings.mode === mode.key
-                              ? 'border-library-ochre bg-library-ochre-tint text-library-ochre dark:border-library-night-ochre dark:bg-library-night-ochre-tint dark:text-library-night-ochre'
-                              : 'border-library-edge dark:border-library-night-edge'
-                          }`}
-                        >
-                          <div className='font-medium'>{mode.label}</div>
-                          <div className='mt-1 text-xs opacity-70'>
-                            {mode.desc}
-                          </div>
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div>
-                    <div className='mb-2 font-medium'>主题</div>
-                    <div className='grid grid-cols-3 gap-2'>
-                      {(['light', 'sepia', 'dark'] as ReaderTheme[]).map(
-                        (theme) => (
-                          <button
-                            key={theme}
-                            onClick={() =>
-                              setSettings((prev) => ({ ...prev, theme }))
-                            }
-                            className={`rounded-md border px-3 py-2 ${
-                              settings.theme === theme
-                                ? 'border-library-ochre bg-library-ochre-tint text-library-ochre dark:border-library-night-ochre dark:bg-library-night-ochre-tint dark:text-library-night-ochre'
-                                : 'border-library-edge dark:border-library-night-edge'
-                            }`}
-                          >
-                            <div className='mb-1 flex justify-center'>
-                              {theme === 'dark' ? (
-                                <Moon className='h-4 w-4' />
-                              ) : (
-                                <Sun className='h-4 w-4' />
-                              )}
-                            </div>
-                            {theme === 'light'
-                              ? '浅色'
-                              : theme === 'sepia'
-                              ? '护眼'
-                              : '深色'}
-                          </button>
-                        )
-                      )}
-                    </div>
-                  </div>
-
-                  <div>
-                    <div className='mb-2 flex items-center justify-between font-medium'>
-                      字号 <span>{settings.fontSize}%</span>
-                    </div>
-                    <input
-                      type='range'
-                      min='85'
-                      max='140'
-                      step='5'
-                      value={settings.fontSize}
-                      onChange={(e) =>
-                        setSettings((prev) => ({
-                          ...prev,
-                          fontSize: Number(e.target.value),
-                        }))
-                      }
-                      className={READER_SLIDER}
-                    />
-                  </div>
-
-                  <div>
-                    <div className='mb-2 flex items-center justify-between font-medium'>
-                      行距 <span>{settings.lineHeight.toFixed(1)}</span>
-                    </div>
-                    <input
-                      type='range'
-                      min='1.4'
-                      max='2.2'
-                      step='0.1'
-                      value={settings.lineHeight}
-                      onChange={(e) =>
-                        setSettings((prev) => ({
-                          ...prev,
-                          lineHeight: Number(e.target.value),
-                        }))
-                      }
-                      className={READER_SLIDER}
-                    />
-                  </div>
-
-                  <div className={cn('rounded-md p-4 text-xs', LIBRARY_PAGE, LIBRARY_MUTED)}>
-                    首次会缓存到当前浏览器，之后再次打开同一本书通常不需要重新整包下载。
-                    当前缓存状态：
-                    {cacheHit ? '已命中本地缓存' : '本次为网络加载'}。
-                  </div>
-
-                  <div className='flex justify-end'>
-                    <button
-                      type='button'
-                      className={cn(LIBRARY_BUTTON, 'px-4 py-2')}
-                      onClick={() => setSettingsOpen(false)}
-                    >
-                      完成
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>,
-            document.body
-          )
-        : null}
+      <ReaderSettingsPanel
+        open={settingsOpen}
+        onOpenChange={setSettingsOpen}
+        settings={settings}
+        onModeChange={switchReaderMode}
+        onSettingsPatch={(patch) =>
+          setSettings((prev) => ({ ...prev, ...patch }))
+        }
+        description='可切换翻页或滚动阅读，默认翻页模式'
+        showThemeIcons
+        footerNote={
+          <div
+            className={cn(
+              'rounded-md p-4 text-xs',
+              LIBRARY_PAGE,
+              LIBRARY_MUTED
+            )}
+          >
+            首次会缓存到当前浏览器，之后再次打开同一本书通常不需要重新整包下载。
+            当前缓存状态：
+            {cacheHit ? '已命中本地缓存' : '本次为网络加载'}。
+          </div>
+        }
+      />
 
       {manifest.format === 'epub' && ttsBarVisible ? (
         <>
@@ -3834,13 +3400,13 @@ export default function BookReadPage() {
                     )}
                   </button>
                   <div className='min-w-0 flex-1'>
-                    <div className='truncate text-sm font-medium text-library-ink dark:text-library-night-ink'>
+                    <div className='truncate text-sm font-medium text-foreground'>
                       {ttsCurrentChapterTitle ||
                         currentTocLabel ||
                         currentChapter ||
                         '语音朗读'}
                     </div>
-                    <div className='mt-0.5 flex items-center gap-2 text-[11px] text-library-muted dark:text-library-night-muted'>
+                    <div className='mt-0.5 flex items-center gap-2 text-[11px] text-muted-foreground'>
                       <span className='truncate'>
                         {!ttsAvailable
                           ? '服务异常'
@@ -3871,7 +3437,7 @@ export default function BookReadPage() {
                     />
                   </button>
                 </div>
-                <div className='mt-2 flex items-center justify-between text-[11px] text-library-muted'>
+                <div className='mt-2 flex items-center justify-between text-[11px] text-muted-foreground'>
                   <span>{selectedVoice?.displayName || '默认音色'}</span>
                   <span>
                     {formatDurationTime(displayedTtsTime)} /{' '}
@@ -3886,8 +3452,8 @@ export default function BookReadPage() {
             <div className='absolute inset-x-0 bottom-20 z-30 mx-auto w-[min(94vw,34rem)]'>
               <div className={cn(READER_SHEET, 'p-4 shadow-2xl')}>
                 <div className='mb-3 flex items-center justify-between'>
-                  <div className='flex items-center gap-2 text-sm font-medium text-library-ink dark:text-library-night-ink'>
-                    <Headphones className='h-4 w-4 text-library-ochre dark:text-library-night-ochre' />
+                  <div className='flex items-center gap-2 text-sm font-medium text-foreground'>
+                    <Headphones className='h-4 w-4 text-foreground' />
                     听书控制
                   </div>
                   <button
@@ -3962,7 +3528,7 @@ export default function BookReadPage() {
 
                 <div className='space-y-4'>
                   <div>
-                    <div className='mb-2 flex items-center gap-2 text-xs text-library-muted dark:text-library-night-muted'>
+                    <div className='mb-2 flex items-center gap-2 text-xs text-muted-foreground'>
                       <Waves className='h-3.5 w-3.5' />
                       <span>音色</span>
                     </div>
@@ -3986,7 +3552,7 @@ export default function BookReadPage() {
                   </div>
 
                   <label className='block'>
-                    <div className='mb-2 flex items-center justify-between text-xs text-library-muted dark:text-library-night-muted'>
+                    <div className='mb-2 flex items-center justify-between text-xs text-muted-foreground'>
                       <span className='flex items-center gap-2'>
                         <Gauge className='h-3.5 w-3.5' />
                         语速
@@ -4013,7 +3579,7 @@ export default function BookReadPage() {
                   </label>
 
                   <label className='block'>
-                    <div className='mb-2 flex items-center justify-between text-xs text-library-muted dark:text-library-night-muted'>
+                    <div className='mb-2 flex items-center justify-between text-xs text-muted-foreground'>
                       <span className='flex items-center gap-2'>
                         <Waves className='h-3.5 w-3.5' />
                         音调
@@ -4043,7 +3609,7 @@ export default function BookReadPage() {
                   </label>
 
                   <label className='block'>
-                    <div className='mb-2 flex items-center justify-between text-xs text-library-muted dark:text-library-night-muted'>
+                    <div className='mb-2 flex items-center justify-between text-xs text-muted-foreground'>
                       <span className='flex items-center gap-2'>
                         <Volume2 className='h-3.5 w-3.5' />
                         音量
@@ -4110,7 +3676,7 @@ export default function BookReadPage() {
             type='button'
             onClick={goToNextChapter}
             aria-label='下一章'
-            className='pointer-events-auto flex h-11 w-11 items-center justify-center rounded-full bg-library-ochre/90 text-white shadow-lg dark:bg-library-night-ochre/90'
+            className='pointer-events-auto flex h-11 w-11 items-center justify-center rounded-full bg-foreground/90 text-background shadow-lg'
           >
             <ChevronRight className='h-5 w-5' />
           </button>

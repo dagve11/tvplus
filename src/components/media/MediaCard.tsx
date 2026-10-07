@@ -34,8 +34,8 @@ export default function MediaCard({
   className,
 }: MediaCardProps) {
   const shellClass = cn(
-    'group block overflow-hidden rounded-md border border-library-edge bg-library-card transition-colors duration-200',
-    'hover:border-library-ochre/45 dark:border-library-night-edge dark:bg-library-night-card dark:hover:border-library-night-ochre/45',
+    'group block overflow-hidden rounded-md border border-border bg-card transition-colors duration-200',
+    'hover:border-foreground/45',
     LIBRARY_FOCUS,
     'focus-visible:ring-inset',
     className
@@ -45,7 +45,7 @@ export default function MediaCard({
     <>
       <div
         className={cn(
-          'relative overflow-hidden bg-library-ochre-tint dark:bg-library-night-ochre-tint',
+          'relative overflow-hidden bg-accent',
           BOOK_COVER_LIFT,
           aspect === '3/4' ? 'aspect-[3/4]' : 'aspect-[2/3]'
         )}
@@ -69,7 +69,7 @@ export default function MediaCard({
         )}
         <span className={BOOK_SPINE_OVERLAY} aria-hidden />
         {item.badge && (
-          <span className='absolute left-2 top-2 rounded-sm bg-library-ink/75 px-1.5 py-0.5 text-[11px] font-medium text-library-paper backdrop-blur-sm dark:bg-black/70 dark:text-library-night-ink'>
+          <span className='absolute left-2 top-2 rounded-sm bg-foreground/75 px-1.5 py-0.5 text-[11px] font-medium text-background backdrop-blur-sm'>
             {item.badge}
           </span>
         )}
@@ -84,7 +84,7 @@ export default function MediaCard({
             // 2.7em = 13px × 1.35 × 2，正好两行：撑高到两行是为了名字短的卡片
             // 也和对面的长名字一样高，但绝不能超过两行——min-height 比两行多出来的
             // 那几像素会让被 -webkit-line-clamp 截掉的第三行从底下露出字头。
-            'line-clamp-2 min-h-[2.7em] text-[13px] font-medium leading-[1.35] text-library-ink dark:text-library-night-ink',
+            'line-clamp-2 min-h-[2.7em] text-[13px] font-medium leading-[1.35] text-foreground',
             LIBRARY_SERIF
           )}
         >
@@ -105,14 +105,14 @@ export default function MediaCard({
         )}
         {typeof item.progress === 'number' && (
           <div
-            className='mt-2 h-1 w-full overflow-hidden rounded-full bg-library-edge dark:bg-library-night-edge'
+            className='mt-2 h-1 w-full overflow-hidden rounded-full bg-muted'
             role='progressbar'
             aria-valuenow={item.progress}
             aria-valuemin={0}
             aria-valuemax={100}
           >
             <div
-              className='h-full rounded-full bg-library-ochre dark:bg-library-night-ochre'
+              className='h-full rounded-full bg-foreground'
               style={{ width: `${item.progress}%` }}
             />
           </div>

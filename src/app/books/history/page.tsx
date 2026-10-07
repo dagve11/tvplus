@@ -54,7 +54,7 @@ import MediaPressCard from '@/components/media/MediaPressCard';
 /** 缓存面板里的一行（书名 + 大小 + 删除键）。 */
 const CARD_CLASS = cn(
   LIBRARY_ROW,
-  'bg-library-card dark:bg-library-night-card'
+  'bg-card'
 );
 const DANGER_BUTTON_CLASS =
   'cursor-pointer rounded-md bg-red-600 px-4 py-2 text-sm font-medium text-white transition-colors duration-200 hover:bg-red-700';
@@ -288,7 +288,7 @@ export default function BookHistoryPage() {
             onClick={() => setCacheModalOpen(false)}
           >
             <div
-              className='absolute right-0 top-0 h-screen w-full max-w-lg overflow-y-auto border-l border-library-edge bg-library-paper shadow-2xl dark:border-library-night-edge dark:bg-library-night'
+              className='absolute right-0 top-0 h-screen w-full max-w-lg overflow-y-auto border-l border-border bg-background shadow-2xl'
               onClick={(event) => event.stopPropagation()}
             >
               <div className='space-y-5 p-5'>

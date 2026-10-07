@@ -30,7 +30,7 @@ export interface MediaShellTab {
  * 漫画与小说共用的页面外壳（顶栏 + 二级 tab + 移动端底栏）。
  *
  * 两套功能仍然各有自己的外壳实例与作用域，这里只是把重复的 200 余行收敛成一份。
- * 外壳走「暖纸书库」语言：实心纸面顶栏（不再用玻璃模糊）+ 赭石强调。阅读页与
+ * 外壳走「书库」语言：实心顶栏（不再用玻璃模糊）+ 单色前景强调。阅读页与
  * 书库页共用同一套外壳，区别只剩两处——阅读页把二级 tab 换成阅读器动作按钮，
  * 内容区用各功能自己的 reader.mainClassName。
  */
@@ -62,7 +62,7 @@ export default function MediaShell({
   return (
     <div className={cn('min-h-screen', LIBRARY_PAGE, LIBRARY_TEXT)}>
       <header
-        className='fixed inset-x-0 top-0 z-40 border-b border-library-edge bg-library-paper/95 backdrop-blur-none dark:border-library-night-edge dark:bg-library-night/95'
+        className='fixed inset-x-0 top-0 z-40 border-b border-border bg-background/95 backdrop-blur-none'
         style={{ paddingTop: 'env(safe-area-inset-top)' }}
       >
         <div className='mx-auto flex h-14 max-w-7xl items-center gap-3 px-3 sm:h-16 sm:px-6'>
@@ -81,7 +81,7 @@ export default function MediaShell({
                 className={cn(
                   'flex h-10 shrink-0 items-center rounded-md px-3 text-sm font-semibold transition-colors duration-200',
                   LIBRARY_SERIF,
-                  'text-library-ochre hover:bg-library-ochre-tint dark:text-library-night-ochre dark:hover:bg-library-night-ochre-tint',
+                  'text-foreground hover:bg-accent',
                   LIBRARY_FOCUS
                 )}
               >
@@ -156,7 +156,7 @@ export default function MediaShell({
 
       {!isReader && (
         <nav
-          className='fixed inset-x-0 bottom-0 z-40 border-t border-library-edge bg-library-paper/95 backdrop-blur-none dark:border-library-night-edge dark:bg-library-night/95 lg:hidden'
+          className='fixed inset-x-0 bottom-0 z-40 border-t border-border bg-background/95 backdrop-blur-none lg:hidden'
           style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
         >
           <div className='mx-auto grid max-w-3xl grid-cols-4'>
@@ -168,21 +168,21 @@ export default function MediaShell({
                   key={tab.href}
                   href={tab.href}
                   aria-current={active ? 'page' : undefined}
-                  className='flex min-h-16 flex-col items-center justify-center gap-1 py-2 text-xs transition-colors duration-200 hover:bg-library-ochre-tint/60 dark:hover:bg-library-night-ochre-tint/60'
+                  className='flex min-h-16 flex-col items-center justify-center gap-1 py-2 text-xs transition-colors duration-200 hover:bg-accent/60'
                 >
                   <Icon
                     className={cn(
                       'h-5 w-5',
                       active
-                        ? 'text-library-ochre dark:text-library-night-ochre'
-                        : 'text-library-muted dark:text-library-night-muted'
+                        ? 'text-foreground'
+                        : 'text-muted-foreground'
                     )}
                   />
                   <span
                     className={
                       active
-                        ? 'font-medium text-library-ochre dark:text-library-night-ochre'
-                        : 'text-library-muted dark:text-library-night-muted'
+                        ? 'font-medium text-foreground'
+                        : 'text-muted-foreground'
                     }
                   >
                     {tab.label}

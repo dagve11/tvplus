@@ -284,7 +284,7 @@ export default function BookDetailPage() {
       >
         <div
           className={cn(
-            'relative aspect-[3/4] overflow-hidden rounded-md bg-library-ochre-tint dark:bg-library-night-ochre-tint',
+            'relative aspect-[3/4] overflow-hidden rounded-md bg-accent',
             BOOK_COVER_LIFT
           )}
         >
@@ -311,7 +311,7 @@ export default function BookDetailPage() {
         </div>
         <div className='flex min-w-0 flex-col justify-between gap-5'>
           <div>
-            <span className='inline-flex items-center gap-1.5 rounded-sm bg-library-ochre-tint px-2.5 py-1 text-xs font-medium text-library-ochre dark:bg-library-night-ochre-tint dark:text-library-night-ochre'>
+            <span className='inline-flex items-center gap-1.5 rounded-sm bg-accent px-2.5 py-1 text-xs font-medium text-foreground'>
               <BookOpen className='h-3.5 w-3.5' />
               {detail.sourceName}
             </span>
@@ -328,7 +328,7 @@ export default function BookDetailPage() {
               {detail.author || '未知作者'}
             </div>
             {detail.summary ? (
-              <div className='mt-4 line-clamp-5 text-sm leading-7 text-library-ink/80 dark:text-library-night-ink/80'>
+              <div className='mt-4 line-clamp-5 text-sm leading-7 text-foreground/80'>
                 {detail.summary}
               </div>
             ) : null}
@@ -338,7 +338,7 @@ export default function BookDetailPage() {
                   key={tag}
                   className={cn(
                     'inline-flex items-center gap-1.5 rounded-sm px-2.5 py-1 text-xs font-medium',
-                    'bg-library-paper text-library-muted dark:bg-library-night dark:text-library-night-muted'
+                    'bg-muted text-muted-foreground'
                   )}
                 >
                   <Tags className='h-3 w-3' />
@@ -365,7 +365,7 @@ export default function BookDetailPage() {
               className={cn(
                 GHOST_BUTTON_CLASS,
                 shelf[`${detail.sourceId}+${detail.id}`] &&
-                  'border-transparent bg-library-ochre-tint text-library-ochre hover:border-transparent hover:text-library-ochre dark:bg-library-night-ochre-tint dark:text-library-night-ochre dark:hover:text-library-night-ochre'
+                  'border-transparent bg-accent text-foreground hover:border-transparent hover:text-foreground'
               )}
             >
               <BookmarkPlus className='h-4 w-4' />
@@ -406,7 +406,7 @@ export default function BookDetailPage() {
 
       <section className={PANEL_CLASS}>
         <div className='flex items-center gap-2'>
-          <FileText className='h-5 w-5 text-library-ochre dark:text-library-night-ochre' />{' '}
+          <FileText className='h-5 w-5 text-foreground' />{' '}
           <h2
             className={cn('text-lg font-semibold', LIBRARY_TEXT, LIBRARY_SERIF)}
           >
@@ -469,7 +469,7 @@ export default function BookDetailPage() {
                     }
                   }}
                   className={cn(
-                    'shrink-0 cursor-pointer rounded-sm px-3 py-1.5 text-xs font-medium text-library-ochre transition-colors duration-200 hover:bg-library-ochre-tint disabled:cursor-not-allowed disabled:text-library-muted dark:text-library-night-ochre dark:hover:bg-library-night-ochre-tint dark:disabled:text-library-night-muted',
+                    'shrink-0 cursor-pointer rounded-sm px-3 py-1.5 text-xs font-medium text-foreground transition-colors duration-200 hover:bg-accent disabled:cursor-not-allowed disabled:text-muted-foreground',
                     LIBRARY_FOCUS
                   )}
                 >
@@ -495,7 +495,7 @@ export default function BookDetailPage() {
             </h2>
             <div
               className={cn(
-                'rounded-sm bg-library-paper px-3 py-1 text-sm dark:bg-library-night',
+                'rounded-sm bg-muted px-3 py-1 text-sm',
                 LIBRARY_MUTED
               )}
             >
@@ -524,7 +524,7 @@ export default function BookDetailPage() {
                   )}
                   onClick={() => cacheBookDetail(detail)}
                   className={cn(
-                    'truncate text-sm transition-colors duration-200 hover:text-library-ochre dark:hover:text-library-night-ochre',
+                    'truncate text-sm transition-colors duration-200 hover:text-foreground',
                     ROW_CLASS,
                     LIBRARY_TEXT,
                     LIBRARY_FOCUS

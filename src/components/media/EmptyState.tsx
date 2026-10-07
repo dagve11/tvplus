@@ -46,14 +46,14 @@ export default function EmptyState({
       )}
     >
       {icon ? (
-        <div className='flex h-14 w-14 items-center justify-center rounded-full bg-library-ochre-tint text-library-ochre dark:bg-library-night-ochre-tint dark:text-library-night-ochre'>
+        <div className='flex h-14 w-14 items-center justify-center rounded-full bg-accent text-foreground'>
           {icon}
         </div>
       ) : null}
       {title ? (
         <div
           className={cn(
-            'mt-4 text-base font-semibold text-library-ink dark:text-library-night-ink',
+            'mt-4 text-base font-semibold text-foreground',
             LIBRARY_SERIF
           )}
         >

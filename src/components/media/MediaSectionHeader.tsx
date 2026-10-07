@@ -21,14 +21,14 @@ export default function MediaSectionHeader({
       <div className='flex items-baseline gap-3'>
         <h2
           className={cn(
-            'shrink-0 text-lg font-semibold text-library-ink dark:text-library-night-ink',
+            'shrink-0 text-lg font-semibold text-foreground',
             LIBRARY_SERIF
           )}
         >
           {title}
         </h2>
         <span
-          className='h-px min-w-4 flex-1 bg-library-edge dark:bg-library-night-edge'
+          className='h-px min-w-4 flex-1 bg-border'
           aria-hidden
         />
         {action ? <div className='shrink-0'>{action}</div> : null}

@@ -559,7 +559,7 @@ export default function BooksSearchPage() {
                     type='button'
                     onClick={() => setQ('')}
                     className={cn(
-                      'absolute right-2.5 top-1/2 inline-flex h-7 w-7 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full text-library-muted transition-colors duration-200 hover:bg-library-ochre-tint hover:text-library-ochre dark:text-library-night-muted dark:hover:bg-library-night-ochre-tint dark:hover:text-library-night-ochre',
+                      'absolute right-2.5 top-1/2 inline-flex h-7 w-7 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full text-muted-foreground transition-colors duration-200 hover:bg-accent hover:text-foreground',
                       LIBRARY_FOCUS
                     )}
                     aria-label='清空搜索关键词'

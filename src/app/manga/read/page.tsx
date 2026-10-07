@@ -992,7 +992,7 @@ export default function MangaReadPage() {
       {chapterListOpen && (
         <div className='fixed inset-0 z-40 bg-black/30' onClick={() => setChapterListOpen(false)}>
           <div
-            className='absolute right-0 top-14 h-[calc(100vh-3.5rem)] w-full max-w-sm overflow-y-auto border-l border-library-edge bg-library-card shadow-xl dark:border-library-night-edge dark:bg-library-night-card sm:top-16 sm:h-[calc(100vh-4rem)]'
+            className='absolute right-0 top-14 h-[calc(100vh-3.5rem)] w-full max-w-sm overflow-y-auto border-l border-border bg-card shadow-xl sm:top-16 sm:h-[calc(100vh-4rem)]'
             onClick={(event) => event.stopPropagation()}
           >
             <div className='p-4'>
@@ -1021,7 +1021,7 @@ export default function MangaReadPage() {
                           ? cn('rounded-md border', LIBRARY_ROW_ACTIVE)
                           : cn(
                               LIBRARY_ROW,
-                              'hover:border-library-ochre dark:hover:border-library-night-ochre'
+                              'hover:border-foreground'
                             )
                       )}
                       onClick={() => setChapterListOpen(false)}
@@ -1136,12 +1136,12 @@ export default function MangaReadPage() {
         )}
 
         <div
-          className={`fixed right-3 top-1/2 z-20 h-40 w-1 -translate-y-1/2 overflow-hidden rounded-full bg-library-edge/80 transition-all duration-200 dark:bg-library-night-edge/80 ${
+          className={`fixed right-3 top-1/2 z-20 h-40 w-1 -translate-y-1/2 overflow-hidden rounded-full bg-muted/80 transition-all duration-200 ${
             controlsVisible ? 'opacity-100' : 'pointer-events-none opacity-0'
           }`}
         >
           <div
-            className='absolute bottom-0 left-0 w-full rounded-full bg-library-ochre transition-all dark:bg-library-night-ochre'
+            className='absolute bottom-0 left-0 w-full rounded-full bg-foreground transition-all'
             style={{ height: `${progress}%` }}
           />
         </div>

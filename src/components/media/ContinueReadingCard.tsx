@@ -57,7 +57,7 @@ export default function ContinueReadingCard({
       onClick={onNavigate}
       aria-label={`${ctaLabel} ${title}`}
       className={cn(
-        'group flex gap-4 p-4 transition-colors duration-200 hover:border-library-ochre/45 dark:hover:border-library-night-ochre/45 sm:gap-5 sm:p-5',
+        'group flex gap-4 p-4 transition-colors duration-200 hover:border-foreground/45 sm:gap-5 sm:p-5',
         LIBRARY_PANEL,
         LIBRARY_FOCUS,
         className
@@ -65,7 +65,7 @@ export default function ContinueReadingCard({
     >
       <div
         className={cn(
-          'relative aspect-[3/4] w-20 shrink-0 overflow-hidden rounded-sm bg-library-ochre-tint dark:bg-library-night-ochre-tint sm:w-28',
+          'relative aspect-[3/4] w-20 shrink-0 overflow-hidden rounded-sm bg-accent sm:w-28',
           BOOK_COVER_LIFT
         )}
       >
@@ -91,12 +91,12 @@ export default function ContinueReadingCard({
 
       <div className='flex min-w-0 flex-1 flex-col justify-between gap-3'>
         <div className='min-w-0'>
-          <div className='text-[11px] font-medium text-library-ochre dark:text-library-night-ochre'>
+          <div className='text-[11px] font-medium text-foreground'>
             {eyebrow}
           </div>
           <div
             className={cn(
-              'mt-1.5 line-clamp-2 text-xl font-semibold leading-snug text-library-ink dark:text-library-night-ink sm:text-2xl',
+              'mt-1.5 line-clamp-2 text-xl font-semibold leading-snug text-foreground sm:text-2xl',
               LIBRARY_SERIF
             )}
           >
@@ -113,14 +113,14 @@ export default function ContinueReadingCard({
           {typeof progress === 'number' && (
             <div className='flex min-w-[8rem] flex-1 items-center gap-3'>
               <div
-                className='h-1 flex-1 overflow-hidden rounded-full bg-library-edge dark:bg-library-night-edge'
+                className='h-1 flex-1 overflow-hidden rounded-full bg-muted'
                 role='progressbar'
                 aria-valuenow={progress}
                 aria-valuemin={0}
                 aria-valuemax={100}
               >
                 <div
-                  className='h-full rounded-full bg-library-ochre dark:bg-library-night-ochre'
+                  className='h-full rounded-full bg-foreground'
                   style={{ width: `${progress}%` }}
                 />
               </div>
