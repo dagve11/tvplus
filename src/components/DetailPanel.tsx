@@ -11,11 +11,8 @@ import {
   Star,
   Tag,
   Users,
-  X,
 } from 'lucide-react';
-import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
-import { createPortal } from 'react-dom';
 
 import { getBangumiSubject, getBangumiSubjectUrl } from '@/lib/bangumi.client';
 import { appendSpecialSourceParam } from '@/lib/special-source.client';
@@ -24,6 +21,14 @@ import { processImageUrl } from '@/lib/utils';
 
 import ImageViewer from '@/components/ImageViewer';
 import ProxyImage from '@/components/ProxyImage';
+import { AppSheet } from '@/components/ui/app-sheet';
+import { Badge } from '@/components/ui/badge';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 
 interface DetailPanelProps {
   isOpen: boolean;
@@ -45,6 +50,8 @@ interface DetailPanelProps {
   };
   sourceId?: string;
   source?: string;
+  // 兼容保留：底座已改为响应式（桌面 Dialog / 移动端 AppSheet），
+  // 这两个 prop 不再影响渲染，仅为不破坏既有调用方签名
   useDrawer?: boolean;
   drawerWidth?: string;
 }
@@ -162,12 +169,7 @@ const DetailPanel: React.FC<DetailPanelProps> = ({
   cmsData,
   sourceId,
   source,
-  useDrawer = false,
-  drawerWidth = 'w-full md:w-[25%]',
 }) => {
-  const [isVisible, setIsVisible] = useState(false);
-  const [isAnimating, setIsAnimating] = useState(false);
-  const [mounted, setMounted] = useState(false);
   const [detailData, setDetailData] = useState<DetailData | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -333,11 +335,6 @@ const DetailPanel: React.FC<DetailPanelProps> = ({
     setShowGallery(true);
   };
 
-  // 确保组件在客户端挂载后才渲染 Portal
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
   useEffect(() => {
     if (!showGallery) {
       setGalleryImages([]);
@@ -375,35 +372,6 @@ const DetailPanel: React.FC<DetailPanelProps> = ({
     };
   }, [showGallery]);
 
-  // 控制动画状态
-  useEffect(() => {
-    let animationId: number;
-    let timer: NodeJS.Timeout;
-
-    if (isOpen) {
-      setIsVisible(true);
-      animationId = requestAnimationFrame(() => {
-        animationId = requestAnimationFrame(() => {
-          setIsAnimating(true);
-        });
-      });
-    } else {
-      setIsAnimating(false);
-      timer = setTimeout(() => {
-        setIsVisible(false);
-      }, 200);
-    }
-
-    return () => {
-      if (animationId) {
-        cancelAnimationFrame(animationId);
-      }
-      if (timer) {
-        clearTimeout(timer);
-      }
-    };
-  }, [isOpen]);
-
   useEffect(() => {
     if (!isOpen) {
       setShowGallery(false);
@@ -412,70 +380,6 @@ const DetailPanel: React.FC<DetailPanelProps> = ({
       setTmdbResults([]);
     }
   }, [isOpen]);
-
-  // 阻止背景滚动（仅在非抽屉模式下）
-  useEffect(() => {
-    if (isVisible && !useDrawer) {
-      // 保存当前滚动位置
-      const scrollY = window.scrollY;
-      const scrollX = window.scrollX;
-      const body = document.body;
-      const html = document.documentElement;
-
-      // 获取滚动条宽度
-      const scrollBarWidth = window.innerWidth - html.clientWidth;
-
-      // 保存原始样式
-      const originalBodyStyle = {
-        position: body.style.position,
-        top: body.style.top,
-        left: body.style.left,
-        right: body.style.right,
-        width: body.style.width,
-        paddingRight: body.style.paddingRight,
-        overflow: body.style.overflow,
-      };
-
-      // 设置body样式来阻止滚动，但保持原位置
-      body.style.position = 'fixed';
-      body.style.top = `-${scrollY}px`;
-      body.style.left = `-${scrollX}px`;
-      body.style.right = '0';
-      body.style.width = '100%';
-      body.style.overflow = 'hidden';
-      body.style.paddingRight = `${scrollBarWidth}px`;
-
-      return () => {
-        // 恢复所有原始样式
-        body.style.position = originalBodyStyle.position;
-        body.style.top = originalBodyStyle.top;
-        body.style.left = originalBodyStyle.left;
-        body.style.right = originalBodyStyle.right;
-        body.style.width = originalBodyStyle.width;
-        body.style.paddingRight = originalBodyStyle.paddingRight;
-        body.style.overflow = originalBodyStyle.overflow;
-
-        // 使用 requestAnimationFrame 确保样式恢复后再滚动
-        requestAnimationFrame(() => {
-          window.scrollTo(scrollX, scrollY);
-        });
-      };
-    }
-  }, [isVisible, useDrawer]);
-
-  // ESC键关闭
-  useEffect(() => {
-    const handleEsc = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        onClose();
-      }
-    };
-
-    if (isVisible) {
-      document.addEventListener('keydown', handleEsc);
-      return () => document.removeEventListener('keydown', handleEsc);
-    }
-  }, [isVisible, onClose]);
 
   // 从标题中解析搜索关键词与季度号
   const parseTmdbSearchInfo = () => {
@@ -1199,7 +1103,7 @@ const DetailPanel: React.FC<DetailPanelProps> = ({
   const galleryEntryButton = canShowGalleryEntry ? (
     <button
       onClick={openGallery}
-      className='inline-flex items-center gap-2 px-3 py-1.5 text-sm rounded-lg bg-blue-500 hover:bg-blue-600 text-white transition-colors'
+      className='inline-flex items-center gap-2 rounded-lg bg-secondary px-3 py-1.5 text-sm text-secondary-foreground transition-colors hover:bg-secondary/80'
     >
       <Images size={16} />
       照片墙
@@ -1283,6 +1187,19 @@ const DetailPanel: React.FC<DetailPanelProps> = ({
     galleryViewportWidth,
   ]);
 
+  // 响应式底座：桌面端 → Dialog，移动端 → AppSheet
+  const [isDesktop, setIsDesktop] = useState(
+    () =>
+      typeof window !== 'undefined' &&
+      window.matchMedia('(min-width: 768px)').matches
+  );
+  useEffect(() => {
+    const mq = window.matchMedia('(min-width: 768px)');
+    const onChange = (e: MediaQueryListEvent) => setIsDesktop(e.matches);
+    mq.addEventListener('change', onChange);
+    return () => mq.removeEventListener('change', onChange);
+  }, []);
+
   const galleryBody = (
     <div
       ref={galleryScrollRef}
@@ -1290,20 +1207,16 @@ const DetailPanel: React.FC<DetailPanelProps> = ({
     >
       {galleryLoading && (
         <div className='flex items-center justify-center py-20'>
-          <div className='animate-spin rounded-full h-10 w-10 border-b-2 border-green-500'></div>
+          <div className='animate-spin rounded-full h-10 w-10 border-b-2 border-primary'></div>
         </div>
       )}
 
       {!galleryLoading && galleryError && (
-        <div className='text-center py-12 text-red-500 dark:text-red-400'>
-          {galleryError}
-        </div>
+        <div className='text-center py-12 text-destructive'>{galleryError}</div>
       )}
 
       {!galleryLoading && !galleryError && galleryImages.length === 0 && (
-        <div className='text-center py-12 text-gray-500 dark:text-gray-400'>
-          暂无图片
-        </div>
+        <div className='text-center py-12 text-muted-foreground'>暂无图片</div>
       )}
 
       {!galleryLoading && !galleryError && galleryImages.length > 0 && (
@@ -1336,7 +1249,7 @@ const DetailPanel: React.FC<DetailPanelProps> = ({
                 }}
               >
                 <div
-                  className='relative w-full h-full overflow-hidden rounded-md bg-gray-100 dark:bg-gray-800 cursor-pointer hover:opacity-90 transition-opacity'
+                  className='relative w-full h-full overflow-hidden rounded-md bg-muted cursor-pointer hover:opacity-90 transition-opacity'
                   onClick={() => handleImageClick(imageUrl)}
                 >
                   <ProxyImage
@@ -1359,84 +1272,42 @@ const DetailPanel: React.FC<DetailPanelProps> = ({
     </div>
   );
 
-  const galleryHeader = (
-    <div className='flex items-center justify-between p-4 border-b border-gray-100 dark:border-gray-800'>
-      <div>
-        <h3 className='text-lg font-semibold text-gray-900 dark:text-gray-100'>
-          照片墙
-        </h3>
-        {!galleryLoading && (
-          <p className='text-sm text-gray-500 dark:text-gray-400'>
-            共 {galleryTotal} 张
-          </p>
-        )}
-      </div>
-      <button
-        onClick={() => setShowGallery(false)}
-        className='p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors'
-        aria-label='关闭照片墙'
+  const galleryDialog = (
+    <Dialog
+      open={showGallery}
+      onOpenChange={(open) => {
+        if (!open) setShowGallery(false);
+      }}
+    >
+      <DialogContent
+        className='flex max-h-[90vh] max-w-6xl flex-col gap-0 overflow-hidden p-0'
+        aria-describedby={undefined}
       >
-        <X size={20} className='text-gray-500 dark:text-gray-400' />
-      </button>
-    </div>
-  );
-
-  const galleryModal = showGallery ? (
-    useDrawer ? (
-      <div className='fixed inset-0 z-[10000] flex items-center justify-end pointer-events-none'>
-        <div
-          className={`relative ${drawerWidth} h-full bg-white dark:bg-gray-900 shadow-2xl overflow-hidden flex flex-col pointer-events-auto`}
-        >
-          {galleryHeader}
-          {galleryBody}
+        <div className='flex shrink-0 items-center justify-between border-b border-border p-4 pr-12'>
+          <div>
+            <DialogTitle>照片墙</DialogTitle>
+            {!galleryLoading && (
+              <p className='text-sm text-muted-foreground'>
+                共 {galleryTotal} 张
+              </p>
+            )}
+          </div>
         </div>
-      </div>
-    ) : (
-      <div className='fixed inset-0 z-[10000] flex items-center justify-center p-4'>
-        <div
-          className='absolute inset-0 bg-black/60'
-          onClick={() => setShowGallery(false)}
-        />
-        <div className='relative w-full max-w-6xl max-h-[90vh] bg-white dark:bg-gray-900 rounded-2xl shadow-2xl overflow-hidden flex flex-col'>
-          {galleryHeader}
-          {galleryBody}
-        </div>
-      </div>
-    )
-  ) : null;
-
-  const episodeStillsHeader = (
-    <div className='flex items-center justify-between p-4 border-b border-gray-100 dark:border-gray-800'>
-      <div>
-        <h3 className='text-lg font-semibold text-gray-900 dark:text-gray-100'>
-          {episodeStillsTitle || '剧照'}
-        </h3>
-        {!episodeStillsLoading && !episodeStillsError && (
-          <p className='text-sm text-gray-500 dark:text-gray-400'>
-            共 {episodeStills.length} 张
-          </p>
-        )}
-      </div>
-      <button
-        onClick={() => setShowEpisodeStills(false)}
-        className='p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors'
-        aria-label='关闭剧照'
-      >
-        <X size={20} className='text-gray-500 dark:text-gray-400' />
-      </button>
-    </div>
+        {galleryBody}
+      </DialogContent>
+    </Dialog>
   );
 
   const episodeStillsBody = (
     <div className='flex-1 overflow-y-auto overflow-x-hidden p-4'>
       {episodeStillsLoading && (
         <div className='flex items-center justify-center py-20'>
-          <div className='animate-spin rounded-full h-10 w-10 border-b-2 border-green-500'></div>
+          <div className='animate-spin rounded-full h-10 w-10 border-b-2 border-primary'></div>
         </div>
       )}
 
       {!episodeStillsLoading && episodeStillsError && (
-        <div className='text-center py-12 text-red-500 dark:text-red-400'>
+        <div className='text-center py-12 text-destructive'>
           {episodeStillsError}
         </div>
       )}
@@ -1444,7 +1315,7 @@ const DetailPanel: React.FC<DetailPanelProps> = ({
       {!episodeStillsLoading &&
         !episodeStillsError &&
         episodeStills.length === 0 && (
-          <div className='text-center py-12 text-gray-500 dark:text-gray-400'>
+          <div className='text-center py-12 text-muted-foreground'>
             暂无剧照
           </div>
         )}
@@ -1456,7 +1327,7 @@ const DetailPanel: React.FC<DetailPanelProps> = ({
             {episodeStills.map((stillUrl, index) => (
               <div
                 key={`${stillUrl}-${index}`}
-                className='relative aspect-video overflow-hidden rounded-md bg-gray-100 dark:bg-gray-800 cursor-pointer hover:opacity-90 transition-opacity'
+                className='relative aspect-video overflow-hidden rounded-md bg-muted cursor-pointer hover:opacity-90 transition-opacity'
                 onClick={() => handleImageClick(stillUrl)}
               >
                 <ProxyImage
@@ -1472,48 +1343,30 @@ const DetailPanel: React.FC<DetailPanelProps> = ({
     </div>
   );
 
-  const episodeStillsModal = showEpisodeStills ? (
-    useDrawer ? (
-      <div className='fixed inset-0 z-[10000] flex items-center justify-end pointer-events-none'>
-        <div
-          className={`relative ${drawerWidth} h-full bg-white dark:bg-gray-900 shadow-2xl overflow-hidden flex flex-col pointer-events-auto`}
-        >
-          {episodeStillsHeader}
-          {episodeStillsBody}
-        </div>
-      </div>
-    ) : (
-      <div className='fixed inset-0 z-[10000] flex items-center justify-center p-4'>
-        <div
-          className='absolute inset-0 bg-black/60'
-          onClick={() => setShowEpisodeStills(false)}
-        />
-        <div className='relative w-full max-w-4xl max-h-[90vh] bg-white dark:bg-gray-900 rounded-2xl shadow-2xl overflow-hidden flex flex-col'>
-          {episodeStillsHeader}
-          {episodeStillsBody}
-        </div>
-      </div>
-    )
-  ) : null;
-
-  const tmdbCorrectionHeader = (
-    <div className='flex items-center justify-between p-4 border-b border-gray-100 dark:border-gray-800'>
-      <div>
-        <h3 className='text-lg font-semibold text-gray-900 dark:text-gray-100'>
-          纠正匹配
-        </h3>
-        <p className='text-sm text-gray-500 dark:text-gray-400'>
-          选择正确的条目
-        </p>
-      </div>
-      <button
-        onClick={() => setShowTmdbCorrection(false)}
-        className='p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors'
-        aria-label='关闭纠错'
+  const episodeStillsDialog = (
+    <Dialog
+      open={showEpisodeStills}
+      onOpenChange={(open) => {
+        if (!open) setShowEpisodeStills(false);
+      }}
+    >
+      <DialogContent
+        className='flex max-h-[90vh] max-w-4xl flex-col gap-0 overflow-hidden p-0'
+        aria-describedby={undefined}
       >
-        <X size={20} className='text-gray-500 dark:text-gray-400' />
-      </button>
-    </div>
+        <div className='flex shrink-0 items-center justify-between border-b border-border p-4 pr-12'>
+          <div>
+            <DialogTitle>{episodeStillsTitle || '剧照'}</DialogTitle>
+            {!episodeStillsLoading && !episodeStillsError && (
+              <p className='text-sm text-muted-foreground'>
+                共 {episodeStills.length} 张
+              </p>
+            )}
+          </div>
+        </div>
+        {episodeStillsBody}
+      </DialogContent>
+    </Dialog>
   );
 
   const tmdbCorrectionBody = (
@@ -1527,17 +1380,18 @@ const DetailPanel: React.FC<DetailPanelProps> = ({
             ? getTMDBImageUrl(result.poster_path, 'w92')
             : '';
           const isActive = detailData?.tmdbId === result.id;
+
           return (
             <div
               key={`${result.media_type}-${result.id}`}
               onClick={() => handleSelectTmdbResult(result)}
               className={`flex items-start gap-3 p-2 rounded-lg cursor-pointer transition-colors ${
                 isActive
-                  ? 'bg-green-100 dark:bg-green-900/30 ring-2 ring-green-500'
-                  : 'bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700'
+                  ? 'bg-accent ring-2 ring-foreground'
+                  : 'bg-muted/50 hover:bg-muted'
               }`}
             >
-              <div className='relative w-12 h-16 rounded overflow-hidden bg-gray-200 dark:bg-gray-700 flex-shrink-0'>
+              <div className='relative w-12 h-16 rounded overflow-hidden bg-muted flex-shrink-0'>
                 {resultPoster ? (
                   <ProxyImage
                     originalSrc={resultPoster}
@@ -1547,26 +1401,29 @@ const DetailPanel: React.FC<DetailPanelProps> = ({
                   />
                 ) : (
                   <div className='w-full h-full flex items-center justify-center'>
-                    <Film size={20} className='text-gray-400' />
+                    <Film size={20} className='text-muted-foreground' />
                   </div>
                 )}
               </div>
               <div className='flex-1 min-w-0'>
                 <div className='flex items-center gap-2'>
-                  <p className='text-sm font-medium text-gray-900 dark:text-gray-100 truncate'>
+                  <p className='text-sm font-medium text-foreground truncate'>
                     {resultTitle}
                   </p>
-                  <span className='flex-shrink-0 px-1.5 py-0.5 rounded text-[10px] bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300'>
+                  <Badge
+                    variant='secondary'
+                    className='flex-shrink-0 px-1.5 py-0.5 text-[10px]'
+                  >
                     {result.media_type === 'tv' ? '剧集' : '电影'}
-                  </span>
+                  </Badge>
                 </div>
                 {resultYear && (
-                  <p className='text-xs text-gray-500 dark:text-gray-400 mt-0.5'>
+                  <p className='text-xs text-muted-foreground mt-0.5'>
                     {resultYear}
                   </p>
                 )}
                 {result.overview && (
-                  <p className='text-xs text-gray-500 dark:text-gray-400 mt-1 line-clamp-2'>
+                  <p className='text-xs text-muted-foreground mt-1 line-clamp-2'>
                     {result.overview}
                   </p>
                 )}
@@ -1578,1235 +1435,585 @@ const DetailPanel: React.FC<DetailPanelProps> = ({
     </div>
   );
 
-  const tmdbCorrectionModal = showTmdbCorrection ? (
-    useDrawer ? (
-      <div className='fixed inset-0 z-[10000] flex items-center justify-end pointer-events-none'>
-        <div
-          className={`relative ${drawerWidth} h-full bg-white dark:bg-gray-900 shadow-2xl overflow-hidden flex flex-col pointer-events-auto`}
+  const tmdbCorrectionDialog = (
+    <Dialog
+      open={showTmdbCorrection}
+      onOpenChange={(open) => {
+        if (!open) setShowTmdbCorrection(false);
+      }}
+    >
+      <DialogContent
+        className='flex max-h-[90vh] max-w-lg flex-col gap-0 overflow-hidden p-0'
+        aria-describedby={undefined}
+      >
+        <div className='flex shrink-0 items-center justify-between border-b border-border p-4 pr-12'>
+          <div>
+            <DialogTitle>纠正匹配</DialogTitle>
+            <p className='text-sm text-muted-foreground'>选择正确的条目</p>
+          </div>
+        </div>
+        {tmdbCorrectionBody}
+      </DialogContent>
+    </Dialog>
+  );
+
+  // 头部操作按钮（纠错 / 外链），桌面端在 Dialog 头部，移动端在 AppSheet 内容顶部
+  const hasHeaderActions =
+    (currentSource === 'tmdb' && tmdbResults.length > 1) || !!externalUrl;
+
+  const headerActions = (
+    <div className='flex items-center gap-2'>
+      {currentSource === 'tmdb' && tmdbResults.length > 1 && (
+        <button
+          onClick={() => setShowTmdbCorrection(true)}
+          className='p-2 rounded-full hover:bg-accent transition-colors duration-150'
+          title='匹配错误?点此纠正'
+          aria-label='纠正匹配结果'
         >
-          {tmdbCorrectionHeader}
-          {tmdbCorrectionBody}
-        </div>
-      </div>
-    ) : (
-      <div className='fixed inset-0 z-[10000] flex items-center justify-center p-4'>
-        <div
-          className='absolute inset-0 bg-black/60'
-          onClick={() => setShowTmdbCorrection(false)}
-        />
-        <div className='relative w-full max-w-lg max-h-[90vh] bg-white dark:bg-gray-900 rounded-2xl shadow-2xl overflow-hidden flex flex-col'>
-          {tmdbCorrectionHeader}
-          {tmdbCorrectionBody}
-        </div>
-      </div>
-    )
-  ) : null;
-
-  if (!isVisible || !mounted) return null;
-
-  const content = useDrawer ? (
-    <div className='fixed inset-0 z-[9999] flex items-center justify-end pointer-events-none'>
-      {/* 详情面板 - 抽屉模式 */}
-      <div
-        className={`relative ${drawerWidth} h-full bg-white dark:bg-gray-900 shadow-2xl overflow-hidden flex flex-col transition-transform duration-300 ease-out pointer-events-auto ${
-          isAnimating ? 'translate-x-0' : 'translate-x-full'
-        }`}
-      >
-        {/* 头部 */}
-        <div className='flex items-center justify-between p-4 border-b border-gray-100 dark:border-gray-800 sticky top-0 bg-white dark:bg-gray-900 z-10'>
-          <h2 className='text-xl font-semibold text-gray-900 dark:text-gray-100'>
-            详情
-          </h2>
-          <div className='flex items-center gap-2'>
-            {currentSource === 'tmdb' && tmdbResults.length > 1 && (
-              <button
-                onClick={() => setShowTmdbCorrection(true)}
-                className='p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-150'
-                title='匹配错误?点此纠正'
-                aria-label='纠正匹配结果'
-              >
-                <SearchCheck
-                  size={18}
-                  className='text-gray-500 dark:text-gray-400'
-                />
-              </button>
-            )}
-            {externalUrl && (
-              <button
-                onClick={() =>
-                  window.open(externalUrl, '_blank', 'noopener,noreferrer')
-                }
-                className='p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-150'
-                title='打开外部页面'
-                aria-label='打开外部页面'
-              >
-                <ExternalLink
-                  size={18}
-                  className='text-gray-500 dark:text-gray-400'
-                />
-              </button>
-            )}
-            <button
-              onClick={onClose}
-              className='p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-150'
-              title='关闭'
-              aria-label='关闭'
-            >
-              <X size={20} className='text-gray-500 dark:text-gray-400' />
-            </button>
-          </div>
-        </div>
-
-        {/* 内容区域 */}
-        <div className='overflow-y-auto max-h-[calc(90vh-4rem)]'>
-          {loading && (
-            <div className='flex items-center justify-center py-20'>
-              <div className='animate-spin rounded-full h-12 w-12 border-b-2 border-green-500'></div>
-            </div>
-          )}
-
-          {error && (
-            <div className='p-6'>
-              <div className='text-center mb-6'>
-                <p className='text-red-500 dark:text-red-400'>{error}</p>
-              </div>
-
-              {/* 数据源显示和切换 - 错误时也显示 */}
-              <div className='mt-6 pt-4 border-t border-gray-200 dark:border-gray-700'>
-                <div className='flex items-center justify-between gap-3 flex-wrap'>
-                  <div className='flex items-center gap-2'>
-                    <span className='text-sm text-gray-500 dark:text-gray-400'>
-                      数据来源:
-                    </span>
-                    <span className='text-sm font-medium text-gray-700 dark:text-gray-300 uppercase'>
-                      {currentSource === 'douban' && 'Douban'}
-                      {currentSource === 'bangumi' && 'Bangumi'}
-                      {currentSource === 'cms' && 'CMS'}
-                      {currentSource === 'tmdb' && 'TMDB'}
-                    </span>
-                  </div>
-                  <div className='flex items-center gap-2 flex-wrap'>
-                    {galleryEntryButton}
-                    {currentSource !== 'tmdb' && (
-                      <button
-                        onClick={handleToggleSource}
-                        disabled={loading}
-                        className='px-3 py-1.5 text-sm rounded-lg bg-green-500 hover:bg-green-600 text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed'
-                      >
-                        切换到 TMDB
-                      </button>
-                    )}
-                    {currentSource === 'tmdb' &&
-                      originalSource !== 'tmdb' &&
-                      originalDetailData && (
-                        <button
-                          onClick={handleToggleSource}
-                          disabled={loading}
-                          className='px-3 py-1.5 text-sm rounded-lg bg-gray-500 hover:bg-gray-600 text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed'
-                        >
-                          切换回{' '}
-                          {originalSource === 'douban'
-                            ? 'Douban'
-                            : originalSource === 'bangumi'
-                            ? 'Bangumi'
-                            : 'CMS'}
-                        </button>
-                      )}
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {!loading && !error && detailData && (
-            <div className='p-6'>
-              {/* 海报和基本信息 */}
-              <div className='flex gap-6 mb-6'>
-                {detailData.poster && (
-                  <div className='flex flex-col items-start gap-3 flex-shrink-0'>
-                    <div
-                      className='relative w-32 h-48 rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-800 cursor-pointer hover:opacity-90 transition-opacity'
-                      onClick={() => handleImageClick(detailData.poster!)}
-                    >
-                      <ProxyImage
-                        originalSrc={detailData.poster}
-                        alt={detailData.title}
-                        className='absolute inset-0 w-full h-full object-cover'
-                        draggable={false}
-                      />
-                    </div>
-                    {galleryEntryButton}
-                  </div>
-                )}
-                <div className='flex-1 min-w-0'>
-                  <h3 className='text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2'>
-                    {detailData.title}
-                  </h3>
-                  {detailData.originalTitle &&
-                    detailData.originalTitle !== detailData.title && (
-                      <p className='text-sm text-gray-500 dark:text-gray-400 mb-3'>
-                        {detailData.originalTitle}
-                      </p>
-                    )}
-
-                  {/* 评分 */}
-                  {detailData.rating && (
-                    <div className='flex items-center gap-2 mb-3'>
-                      <Star
-                        size={20}
-                        className='text-yellow-500 fill-yellow-500'
-                      />
-                      <span className='text-lg font-semibold text-gray-900 dark:text-gray-100'>
-                        {detailData.rating.value.toFixed(1)}
-                      </span>
-                      {detailData.rating.count > 0 && (
-                        <span className='text-sm text-gray-500 dark:text-gray-400'>
-                          ({detailData.rating.count} 评价)
-                        </span>
-                      )}
-                    </div>
-                  )}
-
-                  {/* 类型标签 */}
-                  {detailData.genres && detailData.genres.length > 0 && (
-                    <div className='flex flex-wrap gap-2 mb-3'>
-                      {detailData.genres.map((genre, index) => (
-                        <span
-                          key={index}
-                          className='px-2 py-1 text-xs rounded bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300'
-                        >
-                          {genre}
-                        </span>
-                      ))}
-                    </div>
-                  )}
-
-                  {/* 年份和时长 */}
-                  <div className='flex flex-wrap gap-4 text-sm text-gray-600 dark:text-gray-400'>
-                    {detailData.year && (
-                      <div className='flex items-center gap-1'>
-                        <Calendar size={16} />
-                        <span>{detailData.year}</span>
-                      </div>
-                    )}
-                    {detailData.duration && (
-                      <div className='flex items-center gap-1'>
-                        <Clock size={16} />
-                        <span>{detailData.duration}</span>
-                      </div>
-                    )}
-                    {detailData.episodesCount && (
-                      <div className='flex items-center gap-1'>
-                        <Film size={16} />
-                        <span>{detailData.episodesCount} 集</span>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-
-              {/* 简介 */}
-              {(detailData.intro || detailData.overview) && (
-                <div className='mb-6'>
-                  <h4 className='text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2'>
-                    简介
-                  </h4>
-                  <p className='text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-wrap'>
-                    {detailData.intro || detailData.overview}
-                  </p>
-                </div>
-              )}
-
-              {/* 导演和演员 */}
-              {detailData.directors && detailData.directors.length > 0 && (
-                <div className='mb-4'>
-                  <h4 className='text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2 flex items-center gap-2'>
-                    <Users size={16} />
-                    导演
-                  </h4>
-                  <p className='text-gray-700 dark:text-gray-300'>
-                    {detailData.directors.map((d) => d.name).join(', ')}
-                  </p>
-                </div>
-              )}
-
-              {detailData.actors && detailData.actors.length > 0 && (
-                <div className='mb-4'>
-                  <h4 className='text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2 flex items-center gap-2'>
-                    <Users size={16} />
-                    演员
-                  </h4>
-                  {currentSource === 'tmdb' ? (
-                    <div
-                      ref={actorsScrollRef}
-                      onMouseDown={handleActorsMouseDown}
-                      onMouseMove={handleActorsMouseMove}
-                      onMouseUp={handleActorsMouseUp}
-                      onMouseLeave={handleActorsMouseLeave}
-                      className='overflow-x-auto -mx-6 px-6 cursor-grab active:cursor-grabbing'
-                      style={{
-                        scrollbarWidth: 'thin',
-                        scrollBehavior: isActorsDragging ? 'auto' : 'smooth',
-                      }}
-                    >
-                      <div className='flex gap-4 pb-2'>
-                        {detailData.actors.map((actor, index) => (
-                          <div
-                            key={index}
-                            className='flex flex-col items-center flex-shrink-0'
-                            style={{
-                              pointerEvents: isActorsDragging ? 'none' : 'auto',
-                            }}
-                          >
-                            {actor.profile_path ? (
-                              <div
-                                className='relative w-20 h-20 rounded-full overflow-hidden bg-gray-200 dark:bg-gray-700 mb-2 cursor-pointer hover:opacity-80 transition-opacity'
-                                onClick={() =>
-                                  handleImageClick(
-                                    getTMDBImageUrl(
-                                      actor.profile_path || null,
-                                      'w185'
-                                    )
-                                  )
-                                }
-                              >
-                                <ProxyImage
-                                  originalSrc={getTMDBImageUrl(
-                                    actor.profile_path || null,
-                                    'w185'
-                                  )}
-                                  alt={actor.name}
-                                  className='absolute inset-0 w-full h-full object-cover'
-                                  draggable={false}
-                                />
-                              </div>
-                            ) : (
-                              <div className='w-20 h-20 rounded-full bg-gray-200 dark:bg-gray-700 mb-2 flex items-center justify-center'>
-                                <Users size={28} className='text-gray-400' />
-                              </div>
-                            )}
-                            <a
-                              href={`https://baike.baidu.com/item/${encodeURIComponent(
-                                actor.name
-                              )}`}
-                              target='_blank'
-                              rel='noopener noreferrer'
-                              className='text-xs font-medium text-gray-900 dark:text-gray-100 text-center w-20 line-clamp-2 hover:text-green-600 dark:hover:text-green-400 transition-colors cursor-pointer'
-                              onClick={(e) => e.stopPropagation()}
-                            >
-                              {actor.name}
-                            </a>
-                            {actor.character && (
-                              <p className='text-xs text-gray-500 dark:text-gray-400 text-center w-20 line-clamp-2'>
-                                {actor.character}
-                              </p>
-                            )}
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  ) : (
-                    <p className='text-gray-700 dark:text-gray-300'>
-                      {detailData.actors
-                        .slice(0, 10)
-                        .map((a) => a.name)
-                        .join(', ')}
-                    </p>
-                  )}
-                </div>
-              )}
-
-              {/* 制作信息 */}
-              <div className='grid grid-cols-2 gap-4 text-sm'>
-                {detailData.countries && detailData.countries.length > 0 && (
-                  <div>
-                    <h4 className='font-semibold text-gray-900 dark:text-gray-100 mb-1 flex items-center gap-1'>
-                      <Globe size={14} />
-                      国家/地区
-                    </h4>
-                    <p className='text-gray-700 dark:text-gray-300'>
-                      {detailData.countries.join(', ')}
-                    </p>
-                  </div>
-                )}
-
-                {detailData.languages && detailData.languages.length > 0 && (
-                  <div>
-                    <h4 className='font-semibold text-gray-900 dark:text-gray-100 mb-1 flex items-center gap-1'>
-                      <Tag size={14} />
-                      语言
-                    </h4>
-                    <p className='text-gray-700 dark:text-gray-300'>
-                      {detailData.languages.join(', ')}
-                    </p>
-                  </div>
-                )}
-
-                {detailData.releaseDate && (
-                  <div>
-                    <h4 className='font-semibold text-gray-900 dark:text-gray-100 mb-1 flex items-center gap-1'>
-                      <Calendar size={14} />
-                      上映日期
-                    </h4>
-                    <p className='text-gray-700 dark:text-gray-300'>
-                      {detailData.releaseDate}
-                    </p>
-                  </div>
-                )}
-
-                {detailData.status && (
-                  <div>
-                    <h4 className='font-semibold text-gray-900 dark:text-gray-100 mb-1'>
-                      状态
-                    </h4>
-                    <p className='text-gray-700 dark:text-gray-300'>
-                      {detailData.status}
-                    </p>
-                  </div>
-                )}
-              </div>
-
-              {/* 季度和集数信息（仅TMDB电视剧） */}
-              {detailData.mediaType === 'tv' && (
-                <div className='mt-6'>
-                  {loadingSeasons && (
-                    <div className='flex items-center justify-center py-4'>
-                      <div className='animate-spin rounded-full h-8 w-8 border-b-2 border-green-500'></div>
-                    </div>
-                  )}
-
-                  {!loadingSeasons && seasonData && (
-                    <>
-                      {/* 季度列表 */}
-                      {seasonData.seasons.length > 0 && (
-                        <div className='mb-6'>
-                          <h4 className='text-lg font-semibold text-gray-900 dark:text-gray-100 mb-3'>
-                            季度
-                          </h4>
-                          <div className='grid grid-cols-2 sm:grid-cols-3 gap-3'>
-                            {seasonData.seasons.map((season: any) => (
-                              <div
-                                key={season.id}
-                                onClick={() =>
-                                  handleSeasonChange(season.season_number)
-                                }
-                                className={`flex items-center gap-2 p-2 rounded cursor-pointer transition-colors ${
-                                  selectedSeason === season.season_number
-                                    ? 'bg-green-100 dark:bg-green-900/30 ring-2 ring-green-500'
-                                    : 'bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700'
-                                }`}
-                              >
-                                {season.poster_path && (
-                                  <div
-                                    className='relative w-12 h-16 rounded overflow-hidden bg-gray-200 dark:bg-gray-700 flex-shrink-0 hover:opacity-80 transition-opacity'
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      handleImageClick(
-                                        getTMDBImageUrl(
-                                          season.poster_path,
-                                          'w500'
-                                        )
-                                      );
-                                    }}
-                                  >
-                                    <ProxyImage
-                                      originalSrc={getTMDBImageUrl(
-                                        season.poster_path,
-                                        'w92'
-                                      )}
-                                      alt={season.name}
-                                      className='absolute inset-0 w-full h-full object-cover'
-                                      draggable={false}
-                                    />
-                                  </div>
-                                )}
-                                <div className='flex-1 min-w-0'>
-                                  <p className='text-sm font-medium text-gray-900 dark:text-gray-100 truncate'>
-                                    {season.name}
-                                  </p>
-                                  <p className='text-xs text-gray-500 dark:text-gray-400'>
-                                    {season.episode_count} 集
-                                  </p>
-                                </div>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-
-                      {/* 集数列表 */}
-                      {seasonData.episodes.length > 0 && (
-                        <div>
-                          <h4 className='text-lg font-semibold text-gray-900 dark:text-gray-100 mb-3'>
-                            {seasonData.seasons.find(
-                              (s: any) => s.season_number === selectedSeason
-                            )?.name || `第${selectedSeason}季`}
-                          </h4>
-                          <div
-                            ref={episodesScrollRef}
-                            onMouseDown={handleMouseDown}
-                            onMouseMove={handleMouseMove}
-                            onMouseUp={handleMouseUp}
-                            onMouseLeave={handleMouseLeave}
-                            className='overflow-x-auto -mx-6 px-6 cursor-grab active:cursor-grabbing'
-                            style={{
-                              scrollbarWidth: 'thin',
-                              scrollBehavior: isDragging ? 'auto' : 'smooth',
-                            }}
-                          >
-                            <div className='flex gap-3 py-2'>
-                              {seasonData.episodes.map((episode: Episode) => {
-                                const isExpanded = expandedEpisodes.has(
-                                  episode.id
-                                );
-                                const isCurrentEpisode =
-                                  currentEpisode === episode.episode_number;
-                                return (
-                                  <div
-                                    key={episode.id}
-                                    id={`episode-${episode.episode_number}`}
-                                    className={`flex-shrink-0 w-64 p-3 rounded ${
-                                      isCurrentEpisode
-                                        ? 'bg-green-100 dark:bg-green-900/30 ring-2 ring-green-500'
-                                        : 'bg-gray-50 dark:bg-gray-800'
-                                    }`}
-                                    style={{
-                                      pointerEvents: isDragging
-                                        ? 'none'
-                                        : 'auto',
-                                    }}
-                                  >
-                                    {episode.still_path && (
-                                      <div
-                                        className='relative w-full h-36 rounded overflow-hidden bg-gray-200 dark:bg-gray-700 mb-2 cursor-pointer hover:opacity-90 transition-opacity'
-                                        onClick={() =>
-                                          handleEpisodeStillsClick(episode)
-                                        }
-                                        title='查看该集剧照'
-                                      >
-                                        <ProxyImage
-                                          originalSrc={getTMDBImageUrl(
-                                            episode.still_path,
-                                            'w300'
-                                          )}
-                                          alt={episode.name}
-                                          className='absolute inset-0 w-full h-full object-cover'
-                                          draggable={false}
-                                        />
-                                      </div>
-                                    )}
-                                    <p className='text-sm font-medium text-gray-900 dark:text-gray-100 mb-1'>
-                                      第{episode.episode_number}集:{' '}
-                                      {episode.name}
-                                    </p>
-                                    {episode.overview && (
-                                      <p
-                                        onClick={() => {
-                                          const newExpanded = new Set(
-                                            expandedEpisodes
-                                          );
-                                          if (isExpanded) {
-                                            newExpanded.delete(episode.id);
-                                          } else {
-                                            newExpanded.add(episode.id);
-                                          }
-                                          setExpandedEpisodes(newExpanded);
-                                        }}
-                                        className={`text-xs text-gray-600 dark:text-gray-400 cursor-pointer ${
-                                          isExpanded ? '' : 'line-clamp-3'
-                                        }`}
-                                      >
-                                        {episode.overview}
-                                      </p>
-                                    )}
-                                    {episode.air_date && (
-                                      <p className='text-xs text-gray-500 dark:text-gray-500 mt-1'>
-                                        {episode.air_date}
-                                      </p>
-                                    )}
-                                  </div>
-                                );
-                              })}
-                            </div>
-                          </div>
-                        </div>
-                      )}
-                    </>
-                  )}
-                </div>
-              )}
-
-              {/* 数据源显示和切换 */}
-              <div className='mt-6 pt-4 border-t border-gray-200 dark:border-gray-700'>
-                <div className='flex items-center justify-between gap-3 flex-wrap'>
-                  <div className='flex items-center gap-2'>
-                    <span className='text-sm text-gray-500 dark:text-gray-400'>
-                      数据来源:
-                    </span>
-                    <span className='text-sm font-medium text-gray-700 dark:text-gray-300 uppercase'>
-                      {currentSource === 'douban' && 'Douban'}
-                      {currentSource === 'bangumi' && 'Bangumi'}
-                      {currentSource === 'cms' && 'CMS'}
-                      {currentSource === 'tmdb' && 'TMDB'}
-                    </span>
-                  </div>
-                  <div className='flex items-center gap-2 flex-wrap'>
-                    {galleryEntryButton}
-                    {currentSource !== 'tmdb' && (
-                      <button
-                        onClick={handleToggleSource}
-                        disabled={loading}
-                        className='px-3 py-1.5 text-sm rounded-lg bg-green-500 hover:bg-green-600 text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed'
-                      >
-                        切换到 TMDB
-                      </button>
-                    )}
-                    {currentSource === 'tmdb' &&
-                      originalSource !== 'tmdb' &&
-                      originalDetailData && (
-                        <button
-                          onClick={handleToggleSource}
-                          disabled={loading}
-                          className='px-3 py-1.5 text-sm rounded-lg bg-gray-500 hover:bg-gray-600 text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed'
-                        >
-                          切换回{' '}
-                          {originalSource === 'douban'
-                            ? 'Douban'
-                            : originalSource === 'bangumi'
-                            ? 'Bangumi'
-                            : 'CMS'}
-                        </button>
-                      )}
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* 图片查看器 */}
-      {galleryModal}
-      {episodeStillsModal}
-      {tmdbCorrectionModal}
-      {showImageViewer && (
-        <ImageViewer
-          isOpen={showImageViewer}
-          onClose={() => setShowImageViewer(false)}
-          imageUrl={selectedImage}
-          alt={detailData?.title || title}
-        />
+          <SearchCheck size={18} className='text-muted-foreground' />
+        </button>
       )}
-    </div>
-  ) : (
-    <div className='fixed inset-0 z-[9999] flex items-center justify-center p-4'>
-      {/* 背景遮罩 */}
-      <div
-        className={`absolute inset-0 bg-black/50 transition-opacity duration-200 ease-out ${
-          isAnimating ? 'opacity-100' : 'opacity-0'
-        }`}
-        onClick={onClose}
-        style={{
-          backdropFilter: 'blur(4px)',
-          willChange: 'opacity',
-        }}
-      />
-
-      {/* 详情面板 - 居中模式 */}
-      <div
-        className='relative w-full max-w-2xl max-h-[90vh] bg-white dark:bg-gray-900 rounded-2xl shadow-2xl overflow-hidden transition-all duration-200 ease-out'
-        style={{
-          willChange: 'transform, opacity',
-          backfaceVisibility: 'hidden',
-          transform: isAnimating
-            ? 'scale(1) translateZ(0)'
-            : 'scale(0.95) translateZ(0)',
-          opacity: isAnimating ? 1 : 0,
-        }}
-      >
-        {/* 头部 */}
-        <div className='flex items-center justify-between p-4 border-b border-gray-100 dark:border-gray-800 sticky top-0 bg-white dark:bg-gray-900 z-10'>
-          <h2 className='text-xl font-semibold text-gray-900 dark:text-gray-100'>
-            详情
-          </h2>
-          <div className='flex items-center gap-2'>
-            {currentSource === 'tmdb' && tmdbResults.length > 1 && (
-              <button
-                onClick={() => setShowTmdbCorrection(true)}
-                className='p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-150'
-                title='匹配错误?点此纠正'
-                aria-label='纠正匹配结果'
-              >
-                <SearchCheck
-                  size={18}
-                  className='text-gray-500 dark:text-gray-400'
-                />
-              </button>
-            )}
-            {externalUrl && (
-              <button
-                onClick={() =>
-                  window.open(externalUrl, '_blank', 'noopener,noreferrer')
-                }
-                className='p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-150'
-                title='打开外部页面'
-                aria-label='打开外部页面'
-              >
-                <ExternalLink
-                  size={18}
-                  className='text-gray-500 dark:text-gray-400'
-                />
-              </button>
-            )}
-            <button
-              onClick={onClose}
-              className='p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-150'
-              title='关闭'
-              aria-label='关闭'
-            >
-              <X size={20} className='text-gray-500 dark:text-gray-400' />
-            </button>
-          </div>
-        </div>
-
-        {/* 内容区域 */}
-        <div className='overflow-y-auto max-h-[calc(90vh-4rem)]'>
-          {loading && (
-            <div className='flex items-center justify-center py-20'>
-              <div className='animate-spin rounded-full h-12 w-12 border-b-2 border-green-500'></div>
-            </div>
-          )}
-
-          {error && (
-            <div className='p-6'>
-              <div className='text-center mb-6'>
-                <p className='text-red-500 dark:text-red-400'>{error}</p>
-              </div>
-
-              {/* 数据源显示和切换 - 错误时也显示 */}
-              <div className='mt-6 pt-4 border-t border-gray-200 dark:border-gray-700'>
-                <div className='flex items-center justify-between'>
-                  <div className='flex items-center gap-2'>
-                    <span className='text-sm text-gray-500 dark:text-gray-400'>
-                      数据来源:
-                    </span>
-                    <span className='text-sm font-medium text-gray-700 dark:text-gray-300 uppercase'>
-                      {currentSource === 'douban' && 'Douban'}
-                      {currentSource === 'bangumi' && 'Bangumi'}
-                      {currentSource === 'cms' && 'CMS'}
-                      {currentSource === 'tmdb' && 'TMDB'}
-                    </span>
-                  </div>
-                  {currentSource !== 'tmdb' && (
-                    <button
-                      onClick={handleToggleSource}
-                      disabled={loading}
-                      className='px-3 py-1.5 text-sm rounded-lg bg-green-500 hover:bg-green-600 text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed'
-                    >
-                      切换到 TMDB
-                    </button>
-                  )}
-                  {currentSource === 'tmdb' &&
-                    originalSource !== 'tmdb' &&
-                    originalDetailData && (
-                      <button
-                        onClick={handleToggleSource}
-                        disabled={loading}
-                        className='px-3 py-1.5 text-sm rounded-lg bg-gray-500 hover:bg-gray-600 text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed'
-                      >
-                        切换回{' '}
-                        {originalSource === 'douban'
-                          ? 'Douban'
-                          : originalSource === 'bangumi'
-                          ? 'Bangumi'
-                          : 'CMS'}
-                      </button>
-                    )}
-                </div>
-              </div>
-            </div>
-          )}
-
-          {!loading && !error && detailData && (
-            <div className='p-6'>
-              {/* 海报和基本信息 */}
-              <div className='flex gap-6 mb-6'>
-                {detailData.poster && (
-                  <div className='flex flex-col items-start gap-3 flex-shrink-0'>
-                    <div
-                      className='relative w-32 h-48 rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-800 cursor-pointer hover:opacity-90 transition-opacity'
-                      onClick={() => handleImageClick(detailData.poster!)}
-                    >
-                      <ProxyImage
-                        originalSrc={detailData.poster}
-                        alt={detailData.title}
-                        className='absolute inset-0 w-full h-full object-cover'
-                        draggable={false}
-                      />
-                    </div>
-                    {galleryEntryButton}
-                  </div>
-                )}
-                <div className='flex-1 min-w-0'>
-                  <h3 className='text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2'>
-                    {detailData.title}
-                  </h3>
-                  {detailData.originalTitle &&
-                    detailData.originalTitle !== detailData.title && (
-                      <p className='text-sm text-gray-500 dark:text-gray-400 mb-3'>
-                        {detailData.originalTitle}
-                      </p>
-                    )}
-
-                  {/* 评分 */}
-                  {detailData.rating && (
-                    <div className='flex items-center gap-2 mb-3'>
-                      <Star
-                        size={20}
-                        className='text-yellow-500 fill-yellow-500'
-                      />
-                      <span className='text-lg font-semibold text-gray-900 dark:text-gray-100'>
-                        {detailData.rating.value.toFixed(1)}
-                      </span>
-                      {detailData.rating.count > 0 && (
-                        <span className='text-sm text-gray-500 dark:text-gray-400'>
-                          ({detailData.rating.count} 评价)
-                        </span>
-                      )}
-                    </div>
-                  )}
-
-                  {/* 类型标签 */}
-                  {detailData.genres && detailData.genres.length > 0 && (
-                    <div className='flex flex-wrap gap-2 mb-3'>
-                      {detailData.genres.map((genre, index) => (
-                        <span
-                          key={index}
-                          className='px-2 py-1 text-xs rounded bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300'
-                        >
-                          {genre}
-                        </span>
-                      ))}
-                    </div>
-                  )}
-
-                  {/* 年份和时长 */}
-                  <div className='flex flex-wrap gap-4 text-sm text-gray-600 dark:text-gray-400'>
-                    {detailData.year && (
-                      <div className='flex items-center gap-1'>
-                        <Calendar size={16} />
-                        <span>{detailData.year}</span>
-                      </div>
-                    )}
-                    {detailData.duration && (
-                      <div className='flex items-center gap-1'>
-                        <Clock size={16} />
-                        <span>{detailData.duration}</span>
-                      </div>
-                    )}
-                    {detailData.episodesCount && (
-                      <div className='flex items-center gap-1'>
-                        <Film size={16} />
-                        <span>{detailData.episodesCount} 集</span>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-
-              {/* 简介 */}
-              {(detailData.intro || detailData.overview) && (
-                <div className='mb-6'>
-                  <h4 className='text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2'>
-                    简介
-                  </h4>
-                  <p className='text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-wrap'>
-                    {detailData.intro || detailData.overview}
-                  </p>
-                </div>
-              )}
-
-              {/* 导演和演员 */}
-              {detailData.directors && detailData.directors.length > 0 && (
-                <div className='mb-4'>
-                  <h4 className='text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2 flex items-center gap-2'>
-                    <Users size={16} />
-                    导演
-                  </h4>
-                  <p className='text-gray-700 dark:text-gray-300'>
-                    {detailData.directors.map((d) => d.name).join(', ')}
-                  </p>
-                </div>
-              )}
-
-              {detailData.actors && detailData.actors.length > 0 && (
-                <div className='mb-4'>
-                  <h4 className='text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2 flex items-center gap-2'>
-                    <Users size={16} />
-                    演员
-                  </h4>
-                  {currentSource === 'tmdb' ? (
-                    <div
-                      ref={actorsScrollRef}
-                      onMouseDown={handleActorsMouseDown}
-                      onMouseMove={handleActorsMouseMove}
-                      onMouseUp={handleActorsMouseUp}
-                      onMouseLeave={handleActorsMouseLeave}
-                      className='overflow-x-auto -mx-6 px-6 cursor-grab active:cursor-grabbing'
-                      style={{
-                        scrollbarWidth: 'thin',
-                        scrollBehavior: isActorsDragging ? 'auto' : 'smooth',
-                      }}
-                    >
-                      <div className='flex gap-4 pb-2'>
-                        {detailData.actors.map((actor, index) => (
-                          <div
-                            key={index}
-                            className='flex flex-col items-center flex-shrink-0'
-                            style={{
-                              pointerEvents: isActorsDragging ? 'none' : 'auto',
-                            }}
-                          >
-                            {actor.profile_path ? (
-                              <div
-                                className='relative w-20 h-20 rounded-full overflow-hidden bg-gray-200 dark:bg-gray-700 mb-2 cursor-pointer hover:opacity-80 transition-opacity'
-                                onClick={() =>
-                                  handleImageClick(
-                                    getTMDBImageUrl(
-                                      actor.profile_path || null,
-                                      'w185'
-                                    )
-                                  )
-                                }
-                              >
-                                <ProxyImage
-                                  originalSrc={getTMDBImageUrl(
-                                    actor.profile_path || null,
-                                    'w185'
-                                  )}
-                                  alt={actor.name}
-                                  className='absolute inset-0 w-full h-full object-cover'
-                                  draggable={false}
-                                />
-                              </div>
-                            ) : (
-                              <div className='w-20 h-20 rounded-full bg-gray-200 dark:bg-gray-700 mb-2 flex items-center justify-center'>
-                                <Users size={28} className='text-gray-400' />
-                              </div>
-                            )}
-                            <a
-                              href={`https://baike.baidu.com/item/${encodeURIComponent(
-                                actor.name
-                              )}`}
-                              target='_blank'
-                              rel='noopener noreferrer'
-                              className='text-xs font-medium text-gray-900 dark:text-gray-100 text-center w-20 line-clamp-2 hover:text-green-600 dark:hover:text-green-400 transition-colors cursor-pointer'
-                              onClick={(e) => e.stopPropagation()}
-                            >
-                              {actor.name}
-                            </a>
-                            {actor.character && (
-                              <p className='text-xs text-gray-500 dark:text-gray-400 text-center w-20 line-clamp-2'>
-                                {actor.character}
-                              </p>
-                            )}
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  ) : (
-                    <p className='text-gray-700 dark:text-gray-300'>
-                      {detailData.actors
-                        .slice(0, 10)
-                        .map((a) => a.name)
-                        .join(', ')}
-                    </p>
-                  )}
-                </div>
-              )}
-
-              {/* 制作信息 */}
-              <div className='grid grid-cols-2 gap-4 text-sm'>
-                {detailData.countries && detailData.countries.length > 0 && (
-                  <div>
-                    <h4 className='font-semibold text-gray-900 dark:text-gray-100 mb-1 flex items-center gap-1'>
-                      <Globe size={14} />
-                      国家/地区
-                    </h4>
-                    <p className='text-gray-700 dark:text-gray-300'>
-                      {detailData.countries.join(', ')}
-                    </p>
-                  </div>
-                )}
-
-                {detailData.languages && detailData.languages.length > 0 && (
-                  <div>
-                    <h4 className='font-semibold text-gray-900 dark:text-gray-100 mb-1 flex items-center gap-1'>
-                      <Tag size={14} />
-                      语言
-                    </h4>
-                    <p className='text-gray-700 dark:text-gray-300'>
-                      {detailData.languages.join(', ')}
-                    </p>
-                  </div>
-                )}
-
-                {detailData.releaseDate && (
-                  <div>
-                    <h4 className='font-semibold text-gray-900 dark:text-gray-100 mb-1 flex items-center gap-1'>
-                      <Calendar size={14} />
-                      上映日期
-                    </h4>
-                    <p className='text-gray-700 dark:text-gray-300'>
-                      {detailData.releaseDate}
-                    </p>
-                  </div>
-                )}
-
-                {detailData.status && (
-                  <div>
-                    <h4 className='font-semibold text-gray-900 dark:text-gray-100 mb-1'>
-                      状态
-                    </h4>
-                    <p className='text-gray-700 dark:text-gray-300'>
-                      {detailData.status}
-                    </p>
-                  </div>
-                )}
-              </div>
-
-              {/* 季度和集数信息（仅TMDB电视剧） */}
-              {detailData.mediaType === 'tv' && (
-                <div className='mt-6'>
-                  {loadingSeasons && (
-                    <div className='flex items-center justify-center py-4'>
-                      <div className='animate-spin rounded-full h-8 w-8 border-b-2 border-green-500'></div>
-                    </div>
-                  )}
-
-                  {!loadingSeasons && seasonData && (
-                    <>
-                      {/* 季度列表 */}
-                      {seasonData.seasons.length > 0 && (
-                        <div className='mb-6'>
-                          <h4 className='text-lg font-semibold text-gray-900 dark:text-gray-100 mb-3'>
-                            季度
-                          </h4>
-                          <div className='grid grid-cols-2 sm:grid-cols-3 gap-3'>
-                            {seasonData.seasons.map((season: any) => (
-                              <div
-                                key={season.id}
-                                onClick={() =>
-                                  handleSeasonChange(season.season_number)
-                                }
-                                className={`flex items-center gap-2 p-2 rounded cursor-pointer transition-colors ${
-                                  selectedSeason === season.season_number
-                                    ? 'bg-green-100 dark:bg-green-900/30 ring-2 ring-green-500'
-                                    : 'bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700'
-                                }`}
-                              >
-                                {season.poster_path && (
-                                  <div
-                                    className='relative w-12 h-16 rounded overflow-hidden bg-gray-200 dark:bg-gray-700 flex-shrink-0 hover:opacity-80 transition-opacity'
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      handleImageClick(
-                                        getTMDBImageUrl(
-                                          season.poster_path,
-                                          'w500'
-                                        )
-                                      );
-                                    }}
-                                  >
-                                    <ProxyImage
-                                      originalSrc={getTMDBImageUrl(
-                                        season.poster_path,
-                                        'w92'
-                                      )}
-                                      alt={season.name}
-                                      className='absolute inset-0 w-full h-full object-cover'
-                                      draggable={false}
-                                    />
-                                  </div>
-                                )}
-                                <div className='flex-1 min-w-0'>
-                                  <p className='text-sm font-medium text-gray-900 dark:text-gray-100 truncate'>
-                                    {season.name}
-                                  </p>
-                                  <p className='text-xs text-gray-500 dark:text-gray-400'>
-                                    {season.episode_count} 集
-                                  </p>
-                                </div>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-
-                      {/* 集数列表 */}
-                      {seasonData.episodes.length > 0 && (
-                        <div>
-                          <h4 className='text-lg font-semibold text-gray-900 dark:text-gray-100 mb-3'>
-                            {seasonData.seasons.find(
-                              (s: any) => s.season_number === selectedSeason
-                            )?.name || `第${selectedSeason}季`}
-                          </h4>
-                          <div
-                            ref={episodesScrollRef}
-                            onMouseDown={handleMouseDown}
-                            onMouseMove={handleMouseMove}
-                            onMouseUp={handleMouseUp}
-                            onMouseLeave={handleMouseLeave}
-                            className='overflow-x-auto -mx-6 px-6 cursor-grab active:cursor-grabbing'
-                            style={{
-                              scrollbarWidth: 'thin',
-                              scrollBehavior: isDragging ? 'auto' : 'smooth',
-                            }}
-                          >
-                            <div className='flex gap-3 py-2'>
-                              {seasonData.episodes.map((episode: Episode) => {
-                                const isExpanded = expandedEpisodes.has(
-                                  episode.id
-                                );
-                                const isCurrentEpisode =
-                                  currentEpisode === episode.episode_number;
-                                return (
-                                  <div
-                                    key={episode.id}
-                                    id={`episode-${episode.episode_number}`}
-                                    className={`flex-shrink-0 w-64 p-3 rounded ${
-                                      isCurrentEpisode
-                                        ? 'bg-green-100 dark:bg-green-900/30 ring-2 ring-green-500'
-                                        : 'bg-gray-50 dark:bg-gray-800'
-                                    }`}
-                                    style={{
-                                      pointerEvents: isDragging
-                                        ? 'none'
-                                        : 'auto',
-                                    }}
-                                  >
-                                    {episode.still_path && (
-                                      <div
-                                        className='relative w-full h-36 rounded overflow-hidden bg-gray-200 dark:bg-gray-700 mb-2 cursor-pointer hover:opacity-90 transition-opacity'
-                                        onClick={() =>
-                                          handleEpisodeStillsClick(episode)
-                                        }
-                                        title='查看该集剧照'
-                                      >
-                                        <ProxyImage
-                                          originalSrc={getTMDBImageUrl(
-                                            episode.still_path,
-                                            'w300'
-                                          )}
-                                          alt={episode.name}
-                                          className='absolute inset-0 w-full h-full object-cover'
-                                          draggable={false}
-                                        />
-                                      </div>
-                                    )}
-                                    <p className='text-sm font-medium text-gray-900 dark:text-gray-100 mb-1'>
-                                      第{episode.episode_number}集:{' '}
-                                      {episode.name}
-                                    </p>
-                                    {episode.overview && (
-                                      <p
-                                        onClick={() => {
-                                          const newExpanded = new Set(
-                                            expandedEpisodes
-                                          );
-                                          if (isExpanded) {
-                                            newExpanded.delete(episode.id);
-                                          } else {
-                                            newExpanded.add(episode.id);
-                                          }
-                                          setExpandedEpisodes(newExpanded);
-                                        }}
-                                        className={`text-xs text-gray-600 dark:text-gray-400 cursor-pointer ${
-                                          isExpanded ? '' : 'line-clamp-3'
-                                        }`}
-                                      >
-                                        {episode.overview}
-                                      </p>
-                                    )}
-                                    {episode.air_date && (
-                                      <p className='text-xs text-gray-500 dark:text-gray-500 mt-1'>
-                                        {episode.air_date}
-                                      </p>
-                                    )}
-                                  </div>
-                                );
-                              })}
-                            </div>
-                          </div>
-                        </div>
-                      )}
-                    </>
-                  )}
-                </div>
-              )}
-
-              {/* 数据源显示和切换 */}
-              <div className='mt-6 pt-4 border-t border-gray-200 dark:border-gray-700'>
-                <div className='flex items-center justify-between'>
-                  <div className='flex items-center gap-2'>
-                    <span className='text-sm text-gray-500 dark:text-gray-400'>
-                      数据来源:
-                    </span>
-                    <span className='text-sm font-medium text-gray-700 dark:text-gray-300 uppercase'>
-                      {currentSource === 'douban' && 'Douban'}
-                      {currentSource === 'bangumi' && 'Bangumi'}
-                      {currentSource === 'cms' && 'CMS'}
-                      {currentSource === 'tmdb' && 'TMDB'}
-                    </span>
-                  </div>
-                  {currentSource !== 'tmdb' && (
-                    <button
-                      onClick={handleToggleSource}
-                      disabled={loading}
-                      className='px-3 py-1.5 text-sm rounded-lg bg-green-500 hover:bg-green-600 text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed'
-                    >
-                      切换到 TMDB
-                    </button>
-                  )}
-                  {currentSource === 'tmdb' &&
-                    originalSource !== 'tmdb' &&
-                    originalDetailData && (
-                      <button
-                        onClick={handleToggleSource}
-                        disabled={loading}
-                        className='px-3 py-1.5 text-sm rounded-lg bg-gray-500 hover:bg-gray-600 text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed'
-                      >
-                        切换回{' '}
-                        {originalSource === 'douban'
-                          ? 'Douban'
-                          : originalSource === 'bangumi'
-                          ? 'Bangumi'
-                          : 'CMS'}
-                      </button>
-                    )}
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* 图片查看器 */}
-      {galleryModal}
-      {episodeStillsModal}
-      {tmdbCorrectionModal}
-      {showImageViewer && (
-        <ImageViewer
-          isOpen={showImageViewer}
-          onClose={() => setShowImageViewer(false)}
-          imageUrl={selectedImage}
-          alt={detailData?.title || title}
-        />
+      {externalUrl && (
+        <button
+          onClick={() => window.open(externalUrl, '_blank', 'noopener,noreferrer')}
+          className='p-2 rounded-full hover:bg-accent transition-colors duration-150'
+          title='打开外部页面'
+          aria-label='打开外部页面'
+        >
+          <ExternalLink size={18} className='text-muted-foreground' />
+        </button>
       )}
     </div>
   );
 
-  return createPortal(content, document.body);
+  // 数据源显示和切换（错误态与详情底部共用）
+  const sourceSwitchRow = (
+    <div className='mt-6 pt-4 border-t border-border'>
+      <div className='flex items-center justify-between gap-3 flex-wrap'>
+        <div className='flex items-center gap-2'>
+          <span className='text-sm text-muted-foreground'>数据来源:</span>
+          <span className='text-sm font-medium text-foreground/80 uppercase'>
+            {currentSource === 'douban' && 'Douban'}
+            {currentSource === 'bangumi' && 'Bangumi'}
+            {currentSource === 'cms' && 'CMS'}
+            {currentSource === 'tmdb' && 'TMDB'}
+          </span>
+        </div>
+        <div className='flex items-center gap-2 flex-wrap'>
+          {galleryEntryButton}
+          {currentSource !== 'tmdb' && (
+            <button
+              onClick={handleToggleSource}
+              disabled={loading}
+              className='px-3 py-1.5 text-sm rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed'
+            >
+              切换到 TMDB
+            </button>
+          )}
+          {currentSource === 'tmdb' &&
+            originalSource !== 'tmdb' &&
+            originalDetailData && (
+              <button
+                onClick={handleToggleSource}
+                disabled={loading}
+                className='px-3 py-1.5 text-sm rounded-lg bg-secondary text-secondary-foreground hover:bg-secondary/80 transition-colors disabled:opacity-50 disabled:cursor-not-allowed'
+              >
+                切换回{' '}
+                {originalSource === 'douban'
+                  ? 'Douban'
+                  : originalSource === 'bangumi'
+                  ? 'Bangumi'
+                  : 'CMS'}
+              </button>
+            )}
+        </div>
+      </div>
+    </div>
+  );
+
+  // 详情内容区（桌面 Dialog 与移动 AppSheet 共用）
+  const panelContent = (
+    <>
+      {loading && (
+        <div className='flex items-center justify-center py-20'>
+          <div className='animate-spin rounded-full h-12 w-12 border-b-2 border-primary'></div>
+        </div>
+      )}
+
+      {error && (
+        <div className='p-6'>
+          <div className='text-center mb-6'>
+            <p className='text-destructive'>{error}</p>
+          </div>
+
+          {/* 数据源显示和切换 - 错误时也显示 */}
+          {sourceSwitchRow}
+        </div>
+      )}
+
+      {!loading && !error && detailData && (
+        <div className='p-6'>
+          {/* 海报和基本信息 */}
+          <div className='flex gap-6 mb-6'>
+            {detailData.poster && (
+              <div className='flex flex-col items-start gap-3 flex-shrink-0'>
+                <div
+                  className='relative w-32 h-48 rounded-lg overflow-hidden bg-muted cursor-pointer hover:opacity-90 transition-opacity'
+                  onClick={() => handleImageClick(detailData.poster!)}
+                >
+                  <ProxyImage
+                    originalSrc={detailData.poster}
+                    alt={detailData.title}
+                    className='absolute inset-0 w-full h-full object-cover'
+                    draggable={false}
+                  />
+                </div>
+                {galleryEntryButton}
+              </div>
+            )}
+            <div className='flex-1 min-w-0'>
+              <h3 className='text-2xl font-bold text-foreground mb-2'>
+                {detailData.title}
+              </h3>
+              {detailData.originalTitle &&
+                detailData.originalTitle !== detailData.title && (
+                  <p className='text-sm text-muted-foreground mb-3'>
+                    {detailData.originalTitle}
+                  </p>
+                )}
+
+              {/* 评分 */}
+              {detailData.rating && (
+                <div className='flex items-center gap-2 mb-3'>
+                  <Star size={20} className='fill-foreground text-foreground' />
+                  <span className='text-lg font-semibold text-foreground'>
+                    {detailData.rating.value.toFixed(1)}
+                  </span>
+                  {detailData.rating.count > 0 && (
+                    <span className='text-sm text-muted-foreground'>
+                      ({detailData.rating.count} 评价)
+                    </span>
+                  )}
+                </div>
+              )}
+
+              {/* 类型标签 */}
+              {detailData.genres && detailData.genres.length > 0 && (
+                <div className='flex flex-wrap gap-2 mb-3'>
+                  {detailData.genres.map((genre, index) => (
+                    <Badge key={index} variant='secondary'>
+                      {genre}
+                    </Badge>
+                  ))}
+                </div>
+              )}
+
+              {/* 年份和时长 */}
+              <div className='flex flex-wrap gap-4 text-sm text-muted-foreground'>
+                {detailData.year && (
+                  <div className='flex items-center gap-1'>
+                    <Calendar size={16} />
+                    <span>{detailData.year}</span>
+                  </div>
+                )}
+                {detailData.duration && (
+                  <div className='flex items-center gap-1'>
+                    <Clock size={16} />
+                    <span>{detailData.duration}</span>
+                  </div>
+                )}
+                {detailData.episodesCount && (
+                  <div className='flex items-center gap-1'>
+                    <Film size={16} />
+                    <span>{detailData.episodesCount} 集</span>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* 简介 */}
+          {(detailData.intro || detailData.overview) && (
+            <div className='mb-6'>
+              <h4 className='text-lg font-semibold text-foreground mb-2'>
+                简介
+              </h4>
+              <p className='text-foreground/80 leading-relaxed whitespace-pre-wrap'>
+                {detailData.intro || detailData.overview}
+              </p>
+            </div>
+          )}
+
+          {/* 导演和演员 */}
+          {detailData.directors && detailData.directors.length > 0 && (
+            <div className='mb-4'>
+              <h4 className='text-sm font-semibold text-foreground mb-2 flex items-center gap-2'>
+                <Users size={16} />
+                导演
+              </h4>
+              <p className='text-foreground/80'>
+                {detailData.directors.map((d) => d.name).join(', ')}
+              </p>
+            </div>
+          )}
+
+          {detailData.actors && detailData.actors.length > 0 && (
+            <div className='mb-4'>
+              <h4 className='text-sm font-semibold text-foreground mb-2 flex items-center gap-2'>
+                <Users size={16} />
+                演员
+              </h4>
+              {currentSource === 'tmdb' ? (
+                <div
+                  ref={actorsScrollRef}
+                  onMouseDown={handleActorsMouseDown}
+                  onMouseMove={handleActorsMouseMove}
+                  onMouseUp={handleActorsMouseUp}
+                  onMouseLeave={handleActorsMouseLeave}
+                  className='overflow-x-auto -mx-6 px-6 cursor-grab active:cursor-grabbing'
+                  style={{
+                    scrollbarWidth: 'thin',
+                    scrollBehavior: isActorsDragging ? 'auto' : 'smooth',
+                  }}
+                >
+                  <div className='flex gap-4 pb-2'>
+                    {detailData.actors.map((actor, index) => (
+                      <div
+                        key={index}
+                        className='flex flex-col items-center flex-shrink-0'
+                        style={{
+                          pointerEvents: isActorsDragging ? 'none' : 'auto',
+                        }}
+                      >
+                        {actor.profile_path ? (
+                          <div
+                            className='relative w-20 h-20 rounded-full overflow-hidden bg-muted mb-2 cursor-pointer hover:opacity-80 transition-opacity'
+                            onClick={() =>
+                              handleImageClick(
+                                getTMDBImageUrl(
+                                  actor.profile_path || null,
+                                  'w185'
+                                )
+                              )
+                            }
+                          >
+                            <ProxyImage
+                              originalSrc={getTMDBImageUrl(
+                                actor.profile_path || null,
+                                'w185'
+                              )}
+                              alt={actor.name}
+                              className='absolute inset-0 w-full h-full object-cover'
+                              draggable={false}
+                            />
+                          </div>
+                        ) : (
+                          <div className='w-20 h-20 rounded-full bg-muted mb-2 flex items-center justify-center'>
+                            <Users size={28} className='text-muted-foreground' />
+                          </div>
+                        )}
+                        <a
+                          href={`https://baike.baidu.com/item/${encodeURIComponent(
+                            actor.name
+                          )}`}
+                          target='_blank'
+                          rel='noopener noreferrer'
+                          className='text-xs font-medium text-foreground text-center w-20 line-clamp-2 hover:text-foreground/70 transition-colors cursor-pointer'
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          {actor.name}
+                        </a>
+                        {actor.character && (
+                          <p className='text-xs text-muted-foreground text-center w-20 line-clamp-2'>
+                            {actor.character}
+                          </p>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <p className='text-foreground/80'>
+                  {detailData.actors
+                    .slice(0, 10)
+                    .map((a) => a.name)
+                    .join(', ')}
+                </p>
+              )}
+            </div>
+          )}
+
+          {/* 制作信息 */}
+          <div className='grid grid-cols-2 gap-4 text-sm'>
+            {detailData.countries && detailData.countries.length > 0 && (
+              <div>
+                <h4 className='font-semibold text-foreground mb-1 flex items-center gap-1'>
+                  <Globe size={14} />
+                  国家/地区
+                </h4>
+                <p className='text-foreground/80'>
+                  {detailData.countries.join(', ')}
+                </p>
+              </div>
+            )}
+
+            {detailData.languages && detailData.languages.length > 0 && (
+              <div>
+                <h4 className='font-semibold text-foreground mb-1 flex items-center gap-1'>
+                  <Tag size={14} />
+                  语言
+                </h4>
+                <p className='text-foreground/80'>
+                  {detailData.languages.join(', ')}
+                </p>
+              </div>
+            )}
+
+            {detailData.releaseDate && (
+              <div>
+                <h4 className='font-semibold text-foreground mb-1 flex items-center gap-1'>
+                  <Calendar size={14} />
+                  上映日期
+                </h4>
+                <p className='text-foreground/80'>{detailData.releaseDate}</p>
+              </div>
+            )}
+
+            {detailData.status && (
+              <div>
+                <h4 className='font-semibold text-foreground mb-1'>状态</h4>
+                <p className='text-foreground/80'>{detailData.status}</p>
+              </div>
+            )}
+          </div>
+
+          {/* 季度和集数信息（仅TMDB电视剧） */}
+          {detailData.mediaType === 'tv' && (
+            <div className='mt-6'>
+              {loadingSeasons && (
+                <div className='flex items-center justify-center py-4'>
+                  <div className='animate-spin rounded-full h-8 w-8 border-b-2 border-primary'></div>
+                </div>
+              )}
+
+              {!loadingSeasons && seasonData && (
+                <>
+                  {/* 季度列表 */}
+                  {seasonData.seasons.length > 0 && (
+                    <div className='mb-6'>
+                      <h4 className='text-lg font-semibold text-foreground mb-3'>
+                        季度
+                      </h4>
+                      <div className='grid grid-cols-2 sm:grid-cols-3 gap-3'>
+                        {seasonData.seasons.map((season: any) => (
+                          <div
+                            key={season.id}
+                            onClick={() =>
+                              handleSeasonChange(season.season_number)
+                            }
+                            className={`flex items-center gap-2 p-2 rounded cursor-pointer transition-colors ${
+                              selectedSeason === season.season_number
+                                ? 'bg-accent ring-2 ring-foreground'
+                                : 'bg-muted/50 hover:bg-muted'
+                            }`}
+                          >
+                            {season.poster_path && (
+                              <div
+                                className='relative w-12 h-16 rounded overflow-hidden bg-muted flex-shrink-0 hover:opacity-80 transition-opacity'
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleImageClick(
+                                    getTMDBImageUrl(
+                                      season.poster_path,
+                                      'w500'
+                                    )
+                                  );
+                                }}
+                              >
+                                <ProxyImage
+                                  originalSrc={getTMDBImageUrl(
+                                    season.poster_path,
+                                    'w92'
+                                  )}
+                                  alt={season.name}
+                                  className='absolute inset-0 w-full h-full object-cover'
+                                  draggable={false}
+                                />
+                              </div>
+                            )}
+                            <div className='flex-1 min-w-0'>
+                              <p className='text-sm font-medium text-foreground truncate'>
+                                {season.name}
+                              </p>
+                              <p className='text-xs text-muted-foreground'>
+                                {season.episode_count} 集
+                              </p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* 集数列表 */}
+                  {seasonData.episodes.length > 0 && (
+                    <div>
+                      <h4 className='text-lg font-semibold text-foreground mb-3'>
+                        {seasonData.seasons.find(
+                          (s: any) => s.season_number === selectedSeason
+                        )?.name || `第${selectedSeason}季`}
+                      </h4>
+                      <div
+                        ref={episodesScrollRef}
+                        onMouseDown={handleMouseDown}
+                        onMouseMove={handleMouseMove}
+                        onMouseUp={handleMouseUp}
+                        onMouseLeave={handleMouseLeave}
+                        className='overflow-x-auto -mx-6 px-6 cursor-grab active:cursor-grabbing'
+                        style={{
+                          scrollbarWidth: 'thin',
+                          scrollBehavior: isDragging ? 'auto' : 'smooth',
+                        }}
+                      >
+                        <div className='flex gap-3 py-2'>
+                          {seasonData.episodes.map((episode: Episode) => {
+                            const isExpanded = expandedEpisodes.has(
+                              episode.id
+                            );
+                            const isCurrentEpisode =
+                              currentEpisode === episode.episode_number;
+                            return (
+                              <div
+                                key={episode.id}
+                                id={`episode-${episode.episode_number}`}
+                                className={`flex-shrink-0 w-64 p-3 rounded ${
+                                  isCurrentEpisode
+                                    ? 'bg-accent ring-2 ring-foreground'
+                                    : 'bg-muted/50'
+                                }`}
+                                style={{
+                                  pointerEvents: isDragging
+                                    ? 'none'
+                                    : 'auto',
+                                }}
+                              >
+                                {episode.still_path && (
+                                  <div
+                                    className='relative w-full h-36 rounded overflow-hidden bg-muted mb-2 cursor-pointer hover:opacity-90 transition-opacity'
+                                    onClick={() =>
+                                      handleEpisodeStillsClick(episode)
+                                    }
+                                    title='查看该集剧照'
+                                  >
+                                    <ProxyImage
+                                      originalSrc={getTMDBImageUrl(
+                                        episode.still_path,
+                                        'w300'
+                                      )}
+                                      alt={episode.name}
+                                      className='absolute inset-0 w-full h-full object-cover'
+                                      draggable={false}
+                                    />
+                                  </div>
+                                )}
+                                <p className='text-sm font-medium text-foreground mb-1'>
+                                  第{episode.episode_number}集:{' '}
+                                  {episode.name}
+                                </p>
+                                {episode.overview && (
+                                  <p
+                                    onClick={() => {
+                                      const newExpanded = new Set(
+                                        expandedEpisodes
+                                      );
+                                      if (isExpanded) {
+                                        newExpanded.delete(episode.id);
+                                      } else {
+                                        newExpanded.add(episode.id);
+                                      }
+                                      setExpandedEpisodes(newExpanded);
+                                    }}
+                                    className={`text-xs text-muted-foreground cursor-pointer ${
+                                      isExpanded ? '' : 'line-clamp-3'
+                                    }`}
+                                  >
+                                    {episode.overview}
+                                  </p>
+                                )}
+                                {episode.air_date && (
+                                  <p className='text-xs text-muted-foreground mt-1'>
+                                    {episode.air_date}
+                                  </p>
+                                )}
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </>
+              )}
+            </div>
+          )}
+
+          {/* 数据源显示和切换 */}
+          {sourceSwitchRow}
+        </div>
+      )}
+    </>
+  );
+
+  return (
+    <>
+      {isDesktop ? (
+        <Dialog
+          open={isOpen}
+          onOpenChange={(open) => {
+            if (!open) onClose();
+          }}
+        >
+          <DialogContent
+            className='flex max-h-[90vh] max-w-2xl flex-col gap-0 overflow-hidden p-0'
+            aria-describedby={undefined}
+          >
+            <div className='flex shrink-0 items-center justify-between border-b border-border p-4 pr-12'>
+              <DialogTitle className='text-xl'>详情</DialogTitle>
+              {headerActions}
+            </div>
+            <div className='flex-1 overflow-y-auto'>{panelContent}</div>
+          </DialogContent>
+        </Dialog>
+      ) : (
+        <AppSheet
+          isOpen={isOpen}
+          onClose={onClose}
+          title='详情'
+          width='w-full'
+        >
+          {hasHeaderActions && (
+            <div className='flex items-center justify-end border-b border-border px-4 py-2'>
+              {headerActions}
+            </div>
+          )}
+          {panelContent}
+        </AppSheet>
+      )}
+
+      {/* 二级弹层（照片墙 / 剧照 / 纠错 / 看图） */}
+      {galleryDialog}
+      {episodeStillsDialog}
+      {tmdbCorrectionDialog}
+      {showImageViewer && (
+        <ImageViewer
+          isOpen={showImageViewer}
+          onClose={() => setShowImageViewer(false)}
+          imageUrl={selectedImage}
+          alt={detailData?.title || title}
+        />
+      )}
+    </>
+  );
 };
 
 export default DetailPanel;

@@ -28,6 +28,7 @@ import React, {
 
 import { isAnimeCategoryText } from '@/lib/anime-keyword-expr';
 import { getAuthInfoFromBrowserCookie } from '@/lib/auth';
+import { showSuccess } from '@/lib/toast';
 import {
   deleteFavorite,
   deletePlayRecord,
@@ -57,6 +58,7 @@ import DetailPanel from '@/components/DetailPanel';
 import { ImagePlaceholder } from '@/components/ImagePlaceholder';
 import ImageViewer from '@/components/ImageViewer';
 import { ActionSheet } from '@/components/ui/action-sheet';
+import { Badge } from '@/components/ui/badge';
 import TrailerPickerDialog from '@/components/TrailerPickerDialog';
 import type { TMDBVideoItem } from '@/lib/tmdb.client';
 
@@ -153,7 +155,6 @@ const VideoCard = forwardRef<VideoCardHandle, VideoCardProps>(
   ) {
     const router = useRouter();
     const [showAnimeSubscribe, setShowAnimeSubscribe] = useState(false);
-    const [animeSubscribeToast, setAnimeSubscribeToast] = useState('');
     const isAdminUser = useMemo(() => {
       const auth = getAuthInfoFromBrowserCookie();
       return auth?.role === 'admin' || auth?.role === 'owner';
@@ -802,9 +803,9 @@ const VideoCard = forwardRef<VideoCardHandle, VideoCardProps>(
               id: 'favorite',
               label: currentFavorited ? '取消收藏' : '添加收藏',
               icon: currentFavorited ? (
-                <Heart size={20} className='fill-red-600 stroke-red-600' />
+                <Heart size={20} className='fill-foreground stroke-foreground' />
               ) : (
-                <Heart size={20} className='fill-transparent stroke-red-500' />
+                <Heart size={20} className='fill-transparent stroke-foreground' />
               ),
               onClick: () => {
                 const mockEvent = {
@@ -833,9 +834,9 @@ const VideoCard = forwardRef<VideoCardHandle, VideoCardProps>(
             id: 'favorite',
             label: currentFavorited ? '取消收藏' : '添加收藏',
             icon: currentFavorited ? (
-              <Heart size={20} className='fill-red-600 stroke-red-600' />
+              <Heart size={20} className='fill-foreground stroke-foreground' />
             ) : (
-              <Heart size={20} className='fill-transparent stroke-red-500' />
+              <Heart size={20} className='fill-transparent stroke-foreground' />
             ),
             onClick: () => {
               const mockEvent = {
@@ -985,9 +986,9 @@ const VideoCard = forwardRef<VideoCardHandle, VideoCardProps>(
     return (
       <>
         <div
-          className={`group relative w-full rounded-lg bg-transparent transition-all duration-300 ease-in-out hover:scale-[1.05] hover:z-[500] ${
+          className={`group relative w-full rounded-lg bg-transparent transition-all duration-300 ease-in-out hover:scale-[1.05] hover:z-popover ${
             isUpcoming ? 'cursor-default' : 'cursor-pointer'
-          } ${showUpcomingInfo ? 'scale-[1.05] z-[500]' : ''}`}
+          } ${showUpcomingInfo ? 'scale-[1.05] z-popover' : ''}`}
           onClick={handleClick}
           {...longPressProps}
           style={
@@ -1033,7 +1034,7 @@ const VideoCard = forwardRef<VideoCardHandle, VideoCardProps>(
           <div
             className={`relative rounded-lg ${
               origin === 'live'
-                ? 'ring-1 ring-gray-300/80 dark:ring-gray-600/80'
+                ? 'ring-1 ring-border/80'
                 : ''
             } ${
               orientation === 'horizontal' ? 'aspect-[3/2]' : 'aspect-[2/3]'
@@ -1063,13 +1064,13 @@ const VideoCard = forwardRef<VideoCardHandle, VideoCardProps>(
                 />
               )}
               {isDirectPlaySource ? (
-                <div className='absolute inset-0 flex items-center justify-center bg-gray-200/80 dark:bg-gray-700/80'>
-                  <Link className='w-8 h-8 text-blue-500' />
+                <div className='absolute inset-0 flex items-center justify-center bg-muted'>
+                  <Link className='w-8 h-8 text-muted-foreground' />
                 </div>
               ) : isNetdiskSource(actualSource) &&
                 !actualPoster &&
                 displayPoster === netdiskPosterPlaceholder ? (
-                <div className='absolute inset-0 flex flex-col items-center justify-center bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400'>
+                <div className='absolute inset-0 flex flex-col items-center justify-center bg-muted text-muted-foreground'>
                   <Cloud className='w-10 h-10 opacity-80' />
                 </div>
               ) : (
@@ -1216,7 +1217,7 @@ const VideoCard = forwardRef<VideoCardHandle, VideoCardProps>(
                   <PlayCircleIcon
                     size={50}
                     strokeWidth={0.8}
-                    className='text-white fill-transparent transition-all duration-300 ease-out hover:fill-green-500 hover:scale-[1.1]'
+                    className='text-white fill-transparent transition-all duration-300 ease-out hover:fill-white/20 hover:scale-[1.1]'
                     style={
                       {
                         WebkitUserSelect: 'none',
@@ -1255,7 +1256,7 @@ const VideoCard = forwardRef<VideoCardHandle, VideoCardProps>(
                     <Trash2
                       onClick={handleDeleteRecord}
                       size={20}
-                      className='text-white transition-all duration-300 ease-out hover:stroke-red-500 hover:scale-[1.1]'
+                      className='text-white transition-all duration-300 ease-out hover:stroke-destructive hover:scale-[1.1]'
                       style={
                         {
                           WebkitUserSelect: 'none',
@@ -1275,8 +1276,8 @@ const VideoCard = forwardRef<VideoCardHandle, VideoCardProps>(
                       size={20}
                       className={`transition-all duration-300 ease-out ${
                         favorited
-                          ? 'fill-red-600 stroke-red-600'
-                          : 'fill-transparent stroke-white hover:stroke-red-400'
+                          ? 'fill-white stroke-white'
+                          : 'fill-transparent stroke-white hover:stroke-white/70'
                       } hover:scale-[1.1]`}
                       style={
                         {
@@ -1296,8 +1297,8 @@ const VideoCard = forwardRef<VideoCardHandle, VideoCardProps>(
 
             {/* 季度徽章 */}
             {seasonNumber && (
-              <div
-                className='absolute top-2 left-2 bg-blue-500/80 text-white text-xs font-medium px-2 py-1 rounded backdrop-blur-sm shadow-sm transition-all duration-300 ease-out group-hover:opacity-90'
+              <Badge
+                className='absolute top-2 left-2 border-transparent bg-black/60 text-white text-xs font-medium px-2 py-1 rounded backdrop-blur-sm shadow-sm transition-all duration-300 ease-out group-hover:opacity-90'
                 style={
                   {
                     WebkitUserSelect: 'none',
@@ -1312,7 +1313,7 @@ const VideoCard = forwardRef<VideoCardHandle, VideoCardProps>(
                 title={seasonName || `第${seasonNumber}季`}
               >
                 S{seasonNumber}
-              </div>
+              </Badge>
             )}
 
             {/* 评分徽章 */}
@@ -1376,8 +1377,8 @@ const VideoCard = forwardRef<VideoCardHandle, VideoCardProps>(
                   </span>
                 </div>
               ) : (
-                <div
-                  className='absolute top-2 right-2 bg-pink-500 text-white text-xs font-bold w-7 h-7 rounded-full flex items-center justify-center shadow-md transition-all duration-300 ease-out group-hover:scale-110'
+                <Badge
+                  className='absolute top-2 right-2 border-transparent bg-primary text-primary-foreground text-xs font-bold w-7 h-7 rounded-full flex items-center justify-center p-0 shadow-md transition-all duration-300 ease-out group-hover:scale-110'
                   style={
                     {
                       WebkitUserSelect: 'none',
@@ -1391,7 +1392,7 @@ const VideoCard = forwardRef<VideoCardHandle, VideoCardProps>(
                   }}
                 >
                   {rate}
-                </div>
+                </Badge>
               ))}
 
             {/* 竖向模式：顶部直链地址显示 */}
@@ -1413,7 +1414,7 @@ const VideoCard = forwardRef<VideoCardHandle, VideoCardProps>(
                   }}
                 >
                   <div
-                    className='text-[9px] sm:text-[10px] text-yellow-400 line-clamp-2 break-all'
+                    className='text-[9px] sm:text-[10px] text-white/80 line-clamp-2 break-all'
                     style={
                       {
                         WebkitUserSelect: 'none',
@@ -1511,19 +1512,7 @@ const VideoCard = forwardRef<VideoCardHandle, VideoCardProps>(
                   }}
                 >
                   <span
-                    className={`inline-block border rounded px-1 py-0.5 text-[8px] text-white/90 bg-black/60 ${
-                      actualSource === 'xiaoya'
-                        ? 'border-blue-500'
-                        : isNetdiskSource(actualSource)
-                        ? 'border-purple-500'
-                        : actualSource === 'openlist' ||
-                          actualSource === 'emby' ||
-                          actualSource?.startsWith('emby_')
-                        ? 'border-yellow-500'
-                        : origin === 'live'
-                        ? 'border-red-500'
-                        : 'border-white/60'
-                    }`}
+                    className='inline-block border rounded px-1 py-0.5 text-[8px] text-white/90 bg-black/60 border-white/60'
                     style={
                       {
                         WebkitUserSelect: 'none',
@@ -1574,7 +1563,7 @@ const VideoCard = forwardRef<VideoCardHandle, VideoCardProps>(
                   }}
                 >
                   <div
-                    className='bg-green-500 text-white text-xs font-bold w-7 h-7 rounded-full flex items-center justify-center shadow-md hover:bg-green-600 hover:scale-[1.1] transition-all duration-300 ease-out'
+                    className='bg-secondary text-secondary-foreground text-xs font-bold w-7 h-7 rounded-full flex items-center justify-center shadow-md hover:bg-secondary/80 hover:scale-[1.1] transition-all duration-300 ease-out'
                     style={
                       {
                         WebkitUserSelect: 'none',
@@ -1613,7 +1602,7 @@ const VideoCard = forwardRef<VideoCardHandle, VideoCardProps>(
                 return (
                   <div
                     data-button='true'
-                    className={`absolute bottom-1 right-1 z-[55] sm:bottom-2 sm:right-2 transition-all duration-300 ease-in-out delay-75 ${
+                    className={`absolute bottom-1 right-1 z-sticky sm:bottom-2 sm:right-2 transition-all duration-300 ease-in-out delay-75 ${
                       from === 'search'
                         ? 'opacity-100'
                         : 'opacity-0 sm:group-hover:opacity-100'
@@ -1664,7 +1653,7 @@ const VideoCard = forwardRef<VideoCardHandle, VideoCardProps>(
                       }
                     >
                       <div
-                        className='bg-gray-700 text-white text-xs font-bold w-6 h-6 sm:w-7 sm:h-7 rounded-full flex items-center justify-center shadow-md hover:bg-gray-600 hover:scale-[1.1] transition-all duration-300 ease-out cursor-pointer'
+                        className='bg-secondary text-secondary-foreground text-xs font-bold w-6 h-6 sm:w-7 sm:h-7 rounded-full flex items-center justify-center shadow-md hover:bg-secondary/80 hover:scale-[1.1] transition-all duration-300 ease-out cursor-pointer'
                         style={
                           {
                             WebkitUserSelect: 'none',
@@ -1711,7 +1700,7 @@ const VideoCard = forwardRef<VideoCardHandle, VideoCardProps>(
 
                         return (
                           <div
-                            className='absolute bottom-full right-0 z-[60] mb-2 -translate-x-0 opacity-0 invisible pointer-events-none transition-all duration-200 ease-out delay-100 group-hover/sources:opacity-100 group-hover/sources:visible sm:right-0 sm:translate-x-0'
+                            className='absolute bottom-full right-0 z-popover mb-2 -translate-x-0 opacity-0 invisible pointer-events-none transition-all duration-200 ease-out delay-100 group-hover/sources:opacity-100 group-hover/sources:visible sm:right-0 sm:translate-x-0'
                             style={
                               {
                                 WebkitUserSelect: 'none',
@@ -1725,7 +1714,7 @@ const VideoCard = forwardRef<VideoCardHandle, VideoCardProps>(
                             }}
                           >
                             <div
-                              className='relative rounded-lg border border-white/10 bg-gray-800/95 p-1.5 text-xs text-white shadow-xl backdrop-blur-sm sm:p-2 sm:text-xs min-w-[100px] max-w-[140px] sm:min-w-[120px] sm:max-w-[200px]'
+                              className='relative rounded-lg border border-border bg-popover/95 p-1.5 text-xs text-popover-foreground shadow-xl backdrop-blur-sm sm:p-2 sm:text-xs min-w-[100px] max-w-[140px] sm:min-w-[120px] sm:max-w-[200px]'
                               style={
                                 {
                                   WebkitUserSelect: 'none',
@@ -1745,7 +1734,7 @@ const VideoCard = forwardRef<VideoCardHandle, VideoCardProps>(
                                     key={index}
                                     className='flex items-center gap-1 sm:gap-1.5'
                                   >
-                                    <div className='h-0.5 w-0.5 flex-shrink-0 rounded-full bg-blue-400 sm:h-1 sm:w-1'></div>
+                                    <div className='h-0.5 w-0.5 flex-shrink-0 rounded-full bg-muted-foreground sm:h-1 sm:w-1'></div>
                                     <span
                                       className='truncate text-[10px] leading-tight sm:text-xs'
                                       title={sourceName}
@@ -1758,8 +1747,8 @@ const VideoCard = forwardRef<VideoCardHandle, VideoCardProps>(
 
                               {/* 显示更多提示 */}
                               {hasMore && (
-                                <div className='mt-1 border-t border-gray-700/50 pt-1 sm:mt-2 sm:pt-1.5'>
-                                  <div className='flex items-center justify-center text-gray-400'>
+                                <div className='mt-1 border-t border-border/60 pt-1 sm:mt-2 sm:pt-1.5'>
+                                  <div className='flex items-center justify-center text-muted-foreground'>
                                     <span className='text-[10px] font-medium sm:text-xs'>
                                       +{remainingCount} 播放源
                                     </span>
@@ -1768,7 +1757,7 @@ const VideoCard = forwardRef<VideoCardHandle, VideoCardProps>(
                               )}
 
                               {/* 小箭头：放在内容盒外侧，避免被裁切 */}
-                              <div className='absolute top-full right-2 h-0 w-0 border-l-[4px] border-r-[4px] border-t-[4px] border-transparent border-t-gray-800/95 sm:right-3 sm:border-l-[6px] sm:border-r-[6px] sm:border-t-[6px]'></div>
+                              <div className='absolute top-full right-2 h-0 w-0 border-l-[4px] border-r-[4px] border-t-[4px] border-transparent border-t-popover/95 sm:right-3 sm:border-l-[6px] sm:border-r-[6px] sm:border-t-[6px]'></div>
                             </div>
                           </div>
                         );
@@ -1934,17 +1923,7 @@ const VideoCard = forwardRef<VideoCardHandle, VideoCardProps>(
                           {/* 来源 - 右侧 */}
                           {config.showSourceName && source_name && !cmsData && (
                             <span
-                              className={`inline-block border rounded px-1 py-0.5 text-[8px] text-white/90 bg-black/30 backdrop-blur-sm ${
-                                actualSource === 'xiaoya'
-                                  ? 'border-blue-500'
-                                  : isNetdiskSource(actualSource)
-                                  ? 'border-purple-500'
-                                  : actualSource === 'openlist' ||
-                                    actualSource === 'emby' ||
-                                    actualSource?.startsWith('emby_')
-                                  ? 'border-yellow-500'
-                                  : 'border-white/60'
-                              }`}
+                              className='inline-block border rounded px-1 py-0.5 text-[8px] text-white/90 bg-black/30 backdrop-blur-sm border-white/60'
                               style={
                                 {
                                   WebkitUserSelect: 'none',
@@ -2001,15 +1980,7 @@ const VideoCard = forwardRef<VideoCardHandle, VideoCardProps>(
                     !cmsData && (
                       <div className='flex items-center justify-end'>
                         <span
-                          className={`inline-block border rounded px-1 py-0.5 text-[8px] text-white/90 bg-black/30 backdrop-blur-sm ${
-                            origin === 'live'
-                              ? 'border-red-500'
-                              : actualSource === 'openlist' ||
-                                actualSource === 'emby' ||
-                                actualSource?.startsWith('emby_')
-                              ? 'border-yellow-500'
-                              : 'border-white/60'
-                          }`}
+                          className='inline-block border rounded px-1 py-0.5 text-[8px] text-white/90 bg-black/30 backdrop-blur-sm border-white/60'
                           style={
                             {
                               WebkitUserSelect: 'none',
@@ -2041,7 +2012,7 @@ const VideoCard = forwardRef<VideoCardHandle, VideoCardProps>(
               {/* 进度条 */}
               {config.showProgress && progress !== undefined && (
                 <div
-                  className='mt-1 h-1 w-full bg-gray-200 rounded-full overflow-hidden'
+                  className='mt-1 h-1 w-full bg-muted rounded-full overflow-hidden'
                   style={
                     {
                       WebkitUserSelect: 'none',
@@ -2055,7 +2026,7 @@ const VideoCard = forwardRef<VideoCardHandle, VideoCardProps>(
                   }}
                 >
                   <div
-                    className='h-full bg-green-500 transition-all duration-500 ease-out'
+                    className='h-full bg-primary transition-all duration-500 ease-out'
                     style={
                       {
                         width: `${progress}%`,
@@ -2098,7 +2069,7 @@ const VideoCard = forwardRef<VideoCardHandle, VideoCardProps>(
                   }
                 >
                   <span
-                    className='block text-sm font-semibold truncate text-gray-900 dark:text-gray-100 transition-colors duration-300 ease-in-out group-hover:text-green-600 dark:group-hover:text-green-400 peer'
+                    className='block text-sm font-semibold truncate text-foreground transition-colors duration-300 ease-in-out group-hover:text-foreground/70 peer'
                     style={
                       {
                         WebkitUserSelect: 'none',
@@ -2115,7 +2086,7 @@ const VideoCard = forwardRef<VideoCardHandle, VideoCardProps>(
                   </span>
                   {/* 自定义 tooltip */}
                   <div
-                    className='absolute bottom-full left-1/2 z-[70] mb-2 w-max max-w-[min(20rem,calc(100vw-2rem))] -translate-x-1/2 rounded-md bg-gray-800 px-3 py-1 text-center text-xs text-white shadow-lg opacity-0 invisible peer-hover:opacity-100 peer-hover:visible transition-all duration-200 ease-out delay-100 whitespace-normal break-words pointer-events-none'
+                    className='absolute bottom-full left-1/2 z-toast mb-2 w-max max-w-[min(20rem,calc(100vw-2rem))] -translate-x-1/2 rounded-md bg-popover px-3 py-1 text-center text-xs text-popover-foreground shadow-lg opacity-0 invisible peer-hover:opacity-100 peer-hover:visible transition-all duration-200 ease-out delay-100 whitespace-normal break-words pointer-events-none'
                     style={
                       {
                         WebkitUserSelect: 'none',
@@ -2130,7 +2101,7 @@ const VideoCard = forwardRef<VideoCardHandle, VideoCardProps>(
                   >
                     {actualTitle}
                     <div
-                      className='absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-800'
+                      className='absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-popover'
                       style={
                         {
                           WebkitUserSelect: 'none',
@@ -2244,15 +2215,9 @@ const VideoCard = forwardRef<VideoCardHandle, VideoCardProps>(
             from === 'playrecord' && currentEpisode ? currentEpisode : 0
           }
           onSuccess={() => {
-            setAnimeSubscribeToast('已添加追番订阅');
-            window.setTimeout(() => setAnimeSubscribeToast(''), 2500);
+            showSuccess('已添加追番订阅');
           }}
         />
-        {animeSubscribeToast ? (
-          <div className='fixed bottom-24 left-1/2 z-[10001] -translate-x-1/2 rounded-full bg-green-600 px-4 py-2 text-sm text-white shadow-lg'>
-            {animeSubscribeToast}
-          </div>
-        ) : null}
 
         {/* 图片查看器 */}
         {showImageViewer && (
