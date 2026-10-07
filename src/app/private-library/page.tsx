@@ -5,12 +5,16 @@
 import { ArrowDownWideNarrow, ArrowUpNarrowWide,Film } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useMemo,useRef, useState } from 'react';
-import { createPortal } from 'react-dom';
 
 import { base58Encode } from '@/lib/utils';
 
 import PageLayout from '@/components/PageLayout';
 import VideoCard from '@/components/VideoCard';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 
 type LibrarySourceType = 'openlist' | 'emby' | 'xiaoya' | `emby:${string}` | `emby_${string}`;
@@ -80,9 +84,6 @@ export default function PrivateLibraryPage() {
   const [sortBy, setSortBy] = useState<string>('SortName');
   const [sortOrder, setSortOrder] = useState<'Ascending' | 'Descending'>('Ascending');
   const [showSortDropdown, setShowSortDropdown] = useState(false);
-  const [sortDropdownPosition, setSortDropdownPosition] = useState<{ x: number; y: number; width: number }>({ x: 0, y: 0, width: 0 });
-  const sortButtonRef = useRef<HTMLDivElement | null>(null);
-  const sortDropdownRef = useRef<HTMLDivElement | null>(null);
   // 小雅相关状态
   const [xiaoyaPath, setXiaoyaPath] = useState<string>('/');
   const [xiaoyaFolders, setXiaoyaFolders] = useState<Array<{ name: string; path: string }>>([]);
@@ -355,45 +356,6 @@ export default function PrivateLibraryPage() {
     return sortBy === 'SortName' && sortOrder === 'Ascending';
   };
 
-  const calculateSortDropdownPosition = () => {
-    const element = sortButtonRef.current;
-    if (element) {
-      const rect = element.getBoundingClientRect();
-      const viewportWidth = window.innerWidth;
-      const isMobile = viewportWidth < 768;
-
-      let x = rect.left;
-      const minWidth = 200;
-      let dropdownWidth = Math.max(rect.width, minWidth);
-      let useFixedWidth = false;
-
-      if (isMobile) {
-        const padding = 16;
-        const maxWidth = viewportWidth - padding * 2;
-        dropdownWidth = Math.min(dropdownWidth, maxWidth);
-        useFixedWidth = true;
-
-        if (x + dropdownWidth > viewportWidth - padding) {
-          x = viewportWidth - dropdownWidth - padding;
-        }
-        if (x < padding) {
-          x = padding;
-        }
-      }
-
-      setSortDropdownPosition({ x, y: rect.bottom + 4, width: useFixedWidth ? dropdownWidth : rect.width });
-    }
-  };
-
-  const handleSortButtonClick = () => {
-    if (showSortDropdown) {
-      setShowSortDropdown(false);
-    } else {
-      setShowSortDropdown(true);
-      calculateSortDropdownPosition();
-    }
-  };
-
   const handleSortOptionSelect = (value: string) => {
     setSortBy(value);
     setShowSortDropdown(false);
@@ -403,34 +365,6 @@ export default function PrivateLibraryPage() {
     setSortOrder(sortOrder === 'Ascending' ? 'Descending' : 'Ascending');
   };
 
-  // 点击外部关闭排序下拉框
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        sortDropdownRef.current &&
-        !sortDropdownRef.current.contains(event.target as Node) &&
-        sortButtonRef.current &&
-        !sortButtonRef.current.contains(event.target as Node)
-      ) {
-        setShowSortDropdown(false);
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
-
-  // 滚动时关闭排序下拉框
-  useEffect(() => {
-    const handleScroll = () => {
-      if (showSortDropdown) {
-        setShowSortDropdown(false);
-      }
-    };
-    document.body.addEventListener('scroll', handleScroll, { passive: true });
-    return () => {
-      document.body.removeEventListener('scroll', handleScroll);
-    };
-  }, [showSortDropdown]);
 
   // 加载数据的函数
   useEffect(() => {
@@ -821,32 +755,56 @@ export default function PrivateLibraryPage() {
             <div className='px-4'>
               <div className='relative inline-flex rounded-full p-0.5 sm:p-1 bg-transparent gap-1 sm:gap-2'>
                 {/* 排序字段选择 */}
-                <div ref={sortButtonRef} className='relative'>
-                  <button
-                    onClick={handleSortButtonClick}
-                    className={`relative z-10 px-1.5 py-0.5 sm:px-2 sm:py-1 md:px-4 md:py-2 text-xs sm:text-sm font-medium rounded-full transition-all duration-200 whitespace-nowrap ${
-                      showSortDropdown
-                        ? isDefaultSort()
-                          ? 'text-foreground  cursor-default'
-                          : 'text-primary  cursor-default'
-                        : isDefaultSort()
-                          ? 'text-foreground hover:text-foreground   cursor-pointer'
-                          : 'text-primary hover:text-primary   cursor-pointer'
-                    }`}
-                  >
-                    <span>{getSortDisplayText()}</span>
-                    <svg
-                      className={`inline-block w-2.5 h-2.5 sm:w-3 sm:h-3 ml-0.5 sm:ml-1 transition-transform duration-200 ${
-                        showSortDropdown ? 'rotate-180' : ''
+                <Popover
+                  open={showSortDropdown}
+                  onOpenChange={setShowSortDropdown}
+                >
+                  <PopoverTrigger asChild>
+                    <button
+                      className={`relative px-1.5 py-0.5 sm:px-2 sm:py-1 md:px-4 md:py-2 text-xs sm:text-sm font-medium rounded-full transition-all duration-200 whitespace-nowrap ${
+                        showSortDropdown
+                          ? isDefaultSort()
+                            ? 'text-foreground  cursor-default'
+                            : 'text-primary  cursor-default'
+                          : isDefaultSort()
+                            ? 'text-foreground hover:text-foreground   cursor-pointer'
+                            : 'text-primary hover:text-primary   cursor-pointer'
                       }`}
-                      fill='none'
-                      stroke='currentColor'
-                      viewBox='0 0 24 24'
                     >
-                      <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M19 9l-7 7-7-7' />
-                    </svg>
-                  </button>
-                </div>
+                      <span>{getSortDisplayText()}</span>
+                      <svg
+                        className={`inline-block w-2.5 h-2.5 sm:w-3 sm:h-3 ml-0.5 sm:ml-1 transition-transform duration-200 ${
+                          showSortDropdown ? 'rotate-180' : ''
+                        }`}
+                        fill='none'
+                        stroke='currentColor'
+                        viewBox='0 0 24 24'
+                      >
+                        <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M19 9l-7 7-7-7' />
+                      </svg>
+                    </button>
+                  </PopoverTrigger>
+                  <PopoverContent
+                    align='start'
+                    className='w-auto min-w-[200px] max-w-[300px] max-h-[50vh] overflow-y-auto p-2 sm:p-4'
+                  >
+                    <div className='grid grid-cols-2 gap-1 sm:gap-2'>
+                      {sortOptions.map((option) => (
+                        <button
+                          key={option.value}
+                          onClick={() => handleSortOptionSelect(option.value)}
+                          className={`px-2 py-1.5 sm:px-3 sm:py-2 text-xs sm:text-sm rounded-lg transition-all duration-200 text-left ${
+                            sortBy === option.value
+                              ? 'bg-primary text-primary-foreground'
+                              : 'text-foreground  hover:bg-muted/80 '
+                          }`}
+                        >
+                          {option.label}
+                        </button>
+                      ))}
+                    </div>
+                  </PopoverContent>
+                </Popover>
 
                 {/* 排序方向切换 */}
                 <div className='relative'>
@@ -869,40 +827,6 @@ export default function PrivateLibraryPage() {
               </div>
             </div>
           </div>
-        )}
-
-        {/* 排序下拉框 Portal */}
-        {mounted && showSortDropdown && createPortal(
-          <div
-            ref={sortDropdownRef}
-            className='fixed z-[9999] bg-card/95 rounded-xl border border-border backdrop-blur-sm max-h-[50vh] flex flex-col'
-            style={{
-              left: `${sortDropdownPosition.x}px`,
-              top: `${sortDropdownPosition.y}px`,
-              minWidth: `${Math.max(sortDropdownPosition.width, 200)}px`,
-              maxWidth: '300px',
-              position: 'fixed',
-            }}
-          >
-            <div className='p-2 sm:p-4 overflow-y-auto flex-1 min-h-0'>
-              <div className='grid grid-cols-2 gap-1 sm:gap-2'>
-                {sortOptions.map((option) => (
-                  <button
-                    key={option.value}
-                    onClick={() => handleSortOptionSelect(option.value)}
-                    className={`px-2 py-1.5 sm:px-3 sm:py-2 text-xs sm:text-sm rounded-lg transition-all duration-200 text-left ${
-                      sortBy === option.value
-                        ? 'bg-accent text-primary   border border-border '
-                        : 'text-foreground  hover:bg-muted/80 '
-                    }`}
-                  >
-                    {option.label}
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>,
-          document.body
         )}
 
         {error && (

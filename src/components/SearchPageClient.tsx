@@ -22,7 +22,6 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import { createPortal } from 'react-dom';
 
 import { isAnimeCategoryText } from '@/lib/anime-keyword-expr';
 import { getAuthInfoFromBrowserCookie } from '@/lib/auth';
@@ -53,6 +52,11 @@ import SearchResultFilter, {
 import SearchSuggestions from '@/components/SearchSuggestions';
 import VideoCard, { VideoCardHandle } from '@/components/VideoCard';
 import VirtualScrollableGrid from '@/components/VirtualScrollableGrid';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { loadTraditionalToSimplifiedConverter } from '@/lib/danmaku/traditional-to-simplified';
 
@@ -86,13 +90,6 @@ export function SearchPageClient({ searchBase = '/search' }: { searchBase?: stri
     string[]
   >([]);
   const [pansouCloudFilterOpen, setPansouCloudFilterOpen] = useState(false);
-  const [pansouCloudFilterPosition, setPansouCloudFilterPosition] = useState({
-    x: 0,
-    y: 0,
-    width: 0,
-  });
-  const pansouCloudFilterButtonRef = useRef<HTMLButtonElement | null>(null);
-  const pansouCloudFilterDropdownRef = useRef<HTMLDivElement | null>(null);
   // 用户权限
   const [userRole, setUserRole] = useState<'owner' | 'admin' | 'user' | null>(
     null
@@ -1674,26 +1671,6 @@ export function SearchPageClient({ searchBase = '/search' }: { searchBase?: stri
     );
   };
 
-  const calculatePansouCloudFilterPosition = () => {
-    const element = pansouCloudFilterButtonRef.current;
-    if (!element) return;
-
-    const rect = element.getBoundingClientRect();
-    const viewportWidth = window.innerWidth;
-    const padding = 16;
-    const width = Math.min(320, viewportWidth - padding * 2);
-    let x = rect.left;
-
-    if (x + width > viewportWidth - padding) {
-      x = viewportWidth - width - padding;
-    }
-    if (x < padding) {
-      x = padding;
-    }
-
-    setPansouCloudFilterPosition({ x, y: rect.bottom + 8, width });
-  };
-
   const selectedPansouCloudTypeLabels = selectedPansouCloudTypes
     .map((type) => CLOUD_TYPE_NAMES[type] || type)
     .filter(Boolean);
@@ -1708,72 +1685,77 @@ export function SearchPageClient({ searchBase = '/search' }: { searchBase?: stri
 
     return (
       <div className='mx-auto mt-4 flex max-w-2xl justify-end overflow-visible'>
-        <button
-          ref={pansouCloudFilterButtonRef}
-          type='button'
-          onClick={() => {
-            if (!pansouCloudFilterOpen) {
-              calculatePansouCloudFilterPosition();
-            }
-            setPansouCloudFilterOpen((prev) => !prev);
-          }}
-          className={`relative z-10 rounded-full px-3 py-1 text-xs font-medium transition-all duration-200 whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 ${
-            hasFilter
-              ? 'cursor-pointer text-green-600 hover:text-green-700 dark:text-green-400 dark:hover:text-green-300'
-              : 'cursor-pointer text-gray-700 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100'
-          }`}
-          aria-expanded={pansouCloudFilterOpen}
-          aria-haspopup='listbox'
+        <Popover
+          open={pansouCloudFilterOpen}
+          onOpenChange={setPansouCloudFilterOpen}
         >
-          <span>{displayText}</span>
-          <svg
-            className={`ml-1 inline-block h-3 w-3 transition-transform duration-200 ${
-              pansouCloudFilterOpen ? 'rotate-180' : ''
-            }`}
-            fill='none'
-            stroke='currentColor'
-            viewBox='0 0 24 24'
-            aria-hidden='true'
-          >
-            <path
-              strokeLinecap='round'
-              strokeLinejoin='round'
-              strokeWidth={2}
-              d='M19 9l-7 7-7-7'
-            />
-          </svg>
-        </button>
+          <PopoverTrigger asChild>
+            <button
+              type='button'
+              className={`rounded-full px-3 py-1 text-xs font-medium transition-colors whitespace-nowrap focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
+                hasFilter
+                  ? 'cursor-pointer text-primary hover:text-primary/80'
+                  : 'cursor-pointer text-muted-foreground hover:text-foreground'
+              }`}
+              aria-haspopup='listbox'
+            >
+              <span>{displayText}</span>
+              <svg
+                className={`ml-1 inline-block h-3 w-3 transition-transform duration-200 ${
+                  pansouCloudFilterOpen ? 'rotate-180' : ''
+                }`}
+                fill='none'
+                stroke='currentColor'
+                viewBox='0 0 24 24'
+                aria-hidden='true'
+              >
+                <path
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                  strokeWidth={2}
+                  d='M19 9l-7 7-7-7'
+                />
+              </svg>
+            </button>
+          </PopoverTrigger>
+          <PopoverContent align='end' className='w-auto max-w-[320px] p-2'>
+            <div className='grid grid-cols-3 gap-1.5 sm:grid-cols-4'>
+              <button
+                type='button'
+                onClick={() => setSelectedPansouCloudTypes([])}
+                className={`rounded-lg px-2 py-1.5 text-left text-xs transition-colors ${
+                  selectedPansouCloudTypes.length === 0
+                    ? 'bg-primary text-primary-foreground'
+                    : 'text-muted-foreground hover:bg-muted'
+                }`}
+                aria-pressed={selectedPansouCloudTypes.length === 0}
+              >
+                全部类型
+              </button>
+              {PANSOU_CLOUD_TYPE_OPTIONS.map(({ value, label }) => {
+                const selected = selectedPansouCloudTypes.includes(value);
+                return (
+                  <button
+                    key={value}
+                    type='button'
+                    onClick={() => togglePansouCloudType(value)}
+                    className={`rounded-lg px-2 py-1.5 text-left text-xs transition-colors ${
+                      selected
+                        ? 'bg-primary text-primary-foreground'
+                        : 'text-muted-foreground hover:bg-muted'
+                    }`}
+                    aria-pressed={selected}
+                  >
+                    {label}
+                  </button>
+                );
+              })}
+            </div>
+          </PopoverContent>
+        </Popover>
       </div>
     );
   };
-
-  useEffect(() => {
-    if (!pansouCloudFilterOpen) return;
-
-    const handleClickOutside = (event: MouseEvent) => {
-      const target = event.target as Node;
-      if (
-        pansouCloudFilterButtonRef.current?.contains(target) ||
-        pansouCloudFilterDropdownRef.current?.contains(target)
-      ) {
-        return;
-      }
-      setPansouCloudFilterOpen(false);
-    };
-
-    const handleScroll = () => setPansouCloudFilterOpen(false);
-    const handleResize = () => calculatePansouCloudFilterPosition();
-
-    document.addEventListener('mousedown', handleClickOutside);
-    document.body.addEventListener('scroll', handleScroll, { passive: true });
-    window.addEventListener('resize', handleResize);
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-      document.body.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('resize', handleResize);
-    };
-  }, [pansouCloudFilterOpen]);
 
   // 返回顶部功能
   const scrollToTop = () => {
@@ -2039,53 +2021,6 @@ export function SearchPageClient({ searchBase = '/search' }: { searchBase?: stri
           )}
 
         </div>
-
-        {pansouCloudFilterOpen &&
-          createPortal(
-            <div
-              ref={pansouCloudFilterDropdownRef}
-              className='fixed z-[9999] max-h-[50vh] overflow-y-auto rounded-xl border border-gray-200/50 bg-white/95 p-2 backdrop-blur-sm dark:border-gray-700/50 dark:bg-gray-800/95'
-              style={{
-                left: `${pansouCloudFilterPosition.x}px`,
-                top: `${pansouCloudFilterPosition.y}px`,
-                width: `${pansouCloudFilterPosition.width}px`,
-              }}
-            >
-              <div className='grid grid-cols-3 gap-1.5 sm:grid-cols-4'>
-                <button
-                  type='button'
-                  onClick={() => setSelectedPansouCloudTypes([])}
-                  className={`rounded-lg px-2 py-1.5 text-left text-xs transition-all duration-200 ${
-                    selectedPansouCloudTypes.length === 0
-                      ? 'border border-green-200 bg-green-100 text-green-700 dark:border-green-700 dark:bg-green-900/30 dark:text-green-400'
-                      : 'text-gray-700 hover:bg-gray-100/80 dark:text-gray-300 dark:hover:bg-gray-700/80'
-                  }`}
-                  aria-pressed={selectedPansouCloudTypes.length === 0}
-                >
-                  全部类型
-                </button>
-                {PANSOU_CLOUD_TYPE_OPTIONS.map(({ value, label }) => {
-                  const selected = selectedPansouCloudTypes.includes(value);
-                  return (
-                    <button
-                      key={value}
-                      type='button'
-                      onClick={() => togglePansouCloudType(value)}
-                      className={`rounded-lg px-2 py-1.5 text-left text-xs transition-all duration-200 ${
-                        selected
-                          ? 'border border-green-200 bg-green-100 text-green-700 dark:border-green-700 dark:bg-green-900/30 dark:text-green-400'
-                          : 'text-gray-700 hover:bg-gray-100/80 dark:text-gray-300 dark:hover:bg-gray-700/80'
-                      }`}
-                      aria-pressed={selected}
-                    >
-                      {label}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>,
-            document.body
-          )}
 
         {/* 搜索结果或搜索历史 */}
         <div
