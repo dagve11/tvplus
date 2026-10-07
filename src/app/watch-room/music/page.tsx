@@ -1,9 +1,11 @@
 'use client';
 
+import { Volume2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
 import { useWatchRoomContext } from '@/components/WatchRoomProvider';
+
 import type { MusicQueueItem, MusicSyncState } from '@/types/watch-room';
 
 interface LyricLine {
@@ -138,8 +140,8 @@ function AudioSpectrumCanvas({
         return total / Math.max(1, end - start);
       };
 
-      ctx.fillStyle = '#10b981';
-      ctx.strokeStyle = '#10b981';
+      ctx.fillStyle = getComputedStyle(canvas).color;
+      ctx.strokeStyle = getComputedStyle(canvas).color;
 
       const visualVolume = Math.max(SPECTRUM_MIN_VOLUME, volume || SPECTRUM_REFERENCE_VOLUME);
       const visualVolumeScale =
@@ -169,7 +171,7 @@ function AudioSpectrumCanvas({
 
   return (
     <div className={`relative w-full overflow-hidden ${compact ? 'h-6' : 'h-8'}`} aria-hidden="true">
-      <canvas ref={canvasRef} className="absolute inset-0 h-full w-full opacity-50" />
+      <canvas ref={canvasRef} className="absolute inset-0 h-full w-full text-foreground opacity-50" />
     </div>
   );
 }
@@ -180,7 +182,7 @@ function VinylTurntable({ song, isPlaying }: { song: MusicQueueItem; isPlaying: 
   return (
     <div className="relative mx-auto mt-12 mb-5 flex h-[280px] w-[280px] items-center justify-center md:mt-16 md:mb-8 md:h-[340px] md:w-[340px]">
       <div
-        className="pointer-events-none absolute left-1/2 top-[-54px] z-20 h-[140px] w-[108px] drop-shadow-xl transition-transform duration-500"
+        className="pointer-events-none absolute left-1/2 top-[-54px] z-sticky h-[140px] w-[108px] drop-shadow-xl transition-transform duration-500"
         style={{
           marginLeft: '-20px',
           backgroundImage: VINYL_NEEDLE_SVG,
@@ -206,14 +208,14 @@ function VinylTurntable({ song, isPlaying }: { song: MusicQueueItem; isPlaying: 
           }}
         />
         <div className="pointer-events-none absolute left-[18%] top-[10%] h-[42%] w-[22%] rotate-[-28deg] rounded-full bg-white/10 blur-md" />
-        <div className="relative z-10 flex h-[158px] w-[158px] items-center justify-center overflow-hidden rounded-full border-[5px] border-black bg-zinc-800 md:h-[192px] md:w-[192px]">
+        <div className="relative z-sticky flex h-[158px] w-[158px] items-center justify-center overflow-hidden rounded-full border-[5px] border-border bg-muted md:h-[192px] md:w-[192px]">
           {song.pic ? (
             <img src={song.pic} alt={song.name} className="h-full w-full rounded-full object-cover" />
           ) : (
-            <div className="flex h-full w-full items-center justify-center text-4xl text-zinc-500">♪</div>
+            <div className="flex h-full w-full items-center justify-center text-4xl text-muted-foreground">♪</div>
           )}
         </div>
-        <div className="absolute z-20 h-3 w-3 rounded-full bg-zinc-950 ring-1 ring-white/30" />
+        <div className="absolute z-sticky h-3 w-3 rounded-full bg-foreground ring-1 ring-border" />
       </div>
     </div>
   );
@@ -245,7 +247,6 @@ export default function WatchRoomMusicPage() {
   const [duration, setDuration] = useState(0);
   const [needsActivation, setNeedsActivation] = useState(true);
   const [volume, setVolume] = useState(100);
-  const [isDark, setIsDark] = useState(true);
   const [showVolumeSlider, setShowVolumeSlider] = useState(false);
   const [mobilePanel, setMobilePanel] = useState<'cover' | 'lyrics'>('cover');
   const [bars, setBars] = useState<number[]>(() => Array.from({ length: SPECTRUM_BIN_COUNT }, () => SPECTRUM_IDLE_LEVEL));
@@ -302,17 +303,6 @@ export default function WatchRoomMusicPage() {
       router.replace('/watch-room');
     }
   }, [currentRoom, isOwner, router]);
-
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-
-    const syncTheme = () => setIsDark(document.documentElement.classList.contains('dark'));
-    syncTheme();
-
-    const observer = new MutationObserver(syncTheme);
-    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
-    return () => observer.disconnect();
-  }, []);
 
   useEffect(() => {
     const handlePointerDown = (event: PointerEvent) => {
@@ -511,18 +501,14 @@ export default function WatchRoomMusicPage() {
   const progress = duration > 0 ? Math.min(100, Math.max(0, (currentTime / duration) * 100)) : 0;
   const song = state?.song;
   const nextSong = state?.nextSong || null;
-  const themeRootClass = isDark ? 'bg-zinc-950 text-white' : 'bg-white text-zinc-900';
   const showCoverPanel = mobilePanel === 'cover';
   const showLyricsPanel = mobilePanel === 'lyrics';
-  const isPlaying = Boolean(state?.isPlaying);
-  const lyricActiveClass = isDark
-    ? 'scale-105 text-lg font-bold text-emerald-300 md:text-2xl'
-    : 'scale-105 text-lg font-bold text-emerald-600 md:text-2xl';
-  const lyricNearbyClass = isDark ? 'text-base text-zinc-400' : 'text-base text-zinc-500';
-  const lyricIdleClass = isDark ? 'text-sm text-zinc-600' : 'text-sm text-zinc-500';
+  const lyricActiveClass = 'scale-105 text-lg font-bold text-foreground md:text-2xl';
+  const lyricNearbyClass = 'text-base text-muted-foreground';
+  const lyricIdleClass = 'text-sm text-muted-foreground/70';
 
   return (
-    <main className={`relative min-h-screen overflow-hidden transition-colors ${themeRootClass}`}>
+    <main className="relative min-h-screen overflow-hidden transition-colors bg-background text-foreground">
       <style>{`
         @keyframes music-room-vinyl-spin {
           from { transform: rotate(0deg); }
@@ -532,15 +518,15 @@ export default function WatchRoomMusicPage() {
       <audio ref={audioRef} className="hidden" />
 
       {song?.pic && (
-        <img src={song.pic} alt="" className={`absolute inset-0 h-full w-full object-cover blur-3xl ${isDark ? 'opacity-20' : 'opacity-12'}`} />
+        <img src={song.pic} alt="" className="absolute inset-0 h-full w-full object-cover blur-3xl opacity-20" />
       )}
-      <div className={`absolute inset-0 ${isDark ? 'bg-zinc-950/80' : 'bg-white/75'}`} />
+      <div className="absolute inset-0 bg-background/80" />
 
-      <section className="relative z-10 mx-auto flex min-h-screen max-w-6xl flex-col px-5 py-6">
-        <div className={`mb-4 flex items-center justify-between gap-4 text-sm ${isDark ? 'text-zinc-400' : 'text-zinc-600'}`}>
+      <section className="relative z-sticky mx-auto flex min-h-screen max-w-6xl flex-col px-5 py-6">
+        <div className="mb-4 flex items-center justify-between gap-4 text-sm text-muted-foreground">
           <button
             onClick={() => router.push('/watch-room')}
-            className={`rounded-md border px-3 py-2 transition-colors ${isDark ? 'border-white/10 text-zinc-300 hover:bg-white/10' : 'border-zinc-200 text-zinc-700 hover:bg-zinc-100'}`}
+            className="rounded-md border px-3 py-2 transition-colors border-border text-foreground hover:bg-accent"
           >
             返回观影室
           </button>
@@ -551,45 +537,43 @@ export default function WatchRoomMusicPage() {
           <>
             <div className="md:hidden">
               <div className="mx-auto flex w-full max-w-[430px] flex-col gap-3">
-                <div ref={mobileVolumeControlRef} className={`rounded-2xl border px-3 py-3 ${isDark ? 'border-white/10 bg-black/20' : 'border-zinc-200 bg-white/80 shadow-sm'}`}>
+                <div ref={mobileVolumeControlRef} className="rounded-2xl border px-3 py-3 border-border bg-card">
                   <div className="flex items-center gap-3">
                     <button
                       type="button"
                       onClick={() => setMobilePanel(showCoverPanel ? 'lyrics' : 'cover')}
                       className="flex min-w-0 flex-1 items-center gap-3 text-left"
                     >
-                      <div className="h-11 w-11 shrink-0 overflow-hidden rounded-lg border border-white/10 bg-zinc-800">
+                      <div className="h-11 w-11 shrink-0 overflow-hidden rounded-lg border border-border bg-muted">
                         {song.pic ? (
                           <img src={song.pic} alt={song.name} className="h-full w-full object-cover" />
                         ) : (
-                          <div className="flex h-full w-full items-center justify-center text-base text-zinc-500">♪</div>
+                          <div className="flex h-full w-full items-center justify-center text-base text-muted-foreground">♪</div>
                         )}
                       </div>
                       <div className="min-w-0">
                         <div className="truncate text-sm font-semibold">{song.name}</div>
-                        <div className={`truncate text-xs ${isDark ? 'text-zinc-500' : 'text-zinc-600'}`}>{song.artist}</div>
+                        <div className="truncate text-xs text-muted-foreground">{song.artist}</div>
                       </div>
                     </button>
                     <button
                       type="button"
                       onClick={() => setShowVolumeSlider((prev) => !prev)}
-                      className={`relative shrink-0 transition-colors ${isDark ? 'text-zinc-400 hover:text-white' : 'text-zinc-600 hover:text-zinc-900'}`}
+                      className="relative shrink-0 transition-colors text-muted-foreground hover:text-foreground"
                       title="音量"
                     >
-                      <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217zM14.657 2.929a1 1 0 011.414 0A9.972 9.972 0 0119 10a9.972 9.972 0 01-2.929 7.071 1 1 0 01-1.414-1.414A7.971 7.971 0 0017 10c0-2.21-.894-4.208-2.343-5.657a1 1 0 010-1.414zm-2.829 2.828a1 1 0 011.415 0A5.983 5.983 0 0115 10a5.984 5.984 0 01-1.757 4.243 1 1 0 01-1.415-1.415A3.984 3.984 0 0013 10a3.983 3.983 0 00-1.172-2.828 1 1 0 010-1.415z" clipRule="evenodd" />
-                      </svg>
-                      <div className={`absolute right-0 top-6 z-20 transition-opacity ${showVolumeSlider ? 'opacity-100' : 'pointer-events-none opacity-0'}`}>
-                        <div className={`rounded-lg border p-3 shadow-xl ${isDark ? 'border-white/10 bg-zinc-900/95' : 'border-zinc-200 bg-white'}`}>
+                      <Volume2 className="h-4 w-4" />
+                      <div className={`absolute right-0 top-6 z-popover transition-opacity ${showVolumeSlider ? 'opacity-100' : 'pointer-events-none opacity-0'}`}>
+                        <div className="rounded-lg border p-3 shadow-xl border-border bg-popover text-popover-foreground">
                           <div className="flex flex-col items-center gap-2">
-                            <span className={`text-xs font-mono ${isDark ? 'text-zinc-400' : 'text-zinc-600'}`}>{volume}</span>
+                            <span className="text-xs font-mono text-muted-foreground">{volume}</span>
                             <input
                               type="range"
                               min={0}
                               max={100}
                               value={volume}
                               onChange={(e) => setVolume(Number(e.target.value))}
-                              className="h-24 w-2 cursor-pointer appearance-none rounded-full accent-emerald-400"
+                              className="h-24 w-2 cursor-pointer appearance-none rounded-full accent-primary"
                               style={{ writingMode: 'vertical-lr', WebkitAppearance: 'slider-vertical' }}
                             />
                           </div>
@@ -600,23 +584,23 @@ export default function WatchRoomMusicPage() {
                 </div>
 
                 {showCoverPanel ? (
-                  <div className={`rounded-2xl border px-4 py-4 ${isDark ? 'border-white/10 bg-black/20' : 'border-zinc-200 bg-white/80 shadow-sm'}`}>
+                  <div className="rounded-2xl border px-4 py-4 border-border bg-card">
                     <div className="flex flex-col gap-4">
                       <VinylTurntable song={song} isPlaying={Boolean(state?.isPlaying)} />
                       <AudioSpectrumCanvas bars={bars} compact volume={volume} />
                       <div className="flex items-center gap-2 text-xs tabular-nums">
-                        <span className={`w-10 ${isDark ? 'text-zinc-500' : 'text-zinc-600'}`}>{formatTime(currentTime)}</span>
-                        <div className={`relative h-1.5 flex-1 overflow-hidden rounded-full ${isDark ? 'bg-white/10' : 'bg-zinc-200'}`}>
-                          <div className="h-full rounded-full bg-emerald-400" style={{ width: `${progress}%` }} />
+                        <span className="w-10 text-muted-foreground">{formatTime(currentTime)}</span>
+                        <div className="relative h-1.5 flex-1 overflow-hidden rounded-full bg-muted">
+                          <div className="h-full rounded-full bg-primary" style={{ width: `${progress}%` }} />
                         </div>
-                        <span className={`w-10 text-right ${isDark ? 'text-zinc-500' : 'text-zinc-600'}`}>{formatTime(duration)}</span>
+                        <span className="w-10 text-right text-muted-foreground">{formatTime(duration)}</span>
                       </div>
                     </div>
                   </div>
                 ) : (
                 <div
                   ref={mobileLyricsContainerRef}
-                  className={`rounded-2xl border px-4 py-4 ${isDark ? 'border-white/10 bg-black/20' : 'border-zinc-200 bg-white/80 shadow-sm'}`}
+                  className="rounded-2xl border px-4 py-4 border-border bg-card"
                 >
                     <div className="max-h-[64vh] overflow-y-auto px-1">
                       {lyrics.length > 0 ? (
@@ -634,23 +618,23 @@ export default function WatchRoomMusicPage() {
                               }`}
                             >
                               <div>{line.text || '♪'}</div>
-                              {line.translation && <div className={`mt-1 text-sm font-normal ${isDark ? 'text-zinc-500' : 'text-zinc-400'}`}>{line.translation}</div>}
+                              {line.translation && <div className="mt-1 text-sm font-normal text-muted-foreground">{line.translation}</div>}
                             </div>
                           ))}
                         </div>
                       ) : (
-                        <div className={`flex min-h-[48vh] items-center justify-center ${isDark ? 'text-zinc-500' : 'text-zinc-400'}`}>暂无歌词</div>
+                        <div className="flex min-h-[48vh] items-center justify-center text-muted-foreground">暂无歌词</div>
                       )}
                     </div>
                     <div className="mt-3">
                       <AudioSpectrumCanvas bars={bars} compact volume={volume} />
                     </div>
                     <div className="mt-4 flex items-center gap-2 text-xs tabular-nums">
-                      <span className={`w-10 ${isDark ? 'text-zinc-500' : 'text-zinc-600'}`}>{formatTime(currentTime)}</span>
-                      <div className={`relative h-1.5 flex-1 overflow-hidden rounded-full ${isDark ? 'bg-white/10' : 'bg-zinc-200'}`}>
-                        <div className="h-full rounded-full bg-emerald-400" style={{ width: `${progress}%` }} />
+                      <span className="w-10 text-muted-foreground">{formatTime(currentTime)}</span>
+                      <div className="relative h-1.5 flex-1 overflow-hidden rounded-full bg-muted">
+                        <div className="h-full rounded-full bg-primary" style={{ width: `${progress}%` }} />
                       </div>
-                      <span className={`w-10 text-right ${isDark ? 'text-zinc-500' : 'text-zinc-600'}`}>{formatTime(duration)}</span>
+                      <span className="w-10 text-right text-muted-foreground">{formatTime(duration)}</span>
                     </div>
                   </div>
                 )}
@@ -659,29 +643,27 @@ export default function WatchRoomMusicPage() {
 
             <div className="hidden md:grid flex-1 gap-4 md:grid-cols-[420px_minmax(0,1fr)]">
               <div className={`${showCoverPanel ? 'block' : 'hidden'} min-w-0 md:block`}>
-                  <div ref={desktopVolumeControlRef} className={`rounded-lg border p-4 md:p-6 ${isDark ? 'border-white/10 bg-black/20' : 'border-zinc-200 bg-white/80 shadow-sm'}`}>
+                  <div ref={desktopVolumeControlRef} className="rounded-lg border p-4 md:p-6 border-border bg-card">
                   <div className="relative">
                     <button
                       type="button"
                       onClick={() => setShowVolumeSlider((prev) => !prev)}
-                      className={`absolute right-0 top-0 z-10 shrink-0 transition-colors ${isDark ? 'text-zinc-400 hover:text-white' : 'text-zinc-600 hover:text-zinc-900'}`}
+                      className="absolute right-0 top-0 z-sticky shrink-0 transition-colors text-muted-foreground hover:text-foreground"
                       title="音量"
                     >
-                      <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217zM14.657 2.929a1 1 0 011.414 0A9.972 9.972 0 0119 10a9.972 9.972 0 01-2.929 7.071 1 1 0 01-1.414-1.414A7.971 7.971 0 0017 10c0-2.21-.894-4.208-2.343-5.657a1 1 0 010-1.414zm-2.829 2.828a1 1 0 011.415 0A5.983 5.983 0 0115 10a5.984 5.984 0 01-1.757 4.243 1 1 0 01-1.415-1.415A3.984 3.984 0 0013 10a3.983 3.983 0 00-1.172-2.828 1 1 0 010-1.415z" clipRule="evenodd" />
-                      </svg>
+                      <Volume2 className="h-4 w-4" />
                     </button>
-                    <div className={`absolute right-0 top-6 z-20 transition-opacity ${showVolumeSlider ? 'opacity-100' : 'pointer-events-none opacity-0'}`}>
-                      <div className={`rounded-lg border p-3 shadow-xl ${isDark ? 'border-white/10 bg-zinc-900/95' : 'border-zinc-200 bg-white'}`}>
+                    <div className={`absolute right-0 top-6 z-popover transition-opacity ${showVolumeSlider ? 'opacity-100' : 'pointer-events-none opacity-0'}`}>
+                      <div className="rounded-lg border p-3 shadow-xl border-border bg-popover text-popover-foreground">
                         <div className="flex flex-col items-center gap-2">
-                          <span className={`text-xs font-mono ${isDark ? 'text-zinc-400' : 'text-zinc-600'}`}>{volume}</span>
+                          <span className="text-xs font-mono text-muted-foreground">{volume}</span>
                           <input
                             type="range"
                             min={0}
                             max={100}
                             value={volume}
                             onChange={(e) => setVolume(Number(e.target.value))}
-                            className="h-24 w-2 cursor-pointer appearance-none rounded-full accent-emerald-400"
+                            className="h-24 w-2 cursor-pointer appearance-none rounded-full accent-primary"
                             style={{ writingMode: 'vertical-lr', WebkitAppearance: 'slider-vertical' }}
                           />
                         </div>
@@ -692,22 +674,22 @@ export default function WatchRoomMusicPage() {
                   <AudioSpectrumCanvas bars={bars} compact volume={volume} />
                   <div className="mt-4 text-center">
                     <h1 className="truncate text-xl font-bold md:text-3xl">{song.name}</h1>
-                    <p className={`mt-2 truncate text-sm md:text-base ${isDark ? 'text-zinc-400' : 'text-zinc-600'}`}>{song.artist}</p>
-                    {nextSong && <p className={`mt-2 truncate text-xs md:text-sm ${isDark ? 'text-zinc-500' : 'text-zinc-600'}`}>下一首：{nextSong.name} - {nextSong.artist}</p>}
+                    <p className="mt-2 truncate text-sm md:text-base text-muted-foreground">{song.artist}</p>
+                    {nextSong && <p className="mt-2 truncate text-xs md:text-sm text-muted-foreground">下一首：{nextSong.name} - {nextSong.artist}</p>}
                   </div>
                   <div className="mt-5 flex items-center gap-2 text-xs tabular-nums">
-                    <span className={`w-10 ${isDark ? 'text-zinc-500' : 'text-zinc-600'}`}>{formatTime(currentTime)}</span>
-                    <div className={`relative h-1.5 flex-1 overflow-hidden rounded-full ${isDark ? 'bg-white/10' : 'bg-zinc-200'}`}>
-                      <div className="h-full rounded-full bg-emerald-400" style={{ width: `${progress}%` }} />
+                    <span className="w-10 text-muted-foreground">{formatTime(currentTime)}</span>
+                    <div className="relative h-1.5 flex-1 overflow-hidden rounded-full bg-muted">
+                      <div className="h-full rounded-full bg-primary" style={{ width: `${progress}%` }} />
                     </div>
-                    <span className={`w-10 text-right ${isDark ? 'text-zinc-500' : 'text-zinc-600'}`}>{formatTime(duration)}</span>
+                    <span className="w-10 text-right text-muted-foreground">{formatTime(duration)}</span>
                   </div>
                 </div>
               </div>
 
               <div
                 ref={desktopLyricsContainerRef}
-                className={`${showLyricsPanel ? 'block' : 'hidden'} min-h-0 rounded-lg border p-4 md:block md:h-[70vh] md:overflow-y-auto md:p-6 ${isDark ? 'border-white/10 bg-black/20' : 'border-zinc-200 bg-white/80 shadow-sm'}`}
+                className={`${showLyricsPanel ? 'block' : 'hidden'} min-h-0 rounded-lg border p-4 md:block md:h-[70vh] md:overflow-y-auto md:p-6 border-border bg-card`}
               >
                 {lyrics.length > 0 ? (
                   <div className="space-y-4">
@@ -724,28 +706,28 @@ export default function WatchRoomMusicPage() {
                         }`}
                       >
                         <div>{line.text || '♪'}</div>
-                        {line.translation && <div className={`mt-1 text-sm font-normal ${isDark ? 'text-zinc-500' : 'text-zinc-400'}`}>{line.translation}</div>}
+                        {line.translation && <div className="mt-1 text-sm font-normal text-muted-foreground">{line.translation}</div>}
                       </div>
                     ))}
                   </div>
                 ) : (
-                  <div className={`flex h-full min-h-[200px] items-center justify-center ${isDark ? 'text-zinc-500' : 'text-zinc-400'}`}>暂无歌词</div>
+                  <div className="flex h-full min-h-[200px] items-center justify-center text-muted-foreground">暂无歌词</div>
                 )}
               </div>
             </div>
 
           </>
         ) : (
-          <div className={`flex flex-1 items-center justify-center ${isDark ? 'text-zinc-400' : 'text-zinc-500'}`}>等待房主播放音乐</div>
+          <div className="flex flex-1 items-center justify-center text-muted-foreground">等待房主播放音乐</div>
         )}
       </section>
 
       {needsActivation && song && (
-        <div className={`absolute inset-0 z-20 flex items-center justify-center backdrop-blur ${isDark ? 'bg-black/70' : 'bg-white/60'}`}>
+        <div className="absolute inset-0 z-modal flex items-center justify-center backdrop-blur bg-background/70">
           <button
             type="button"
             onClick={activate}
-            className="rounded-full bg-emerald-500 px-8 py-4 text-base font-semibold text-white shadow-2xl hover:bg-emerald-600"
+            className="rounded-full bg-primary px-8 py-4 text-base font-semibold text-primary-foreground shadow-2xl hover:bg-primary/90"
           >
             点击加入一起听
           </button>
