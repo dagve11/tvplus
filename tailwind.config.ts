@@ -47,6 +47,40 @@ const config: Config = {
         ],
       },
       colors: {
+        // ===== shadcn/ui 设计 token（单色 neutral 体系，黑白极简） =====
+        border: 'hsl(var(--border))',
+        input: 'hsl(var(--input))',
+        ring: 'hsl(var(--ring))',
+        background: 'hsl(var(--background))',
+        foreground: 'hsl(var(--foreground))',
+        primary: {
+          DEFAULT: 'hsl(var(--primary))',
+          foreground: 'hsl(var(--primary-foreground))',
+        },
+        secondary: {
+          DEFAULT: 'hsl(var(--secondary))',
+          foreground: 'hsl(var(--secondary-foreground))',
+        },
+        destructive: {
+          DEFAULT: 'hsl(var(--destructive))',
+          foreground: 'hsl(var(--destructive-foreground))',
+        },
+        muted: {
+          DEFAULT: 'hsl(var(--muted))',
+          foreground: 'hsl(var(--muted-foreground))',
+        },
+        accent: {
+          DEFAULT: 'hsl(var(--accent))',
+          foreground: 'hsl(var(--accent-foreground))',
+        },
+        popover: {
+          DEFAULT: 'hsl(var(--popover))',
+          foreground: 'hsl(var(--popover-foreground))',
+        },
+        card: {
+          DEFAULT: 'hsl(var(--card))',
+          foreground: 'hsl(var(--card-foreground))',
+        },
         // 漫画 / 小说专属的"暖纸书库"色板：浅色为纸，深色为墨，强调为赭石。
         // 这里刻意不复用 bg-white / bg-gray-*，因为管理端主题层会对那些类名做
         // !important 覆盖；书库区自成一套色板，不参与全站主题替换。
@@ -115,19 +149,22 @@ const config: Config = {
           'night-theme': 'var(--theme-primary, #10b981)',
           'night-theme-hover': 'var(--theme-primary-hover, #059669)',
         },
-        primary: {
-          50: '#f0f9ff',
-          100: '#e0f2fe',
-          200: '#bae6fd',
-          300: '#7dd3fc',
-          400: '#38bdf8',
-          500: '#0ea5e9',
-          600: '#0284c7',
-          700: '#0369a1',
-          800: '#075985',
-          900: '#0c4a6e',
-        },
-        dark: '#222222',
+        // 注：原 sky 色阶 primary 与 #222 dark 色标经全库 grep 零引用，已删除。
+      },
+      borderRadius: {
+        lg: 'var(--radius)',
+        md: 'calc(var(--radius) - 2px)',
+        sm: 'calc(var(--radius) - 4px)',
+      },
+      zIndex: {
+        base: '0',
+        sticky: '20',
+        header: '30',
+        nav: '30',
+        drawer: '40',
+        modal: '50',
+        popover: '60',
+        toast: '70',
       },
       keyframes: {
         flicker: {
@@ -189,7 +226,11 @@ const config: Config = {
       },
     },
   },
-  plugins: [require('@tailwindcss/forms'), require('@tailwindcss/typography')],
+  plugins: [
+    require('@tailwindcss/forms'),
+    require('@tailwindcss/typography'),
+    require('tailwindcss-animate'),
+  ],
 } satisfies Config;
 
 export default config;

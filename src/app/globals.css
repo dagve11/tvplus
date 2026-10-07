@@ -2,20 +2,96 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ============================================================
+   设计 token（shadcn/ui · neutral 单色体系 · 黑白极简）
+   新 UI 一律消费这些变量（bg-background / text-foreground / bg-card …），
+   不手写具体色值。运行时主题（/api/theme/css）通过覆写本层变量换肤。
+   --theme-primary / --theme-primary-hover 为兼容别名：默认主题=单色灰，
+   供 --mtv-* 加载动画、评分徽章等存量 CSS 引用；选了内置主题后由主题覆写。
+   ============================================================ */
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 0 0% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 3.9%;
+    --primary: 0 0% 9%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 0 0% 96.1%;
+    --secondary-foreground: 0 0% 9%;
+    --muted: 0 0% 96.1%;
+    --muted-foreground: 0 0% 45.1%;
+    --accent: 0 0% 96.1%;
+    --accent-foreground: 0 0% 9%;
+    --destructive: 0 62% 44%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 89.8%;
+    --input: 0 0% 89.8%;
+    --ring: 0 0% 45%;
+    --radius: 0.5rem;
+    --theme-primary: #52525b;
+    --theme-primary-hover: #3f3f46;
+  }
+
+  .dark {
+    --background: 0 0% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 0 0% 6%;
+    --card-foreground: 0 0% 98%;
+    --popover: 0 0% 6%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 0 0% 9%;
+    --secondary: 0 0% 14.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 0 0% 14.9%;
+    --muted-foreground: 0 0% 63.9%;
+    --accent: 0 0% 14.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 55% 45%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 14.9%;
+    --input: 0 0% 16%;
+    --ring: 0 0% 70%;
+    --theme-primary: #d4d4d8;
+    --theme-primary-hover: #fafafa;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html,
+  body {
+    height: 100%;
+    overflow-x: hidden;
+    /* 阻止 iOS Safari 拉动回弹 */
+    overscroll-behavior: none;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
 /* NProgress 进度条样式 */
 #nprogress {
   pointer-events: none;
 }
 
 #nprogress .bar {
-  background: #3b82f6;
+  background: hsl(var(--primary));
   position: fixed;
   z-index: 9999;
   top: 0;
   left: 0;
   width: 100%;
-  height: 3px;
-  box-shadow: 0 0 10px rgba(59, 130, 246, 0.8), 0 0 5px rgba(59, 130, 246, 0.6);
+  height: 2px;
+  box-shadow: 0 0 10px color-mix(in srgb, hsl(var(--primary)) 60%, transparent);
 }
 
 #nprogress .peg {
@@ -24,19 +100,9 @@
   right: 0px;
   width: 100px;
   height: 100%;
-  box-shadow: 0 0 10px rgba(59, 130, 246, 0.8), 0 0 5px rgba(59, 130, 246, 0.6);
-  opacity: 1.0;
+  box-shadow: 0 0 10px color-mix(in srgb, hsl(var(--primary)) 60%, transparent);
+  opacity: 1;
   transform: rotate(3deg) translate(0px, -4px);
-}
-
-/* 暗色模式下的进度条样式 */
-.dark #nprogress .bar {
-  background: #60a5fa;
-  box-shadow: 0 0 10px rgba(96, 165, 250, 0.8), 0 0 5px rgba(96, 165, 250, 0.6);
-}
-
-.dark #nprogress .peg {
-  box-shadow: 0 0 10px rgba(96, 165, 250, 0.8), 0 0 5px rgba(96, 165, 250, 0.6);
 }
 
 @layer utilities {
@@ -50,34 +116,8 @@
   }
 }
 
-:root {
-  --foreground-rgb: 255, 255, 255;
-}
-
-html,
-body {
-  height: 100%;
-  overflow-x: hidden;
-  /* 阻止 iOS Safari 拉动回弹 */
-  overscroll-behavior: none;
-}
-
-body {
-  color: rgb(var(--foreground-rgb));
-}
-
-html:not(.dark) body {
-  background: linear-gradient(
-    180deg,
-    #e6f3fb 0%,
-    #eaf3f7 18%,
-    #f7f7f3 38%,
-    #e9ecef 60%,
-    #dbe3ea 80%,
-    #d3dde6 100%
-  );
-  background-attachment: fixed;
-}
+/* 旧的 --foreground-rgb / 浅色渐变 body 背景已删除：
+   底色统一由 @layer base 的 bg-background / text-foreground 提供（单色 token）。 */
 
 /* 自定义滚动条样式 */
 ::-webkit-scrollbar {
@@ -218,7 +258,8 @@ div[data-media-provider] video {
     transform: scale(1);
     opacity: 0.6;
   }
-  75%, 100% {
+  75%,
+  100% {
     transform: scale(2);
     opacity: 0;
   }
@@ -226,7 +267,8 @@ div[data-media-provider] video {
 
 /* 水波纹缩放动画 - 第二层 (慢速脉冲) */
 @keyframes pulse-scale {
-  0%, 100% {
+  0%,
+  100% {
     transform: scale(1);
     opacity: 0.4;
   }
@@ -238,7 +280,8 @@ div[data-media-provider] video {
 
 /* 主体徽章缩放动画 */
 @keyframes badge-scale {
-  0%, 100% {
+  0%,
+  100% {
     transform: scale(1);
   }
   50% {
@@ -247,7 +290,8 @@ div[data-media-provider] video {
 }
 
 @keyframes reader-book-flip {
-  0%, 100% {
+  0%,
+  100% {
     transform: perspective(120px) rotateY(0deg) translateY(0);
   }
   30% {
@@ -262,15 +306,10 @@ div[data-media-provider] video {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #a8611f;
+  color: hsl(var(--muted-foreground));
   animation: reader-book-flip 1.5s ease-in-out infinite;
   transform-origin: center;
 }
-
-.dark .reader-book-loader {
-  color: #d9924a;
-}
-
 
 /* TV 端遥控器焦点：深色选中 + 放大，而不是细边框 */
 .tv-focusable {
@@ -281,12 +320,8 @@ div[data-media-provider] video {
   scroll-margin-right: 48px;
   transform-origin: center;
   scale: 1;
-  transition:
-    scale 180ms ease,
-    background-color 180ms ease,
-    color 180ms ease,
-    box-shadow 180ms ease,
-    opacity 180ms ease;
+  transition: scale 180ms ease, background-color 180ms ease, color 180ms ease,
+    box-shadow 180ms ease, opacity 180ms ease;
 }
 
 .tv-focusable:focus,
@@ -294,11 +329,10 @@ div[data-media-provider] video {
 .tv-focused {
   outline: none !important;
   scale: 1.055;
-  background-color: rgba(15, 23, 42, 0.96) !important;
+  background-color: rgba(15, 15, 18, 0.96) !important;
   color: #ffffff !important;
-  box-shadow:
-    0 18px 44px rgba(0, 0, 0, 0.68),
-    0 0 26px rgba(225, 29, 72, 0.38) !important;
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.68),
+    0 0 26px rgba(255, 255, 255, 0.35) !important;
   z-index: 30;
 }
 
@@ -317,7 +351,11 @@ div[data-media-provider] video {
   position: absolute;
   inset: -3px;
   border-radius: inherit;
-  background: linear-gradient(135deg, rgba(255,255,255,0.22), rgba(225,29,72,0.28));
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.22),
+    rgba(255, 255, 255, 0.12)
+  );
   opacity: 0.45;
   pointer-events: none;
 }
@@ -348,13 +386,13 @@ div[data-media-provider] video {
 }
 
 :root {
-  --skeleton-color: #f0f0f0;
-  --skeleton-highlight: #e0e0e0;
+  --skeleton-color: hsl(var(--muted));
+  --skeleton-highlight: hsl(var(--border));
 }
 
 .dark {
-  --skeleton-color: #2d2d2d;
-  --skeleton-highlight: #3d3d3d;
+  --skeleton-color: hsl(var(--muted));
+  --skeleton-highlight: hsl(0 0% 22%);
 }
 
 /* ============================================================
@@ -376,16 +414,16 @@ html:not([data-loading-style]) .mtv-load-talisman {
 /* 主题色与墨色，两种款式共用 */
 .mtv-load-grid,
 .mtv-load-talisman {
-  --mtv-acc: var(--theme-primary, #10b981);
-  --mtv-acc-hover: var(--theme-primary-hover, #059669);
+  --mtv-acc: var(--theme-primary, #52525b);
+  --mtv-acc-hover: var(--theme-primary-hover, #3f3f46);
   --mtv-ink: #1c1c22;
-  --mtv-done: #2563eb; /* 方格里「已完成」的填色，刻意不跟主题色同色系 */
+  --mtv-done: #a1a1aa; /* 方格里「已完成」的填色，刻意不跟主题色同色系 */
   --mtv-surface: rgba(255, 255, 255, 0.94);
 }
 .dark .mtv-load-grid,
 .dark .mtv-load-talisman {
   --mtv-ink: #ececf4;
-  --mtv-done: #3b82f6;
+  --mtv-done: #71717a;
   --mtv-surface: rgba(24, 24, 32, 0.94);
 }
 
@@ -412,8 +450,7 @@ html:not([data-loading-style]) .mtv-load-talisman {
   border: 2.5px solid var(--mtv-ink);
   border-radius: 3px;
   /* 不能裁切：进行中的光环/光点要能扩到格子外面 */
-  transition:
-    background 0.45s ease,
+  transition: background 0.45s ease,
     transform 0.34s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 .mtv-panel svg {
@@ -421,9 +458,7 @@ html:not([data-loading-style]) .mtv-load-talisman {
   height: 22px;
   color: var(--mtv-ink);
   opacity: 0.22;
-  transition:
-    color 0.35s,
-    opacity 0.35s;
+  transition: color 0.35s, opacity 0.35s;
 }
 .mtv-panel span {
   font-size: 8px;
@@ -431,9 +466,7 @@ html:not([data-loading-style]) .mtv-load-talisman {
   letter-spacing: 0.06em;
   color: var(--mtv-ink);
   opacity: 0.22;
-  transition:
-    color 0.35s,
-    opacity 0.35s;
+  transition: color 0.35s, opacity 0.35s;
 }
 /* 已完成：整格填蓝，白图标 */
 .mtv-panel.on {
@@ -490,8 +523,11 @@ html:not([data-loading-style]) .mtv-load-talisman {
   position: absolute;
   inset: -6px;
   border-radius: 9px;
-  background:
-    radial-gradient(circle at 50% 0, var(--mtv-acc) 1.6px, transparent 2.4px),
+  background: radial-gradient(
+      circle at 50% 0,
+      var(--mtv-acc) 1.6px,
+      transparent 2.4px
+    ),
     radial-gradient(circle at 100% 50%, var(--mtv-acc) 1.6px, transparent 2.4px),
     radial-gradient(circle at 50% 100%, var(--mtv-acc) 1.6px, transparent 2.4px),
     radial-gradient(circle at 0 50%, var(--mtv-acc) 1.6px, transparent 2.4px),
@@ -602,7 +638,12 @@ html:not([data-loading-style]) .mtv-load-talisman {
     var(--mtv-acc) 0 0.7deg,
     transparent 0.7deg 15deg
   );
-  -webkit-mask: radial-gradient(circle, transparent 62%, #000 63% 70%, transparent 71%);
+  -webkit-mask: radial-gradient(
+    circle,
+    transparent 62%,
+    #000 63% 70%,
+    transparent 71%
+  );
   mask: radial-gradient(circle, transparent 62%, #000 63% 70%, transparent 71%);
   animation: mtv-spin 26s linear infinite;
 }
@@ -614,7 +655,12 @@ html:not([data-loading-style]) .mtv-load-talisman {
     var(--mtv-acc-hover) 0 7deg,
     transparent 7deg 18deg
   );
-  -webkit-mask: radial-gradient(circle, transparent 78%, #000 79% 86%, transparent 87%);
+  -webkit-mask: radial-gradient(
+    circle,
+    transparent 78%,
+    #000 79% 86%,
+    transparent 87%
+  );
   mask: radial-gradient(circle, transparent 78%, #000 79% 86%, transparent 87%);
   animation: mtv-spin 17s linear infinite reverse;
 }
@@ -672,19 +718,17 @@ html:not([data-loading-style]) .mtv-load-talisman {
   position: absolute;
   left: 50%;
   top: 50%;
-  margin: calc(var(--mtv-tal-s) * -8 / 150) 0 0 calc(var(--mtv-tal-s) * -6 / 150);
-  font-family: Georgia, 'Songti SC', 'Noto Serif CJK SC', 'Noto Serif SC', STSong,
-    SimSun, serif;
+  margin: calc(var(--mtv-tal-s) * -8 / 150) 0 0
+    calc(var(--mtv-tal-s) * -6 / 150);
+  font-family: Georgia, 'Songti SC', 'Noto Serif CJK SC', 'Noto Serif SC',
+    STSong, SimSun, serif;
   font-size: calc(var(--mtv-tal-s) * 12 / 150);
   font-weight: 600;
   color: var(--mtv-acc-hover);
   opacity: 0.26;
   transform: rotate(var(--a)) translateY(calc(var(--mtv-tal-s) * -63 / 150))
     rotate(calc(-1 * var(--a)));
-  transition:
-    opacity 0.4s,
-    color 0.4s,
-    text-shadow 0.4s;
+  transition: opacity 0.4s, color 0.4s, text-shadow 0.4s;
 }
 .mtv-rune.lit {
   opacity: 1;
@@ -1023,9 +1067,9 @@ html[data-loading-style='grid'] .mtv-err-box {
   --rate-mid-a: var(--theme-primary, #ec4899);
   --rate-mid-b: var(--theme-primary-hover, #d6559a);
   --rate-mid-ink: #ffffff;
-  --rate-lo-a: #9fb0cc;
-  --rate-lo-b: #6b7d9e;
-  --rate-lo-ink: #20283a;
+  --rate-lo-a: #a1a1aa;
+  --rate-lo-b: #71717a;
+  --rate-lo-ink: #18181b;
   font-variant-numeric: tabular-nums;
   -webkit-user-select: none;
   user-select: none;
