@@ -4,6 +4,7 @@
 
 import {
   Copy,
+  Download,
   ExternalLink,
   Monitor,
   Rss,
@@ -22,12 +23,14 @@ interface SubscribePanelProps {
     message: string;
     onConfirm: () => void;
   }) => void;
+  onOpenTVRemote: () => void;
 }
 
 // 电视访问面板（TVBox 订阅 / OrionTV / Web 电视扫码登录）
 export const SubscribePanel = ({
   open,
   onOpenChange,
+  onOpenTVRemote,
   confirm,
 }: SubscribePanelProps) => {
   // 订阅相关状态
@@ -667,8 +670,7 @@ export const SubscribePanel = ({
                   type='button'
                   onClick={() => {
                     if (!tvModeEnabled) return;
-                    setIsSubscribeOpen(false);
-                    setIsTVRemoteOpen(true);
+                    onOpenTVRemote();
                   }}
                   disabled={!tvModeEnabled}
                   className='inline-flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-slate-950 px-4 py-3 text-sm font-black text-white transition hover:bg-slate-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-500/70 disabled:cursor-not-allowed disabled:bg-slate-300 disabled:text-slate-500 dark:bg-white dark:text-slate-950 dark:hover:bg-slate-200 dark:disabled:bg-white/10 dark:disabled:text-slate-500'

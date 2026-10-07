@@ -10,7 +10,9 @@ import {
   Package,
   Settings,
   Shield,
+  Smartphone,
   Star,
+  Tablet,
   User,
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
@@ -24,12 +26,8 @@ import { UpdateStatus } from '@/lib/version_check';
 import { DeviceManagementPanel } from './DeviceManagementPanel';
 import { DownloadManagementPanel } from './DownloadManagementPanel';
 import { EmailSettingsPanel } from './EmailSettingsPanel';
-import { EmailSettingsPanel } from './EmailSettingsPanel';
-import { FavoritesPanel } from './FavoritesPanel';
 import { FavoritesPanel } from './FavoritesPanel';
 import { NotificationPanel } from './NotificationPanel';
-import { NotificationPanel } from './NotificationPanel';
-import { OfflineDownloadPanel } from './OfflineDownloadPanel';
 import { OfflineDownloadPanel } from './OfflineDownloadPanel';
 import { PersonalCenterPanel } from './PersonalCenterPanel';
 import TVRemotePanel from './tv/TVRemotePanel';
@@ -40,6 +38,11 @@ import { SubscribePanel } from './user-panels/SubscribePanel';
 import { UserSettingsSheet } from './user-panels/UserSettingsSheet';
 import { useVersionCheck } from './VersionCheckProvider';
 import { VersionPanel } from './VersionPanel';
+
+interface AuthInfo {
+  username?: string;
+  role?: 'owner' | 'admin' | 'user';
+}
 
 export const UserMenu: React.FC = () => {
   const router = useRouter();
@@ -942,6 +945,7 @@ export const UserMenu: React.FC = () => {
         open={isSettingsOpen}
         onOpenChange={setIsSettingsOpen}
         confirm={confirm}
+        onOpenDownloadManagement={() => setIsDownloadManagementOpen(true)}
       />
 
       {/* 修改密码面板 */}
@@ -956,6 +960,10 @@ export const UserMenu: React.FC = () => {
         open={isSubscribeOpen}
         onOpenChange={setIsSubscribeOpen}
         confirm={confirm}
+        onOpenTVRemote={() => {
+          setIsSubscribeOpen(false);
+          setIsTVRemoteOpen(true);
+        }}
       />
 
       {/* 版本面板 */}

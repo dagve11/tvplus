@@ -39,6 +39,7 @@ import { clearBangumiImageFallbackCache } from '@/lib/utils';
 interface UserSettingsSheetProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  onOpenDownloadManagement: () => void;
   confirm: (opts: {
     title: string;
     message: string;
@@ -51,8 +52,11 @@ interface UserSettingsSheetProps {
 export const UserSettingsSheet = ({
   open,
   onOpenChange,
+  onOpenDownloadManagement,
   confirm,
 }: UserSettingsSheetProps) => {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
   // 设置相关状态
   const [defaultAggregateSearch, setDefaultAggregateSearch] = useState(true);
   const [saveLivePlayRecords, setSaveLivePlayRecords] = useState(false);
@@ -3356,7 +3360,7 @@ export const UserSettingsSheet = ({
                   {/* 下载文件管理 */}
                   <div className='space-y-2'>
                     <button
-                      onClick={() => setIsDownloadManagementOpen(true)}
+                      onClick={onOpenDownloadManagement}
                       className='w-full px-4 py-2 text-sm bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors flex items-center justify-center gap-2'
                     >
                       <Package className='w-4 h-4' />
