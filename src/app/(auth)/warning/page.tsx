@@ -1,0 +1,95 @@
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: '安全警告 - MoonTVPlus',
+  description: '站点安全配置警告',
+};
+
+export default function WarningPage() {
+  return (
+    <div className='relative z-10 w-full max-w-2xl rounded-xl border border-destructive/40 bg-card p-4 text-card-foreground shadow-xl sm:p-8'>
+      {/* 警告图标 */}
+      <div className='mb-4 flex justify-center sm:mb-6'>
+        <div className='flex h-16 w-16 items-center justify-center rounded-full bg-destructive/10 sm:h-20 sm:w-20'>
+          <svg
+            className='h-10 w-10 text-destructive sm:h-12 sm:w-12'
+            fill='none'
+            stroke='currentColor'
+            viewBox='0 0 24 24'
+          >
+            <path
+              strokeLinecap='round'
+              strokeLinejoin='round'
+              strokeWidth={2}
+              d='M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z'
+            />
+          </svg>
+        </div>
+      </div>
+
+      {/* 标题 */}
+      <div className='mb-6 text-center sm:mb-8'>
+        <h1 className='mb-2 text-2xl font-bold text-foreground sm:text-3xl'>
+          安全合规配置警告
+        </h1>
+        <div className='mx-auto h-1 w-12 rounded-full bg-destructive sm:w-16'></div>
+      </div>
+
+      {/* 警告内容 */}
+      <div className='space-y-4 sm:space-y-6'>
+        <div className='rounded-r-lg border-l-4 border-destructive bg-destructive/10 p-3 sm:p-4'>
+          <p className='mb-2 text-base font-semibold text-destructive sm:text-lg'>
+            ⚠️ 安全风险提示
+          </p>
+          <p className='text-sm text-destructive/90 sm:text-base'>
+            检测到您的站点未配置访问控制，存在潜在的安全风险和法律合规问题。
+          </p>
+        </div>
+
+        <div className='space-y-3 sm:space-y-4'>
+          <h2 className='text-lg font-semibold text-foreground sm:text-xl'>
+            主要风险
+          </h2>
+          <ul className='space-y-2 text-sm text-muted-foreground sm:space-y-3 sm:text-base'>
+            <li className='flex items-start'>
+              <span className='mr-2 mt-0.5 text-destructive'>•</span>
+              <span>未经授权的访问可能导致内容被恶意传播</span>
+            </li>
+            <li className='flex items-start'>
+              <span className='mr-2 mt-0.5 text-destructive'>•</span>
+              <span>服务器资源可能被滥用，影响正常服务</span>
+            </li>
+            <li className='flex items-start'>
+              <span className='mr-2 mt-0.5 text-destructive'>•</span>
+              <span>可能收到相关权利方的法律通知</span>
+            </li>
+            <li className='flex items-start'>
+              <span className='mr-2 mt-0.5 text-destructive'>•</span>
+              <span>服务提供商可能因合规问题终止服务</span>
+            </li>
+          </ul>
+        </div>
+
+        <div className='rounded-lg border border-border bg-muted/50 p-3 sm:p-4'>
+          <h3 className='mb-2 text-base font-semibold text-foreground sm:text-lg'>
+            🔒 安全配置建议
+          </h3>
+          <p className='text-sm text-muted-foreground sm:text-base'>
+            请立即配置{' '}
+            <code className='rounded bg-muted px-1.5 py-0.5 font-mono text-xs text-foreground sm:text-sm'>
+              PASSWORD
+            </code>{' '}
+            环境变量以启用访问控制。
+          </p>
+        </div>
+      </div>
+
+      {/* 底部装饰 */}
+      <div className='mt-6 border-t border-border pt-4 sm:mt-8 sm:pt-6'>
+        <div className='text-center text-xs text-muted-foreground sm:text-sm'>
+          <p>为确保系统安全性和合规性，请及时完成安全配置</p>
+        </div>
+      </div>
+    </div>
+  );
+}
