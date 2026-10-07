@@ -120,7 +120,7 @@ export const SubscribePanel = ({
             if (messageEl) {
               messageEl.textContent = '订阅token已重置！';
               messageEl.className =
-                'text-xs text-center text-green-600 dark:text-green-400 mt-2';
+                'text-xs text-center text-primary mt-2';
               messageEl.classList.remove('hidden');
               setTimeout(() => {
                 messageEl.classList.add('hidden');
@@ -131,7 +131,7 @@ export const SubscribePanel = ({
             if (messageEl) {
               messageEl.textContent = data.error || '重置失败，请重试';
               messageEl.className =
-                'text-xs text-center text-red-600 dark:text-red-400 mt-2';
+                'text-xs text-center text-destructive mt-2';
               messageEl.classList.remove('hidden');
             }
           }
@@ -141,7 +141,7 @@ export const SubscribePanel = ({
           if (messageEl) {
             messageEl.textContent = '重置失败，请重试';
             messageEl.className =
-              'text-xs text-center text-red-600 dark:text-red-400 mt-2';
+              'text-xs text-center text-destructive mt-2';
             messageEl.classList.remove('hidden');
           }
         } finally {
@@ -344,7 +344,7 @@ export const SubscribePanel = ({
     <>
       {/* 背景遮罩 */}
       <div
-        className='fixed inset-0 bg-black/60 backdrop-blur-sm z-[1000]'
+        className='fixed inset-0 bg-black/60 backdrop-blur-sm z-modal'
         onClick={handleCloseSubscribe}
         onTouchMove={(e) => {
           e.preventDefault();
@@ -358,7 +358,7 @@ export const SubscribePanel = ({
       />
 
       {/* 电视访问面板 */}
-      <div className='fixed top-1/2 left-1/2 z-[1001] max-h-[92vh] w-full max-w-3xl -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-3xl border border-slate-200/70 bg-white shadow-2xl shadow-black/30 dark:border-white/10 dark:bg-slate-950'>
+      <div className='fixed top-1/2 left-1/2 z-popover max-h-[92vh] w-full max-w-3xl -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-3xl border border-border bg-card shadow-2xl shadow-black/30'>
         <div
           className='max-h-[92vh] overflow-y-auto p-6 sm:p-7'
           data-panel-content
@@ -378,11 +378,11 @@ export const SubscribePanel = ({
                 playsInline
               />
               <div className='pointer-events-none absolute inset-0 grid place-items-center'>
-                <div className='h-64 w-64 rounded-xl border-4 border-white/90 [box-shadow:0_0_0_9999px_rgba(0,0,0,0.58),0_0_30px_rgba(244,63,94,0.55)] sm:h-80 sm:w-80' />
+                <div className='h-64 w-64 rounded-xl border-4 border-white/90 [box-shadow:0_0_0_9999px_rgba(0,0,0,0.58),0_0_30px_rgba(255,255,255,0.55)] sm:h-80 sm:w-80' />
               </div>
               <div className='absolute left-0 right-0 top-0 flex items-start justify-between gap-4 bg-gradient-to-b from-black/75 to-transparent p-5 text-white sm:p-7'>
                 <div>
-                  <div className='inline-flex items-center gap-2 rounded-full bg-rose-500/25 px-3 py-1 text-xs font-black text-rose-100 ring-1 ring-rose-300/20'>
+                  <div className='inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1 text-xs font-black text-white ring-1 ring-white/20'>
                     <Smartphone className='h-4 w-4' />
                     手机相机扫码
                   </div>
@@ -405,7 +405,7 @@ export const SubscribePanel = ({
                   </p>
                 )}
                 {tvQrScannerError && (
-                  <p className='mt-3 rounded-2xl bg-red-500/20 px-4 py-3 text-center text-sm font-black text-red-100 ring-1 ring-red-300/20 backdrop-blur'>
+                  <p className='mt-3 rounded-2xl bg-destructive/20 px-4 py-3 text-center text-sm font-black text-destructive-foreground ring-1 ring-destructive/30 backdrop-blur'>
                     {tvQrScannerError}
                   </p>
                 )}
@@ -416,24 +416,24 @@ export const SubscribePanel = ({
           {/* 标题栏 */}
           <div className='mb-6 flex items-start justify-between gap-4'>
             <div>
-              <div className='inline-flex items-center gap-2 rounded-full bg-green-500/10 px-3 py-1 text-xs font-bold text-green-600 dark:text-green-400'>
+              <div className='inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-xs font-bold text-primary'>
                 <Monitor className='h-4 w-4' />
                 TV ACCESS
               </div>
-              <h3 className='mt-3 text-2xl font-black text-slate-900 dark:text-slate-50'>
+              <h3 className='mt-3 text-2xl font-black text-foreground'>
                 电视访问
               </h3>
             </div>
             <button
               onClick={handleCloseSubscribe}
-              className='flex h-9 w-9 cursor-pointer items-center justify-center rounded-full text-slate-500 transition hover:bg-slate-100 hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 dark:hover:bg-white/10 dark:hover:text-white'
+              className='flex h-9 w-9 cursor-pointer items-center justify-center rounded-full text-muted-foreground transition hover:bg-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'
               aria-label='Close'
             >
               <X className='h-5 w-5' />
             </button>
           </div>
 
-          <div className='mb-5 grid grid-cols-3 rounded-2xl bg-slate-100 p-1 dark:bg-white/10'>
+          <div className='mb-5 grid grid-cols-3 rounded-2xl bg-muted p-1'>
             {[
               { key: 'tvbox' as const, label: 'TVBox 订阅', icon: Rss },
               { key: 'orion' as const, label: 'OrionTV', icon: Download },
@@ -449,10 +449,10 @@ export const SubscribePanel = ({
                     setTvAccessTab(item.key);
                     if (item.key !== 'web') closeTvQrScanner();
                   }}
-                  className={`flex cursor-pointer items-center justify-center gap-2 rounded-xl px-3 py-3 text-sm font-black transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500/70 ${
+                  className={`flex cursor-pointer items-center justify-center gap-2 rounded-xl px-3 py-3 text-sm font-black transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
                     active
-                      ? 'bg-white text-slate-950 shadow-sm dark:bg-slate-950 dark:text-white'
-                      : 'text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white'
+                      ? 'bg-background text-foreground shadow-sm'
+                      : 'text-muted-foreground hover:text-foreground'
                   }`}
                 >
                   <Icon className='h-4 w-4' />
@@ -464,17 +464,17 @@ export const SubscribePanel = ({
           </div>
 
           {tvAccessTab === 'tvbox' && (
-            <section className='rounded-2xl border border-slate-200 bg-slate-50 p-5 dark:border-white/10 dark:bg-white/[0.04]'>
+            <section className='rounded-2xl border border-border bg-muted p-5'>
               <div className='flex items-center justify-between gap-3'>
                 <div className='flex items-center gap-3'>
-                  <div className='flex h-11 w-11 items-center justify-center rounded-2xl bg-green-500 text-white shadow-lg shadow-green-500/25'>
+                  <div className='flex h-11 w-11 items-center justify-center rounded-2xl bg-primary text-primary-foreground shadow-lg'>
                     <Rss className='h-5 w-5' />
                   </div>
                   <div>
-                    <h4 className='text-lg font-black text-slate-900 dark:text-slate-100'>
+                    <h4 className='text-lg font-black text-foreground'>
                       TVBox 订阅
                     </h4>
-                    <p className='mt-1 text-sm text-slate-600 dark:text-slate-400'>
+                    <p className='mt-1 text-sm text-muted-foreground'>
                       复制订阅链接到 TVBox 使用
                     </p>
                   </div>
@@ -482,8 +482,8 @@ export const SubscribePanel = ({
                 <span
                   className={`rounded-full px-2.5 py-1 text-xs font-bold ${
                     subscribeEnabled
-                      ? 'bg-green-500/10 text-green-600 dark:text-green-400'
-                      : 'bg-slate-200 text-slate-500 dark:bg-white/10 dark:text-slate-400'
+                      ? 'bg-primary/10 text-primary'
+                      : 'bg-muted text-muted-foreground'
                   }`}
                 >
                   {subscribeEnabled ? '已启用' : '未启用'}
@@ -491,14 +491,14 @@ export const SubscribePanel = ({
               </div>
 
               {!subscribeEnabled ? (
-                <div className='mt-5 rounded-xl border border-dashed border-slate-300 bg-white/70 px-4 py-3 text-sm font-semibold text-slate-500 dark:border-white/10 dark:bg-white/5 dark:text-slate-400'>
+                <div className='mt-5 rounded-xl border border-dashed border-border bg-muted px-4 py-3 text-sm font-semibold text-muted-foreground'>
                   TVBox 订阅功能未启用
                 </div>
               ) : isLoadingSubscribeUrl ? (
                 <div className='mt-5 space-y-3'>
-                  <div className='h-14 animate-pulse rounded-xl bg-slate-200 dark:bg-white/10' />
-                  <div className='h-14 animate-pulse rounded-xl bg-slate-200 dark:bg-white/10' />
-                  <div className='h-10 animate-pulse rounded-xl bg-slate-200 dark:bg-white/10' />
+                  <div className='h-14 animate-pulse rounded-xl bg-muted' />
+                  <div className='h-14 animate-pulse rounded-xl bg-muted' />
+                  <div className='h-10 animate-pulse rounded-xl bg-muted' />
                 </div>
               ) : (
                 <div className='mt-5 space-y-4'>
@@ -506,52 +506,52 @@ export const SubscribePanel = ({
                     <button
                       type='button'
                       onClick={() => setSubscribeAdFilterEnabled((prev) => !prev)}
-                      className='flex w-full cursor-pointer items-center justify-between rounded-xl border border-slate-200 bg-white px-4 py-3 text-left transition hover:border-green-400 dark:border-white/10 dark:bg-slate-900/70'
+                      className='flex w-full cursor-pointer items-center justify-between rounded-xl border border-border bg-card px-4 py-3 text-left transition hover:border-primary'
                     >
                       <div>
-                        <div className='text-sm font-bold text-slate-800 dark:text-slate-200'>去广告</div>
-                        <div className='mt-1 text-xs text-slate-500 dark:text-slate-400'>开启后通过代理处理播放链接</div>
+                        <div className='text-sm font-bold text-foreground'>去广告</div>
+                        <div className='mt-1 text-xs text-muted-foreground'>开启后通过代理处理播放链接</div>
                       </div>
-                      <span className={`h-5 w-9 rounded-full p-0.5 transition ${subscribeAdFilterEnabled ? 'bg-green-500' : 'bg-slate-300 dark:bg-slate-700'}`}>
-                        <span className={`block h-4 w-4 rounded-full bg-white transition ${subscribeAdFilterEnabled ? 'translate-x-4' : ''}`} />
+                      <span className={`h-5 w-9 rounded-full p-0.5 transition ${subscribeAdFilterEnabled ? 'bg-primary' : 'bg-input'}`}>
+                        <span className={`block h-4 w-4 rounded-full bg-background transition ${subscribeAdFilterEnabled ? 'translate-x-4' : ''}`} />
                       </span>
                     </button>
                     <button
                       type='button'
                       onClick={() => setSubscribeYellowFilterEnabled((prev) => !prev)}
-                      className='flex w-full cursor-pointer items-center justify-between rounded-xl border border-slate-200 bg-white px-4 py-3 text-left transition hover:border-yellow-400 dark:border-white/10 dark:bg-slate-900/70'
+                      className='flex w-full cursor-pointer items-center justify-between rounded-xl border border-border bg-card px-4 py-3 text-left transition hover:border-primary'
                     >
                       <div>
-                        <div className='text-sm font-bold text-slate-800 dark:text-slate-200'>黄色过滤</div>
-                        <div className='mt-1 text-xs text-slate-500 dark:text-slate-400'>过滤代理搜索中的黄色内容</div>
+                        <div className='text-sm font-bold text-foreground'>黄色过滤</div>
+                        <div className='mt-1 text-xs text-muted-foreground'>过滤代理搜索中的黄色内容</div>
                       </div>
-                      <span className={`h-5 w-9 rounded-full p-0.5 transition ${subscribeYellowFilterEnabled ? 'bg-yellow-500' : 'bg-slate-300 dark:bg-slate-700'}`}>
-                        <span className={`block h-4 w-4 rounded-full bg-white transition ${subscribeYellowFilterEnabled ? 'translate-x-4' : ''}`} />
+                      <span className={`h-5 w-9 rounded-full p-0.5 transition ${subscribeYellowFilterEnabled ? 'bg-primary' : 'bg-input'}`}>
+                        <span className={`block h-4 w-4 rounded-full bg-background transition ${subscribeYellowFilterEnabled ? 'translate-x-4' : ''}`} />
                       </span>
                     </button>
                   </div>
 
                   <div>
-                    <h4 className='mb-2 text-sm font-medium text-slate-700 dark:text-slate-300'>
+                    <h4 className='mb-2 text-sm font-medium text-foreground'>
                       订阅链接
                     </h4>
                     <div className='flex gap-2'>
                       <input
                         type='text'
-                        className='min-w-0 flex-1 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 outline-none focus:ring-2 focus:ring-green-500 dark:border-white/10 dark:bg-slate-900 dark:text-slate-200'
+                        className='min-w-0 flex-1 rounded-xl border border-input bg-background px-3 py-2 text-sm text-foreground outline-none focus:ring-2 focus:ring-ring'
                         value={subscribeUrl}
                         readOnly
                       />
                       <button
                         onClick={handleCopySubscribeUrl}
-                        className='inline-flex cursor-pointer items-center justify-center gap-2 rounded-xl bg-green-600 px-4 py-2.5 text-sm font-black text-white transition hover:bg-green-700'
+                        className='inline-flex cursor-pointer items-center justify-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-black text-primary-foreground transition hover:bg-primary/90'
                       >
                         <Copy className='h-4 w-4' />
                         {copySuccess ? '已复制' : '复制'}
                       </button>
                     </div>
                     {(subscribeAdFilterEnabled || subscribeYellowFilterEnabled) && (
-                      <p className='mt-2 rounded-xl border border-yellow-400/25 bg-yellow-400/10 px-3 py-2 text-xs font-semibold text-yellow-700 dark:text-yellow-300'>
+                      <p className='mt-2 rounded-xl border border-border bg-muted px-3 py-2 text-xs font-semibold text-foreground'>
                         💡 代理模式已开启，某些源可能因为区域或兼容问题无法播放
                       </p>
                     )}
@@ -561,11 +561,11 @@ export const SubscribePanel = ({
                     <button
                       onClick={handleResetToken}
                       disabled={isResettingToken}
-                      className='w-full cursor-pointer rounded-xl bg-red-600 px-4 py-2.5 text-sm font-black text-white transition hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-60'
+                      className='w-full cursor-pointer rounded-xl bg-destructive px-4 py-2.5 text-sm font-black text-destructive-foreground transition hover:bg-destructive/90 disabled:cursor-not-allowed disabled:opacity-60'
                     >
                       {isResettingToken ? '重置中...' : '重置订阅Token'}
                     </button>
-                    <p className='mt-2 text-center text-xs text-slate-500 dark:text-slate-400'>
+                    <p className='mt-2 text-center text-xs text-muted-foreground'>
                       ⚠️ 重置后旧链接将失效
                     </p>
                     <p id='tvbox-token-message' className='hidden text-center text-xs'></p>
@@ -576,27 +576,27 @@ export const SubscribePanel = ({
           )}
 
           {tvAccessTab === 'orion' && (
-            <section className='rounded-2xl border border-slate-200 bg-slate-50 p-5 dark:border-white/10 dark:bg-white/[0.04]'>
+            <section className='rounded-2xl border border-border bg-muted p-5'>
               <div className='flex items-center gap-3'>
                 <img
                   src='/icons/OrionTV.png'
                   alt='OrionTV'
-                  className='h-11 w-11 rounded-2xl object-cover shadow-lg shadow-indigo-500/20'
+                  className='h-11 w-11 rounded-2xl object-cover shadow-lg'
                 />
                 <div>
-                  <h4 className='text-lg font-black text-slate-900 dark:text-slate-100'>
+                  <h4 className='text-lg font-black text-foreground'>
                     OrionTV
                   </h4>
-                  <p className='mt-1 text-sm text-slate-600 dark:text-slate-400'>
+                  <p className='mt-1 text-sm text-muted-foreground'>
                     Android TV 专用客户端
                   </p>
                 </div>
               </div>
-              <p className='mt-5 text-sm leading-6 text-slate-600 dark:text-slate-400'>
+              <p className='mt-5 text-sm leading-6 text-muted-foreground'>
                 可直接作为 MoonTV Plus 电视端使用，适合安装到 Android TV / 电视盒子。
               </p>
               <div className='mt-5'>
-                <h5 className='mb-2 text-sm font-bold text-slate-700 dark:text-slate-300'>
+                <h5 className='mb-2 text-sm font-bold text-foreground'>
                   Base URL
                 </h5>
                 <div className='flex gap-2'>
@@ -604,18 +604,18 @@ export const SubscribePanel = ({
                     type='text'
                     readOnly
                     value={typeof window !== 'undefined' ? window.location.origin : ''}
-                    className='min-w-0 flex-1 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 outline-none dark:border-white/10 dark:bg-slate-900 dark:text-slate-200'
+                    className='min-w-0 flex-1 rounded-xl border border-input bg-background px-3 py-2 text-sm text-foreground outline-none'
                   />
                   <button
                     type='button'
                     onClick={handleCopyOrionBaseUrl}
-                    className='inline-flex cursor-pointer items-center justify-center gap-2 rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-black text-white transition hover:bg-indigo-700'
+                    className='inline-flex cursor-pointer items-center justify-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-black text-primary-foreground transition hover:bg-primary/90'
                   >
                     <Copy className='h-4 w-4' />
                     {orionBaseUrlCopySuccess ? '已复制' : '复制'}
                   </button>
                 </div>
-                <p className='mt-2 text-xs text-slate-500 dark:text-slate-400'>
+                <p className='mt-2 text-xs text-muted-foreground'>
                   在 OrionTV 中填写该地址作为后端服务地址。
                 </p>
               </div>
@@ -623,7 +623,7 @@ export const SubscribePanel = ({
                 href='https://github.com/mtvpls/OrionTV_Build/tags'
                 target='_blank'
                 rel='noopener noreferrer'
-                className='mt-5 inline-flex cursor-pointer items-center justify-center gap-2 rounded-xl bg-indigo-600 px-5 py-3 text-sm font-black text-white transition hover:bg-indigo-700'
+                className='mt-5 inline-flex cursor-pointer items-center justify-center gap-2 rounded-xl bg-primary px-5 py-3 text-sm font-black text-primary-foreground transition hover:bg-primary/90'
               >
                 下载 OrionTV
                 <ExternalLink className='h-4 w-4' />
@@ -632,27 +632,27 @@ export const SubscribePanel = ({
           )}
 
           {tvAccessTab === 'web' && (
-            <section className='rounded-2xl border border-slate-200 bg-slate-50 p-5 dark:border-white/10 dark:bg-white/[0.04]'>
+            <section className='rounded-2xl border border-border bg-muted p-5'>
               <div className='flex items-center gap-3'>
-                <div className='flex h-11 w-11 items-center justify-center rounded-2xl bg-rose-500 text-white shadow-lg shadow-rose-500/25'>
+                <div className='flex h-11 w-11 items-center justify-center rounded-2xl bg-primary text-primary-foreground shadow-lg'>
                   <Monitor className='h-5 w-5' />
                 </div>
                 <div>
-                  <h4 className='text-lg font-black text-slate-900 dark:text-slate-100'>
+                  <h4 className='text-lg font-black text-foreground'>
                     Web 电视
                   </h4>
-                  <p className='mt-1 text-sm text-slate-600 dark:text-slate-400'>
+                  <p className='mt-1 text-sm text-muted-foreground'>
                     手机扫描电视屏幕二维码并确认登录
                   </p>
                 </div>
               </div>
-                <p className='mt-5 text-sm leading-6 text-slate-600 dark:text-slate-400'>
+                <p className='mt-5 text-sm leading-6 text-muted-foreground'>
                 {tvModeEnabled
                   ? '电视端打开 /tv 后可扫码登录；在电视端“我的”页也可扫描局域网遥控二维码。'
                   : '当前部署未开启 TV 模式，/tv 页面和 Web 电视遥控不可用。'}
               </p>
               {!tvModeEnabled && (
-                <div className='mt-5 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm font-bold text-amber-800 dark:border-amber-300/20 dark:bg-amber-400/10 dark:text-amber-200'>
+                <div className='mt-5 rounded-2xl border border-border bg-muted px-4 py-3 text-sm font-bold text-foreground'>
                   TV 模式未开启。请在环境变量中设置 ENABLE_TV_MODE=true 后重启服务。
                 </div>
               )}
@@ -661,7 +661,7 @@ export const SubscribePanel = ({
                   type='button'
                   onClick={startTvQrScanner}
                   disabled={!tvModeEnabled}
-                  className='inline-flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-rose-600 px-4 py-3 text-sm font-black text-white transition hover:bg-rose-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-500/70 disabled:cursor-not-allowed disabled:bg-slate-300 disabled:text-slate-500 dark:disabled:bg-white/10 dark:disabled:text-slate-500'
+                  className='inline-flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3 text-sm font-black text-primary-foreground transition hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:bg-muted disabled:text-muted-foreground'
                 >
                   打开相机扫码
                   <Smartphone className='h-4 w-4' />
@@ -673,7 +673,7 @@ export const SubscribePanel = ({
                     onOpenTVRemote();
                   }}
                   disabled={!tvModeEnabled}
-                  className='inline-flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-slate-950 px-4 py-3 text-sm font-black text-white transition hover:bg-slate-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-500/70 disabled:cursor-not-allowed disabled:bg-slate-300 disabled:text-slate-500 dark:bg-white dark:text-slate-950 dark:hover:bg-slate-200 dark:disabled:bg-white/10 dark:disabled:text-slate-500'
+                  className='inline-flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-secondary px-4 py-3 text-sm font-black text-secondary-foreground transition hover:bg-secondary/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:bg-muted disabled:text-muted-foreground'
                 >
                   <Sliders className='h-4 w-4' />
                   远程电视遥控器
