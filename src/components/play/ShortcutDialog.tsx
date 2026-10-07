@@ -42,7 +42,7 @@ export default function ShortcutDialog({ show, onClose }: ShortcutDialogProps) {
 
   return (
     <div
-      className='fixed inset-0 z-[10000] flex items-center justify-center bg-black/50 px-4 py-6 backdrop-blur-sm'
+      className='fixed inset-0 z-modal flex items-center justify-center bg-black/50 px-4 py-6 backdrop-blur-sm'
       onClick={onClose}
     >
       <div

@@ -22,7 +22,7 @@ export default function DanmakuSourceSelector({
   }
 
   return (
-    <div className='fixed inset-0 z-[1000] flex items-center justify-center bg-black/60 backdrop-blur-sm'>
+    <div className='fixed inset-0 z-modal flex items-center justify-center bg-black/60 backdrop-blur-sm'>
       <div className='relative w-full max-w-2xl max-h-[80vh] mx-4 bg-white dark:bg-gray-800 rounded-2xl shadow-2xl overflow-hidden'>
         {/* 标题栏 */}
         <div className='sticky top-0 z-10 bg-gradient-to-r from-green-500 to-emerald-600 px-6 py-4'>
