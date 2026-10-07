@@ -102,73 +102,12 @@ import { AIConfigComponent } from '@/components/admin/sections/AIConfigComponent
 import { MusicConfigComponent } from '@/components/admin/sections/MusicConfigComponent';
 import { LiveSourceConfig } from '@/components/admin/sections/LiveSourceConfig';
 import { WebLiveConfig } from '@/components/admin/sections/WebLiveConfig';
-import { useAdminAlert } from '@/components/admin/shared';
+import { adminButtonStyles, useAdminAlert } from '@/components/admin/shared';
 import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import AnimeSubscriptionComponent from '@/components/AnimeSubscriptionComponent';
 import CorrectDialog from '@/components/CorrectDialog';
 import DataMigration from '@/components/DataMigration';
 import PageLayout from '@/components/PageLayout';
-
-// 统一按钮样式系统
-const buttonStyles = {
-  // 主要操作按钮（蓝色）- 用于配置、设置、确认等
-  primary:
-    'px-3 py-1.5 text-sm font-medium bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700 text-white rounded-lg transition-colors',
-  // 成功操作按钮（绿色）- 用于添加、启用、保存等
-  success:
-    'px-3 py-1.5 text-sm font-medium bg-green-600 hover:bg-green-700 dark:bg-green-600 dark:hover:bg-green-700 text-white rounded-lg transition-colors',
-  // 危险操作按钮（红色）- 用于删除、禁用、重置等
-  danger:
-    'px-3 py-1.5 text-sm font-medium bg-red-600 hover:bg-red-700 dark:bg-red-600 dark:hover:bg-red-700 text-white rounded-lg transition-colors',
-  // 次要操作按钮（灰色）- 用于取消、关闭等
-  secondary:
-    'px-3 py-1.5 text-sm font-medium bg-gray-600 hover:bg-gray-700 dark:bg-gray-600 dark:hover:bg-gray-700 text-white rounded-lg transition-colors',
-  // 警告操作按钮（黄色）- 用于批量禁用等
-  warning:
-    'px-3 py-1.5 text-sm font-medium bg-yellow-600 hover:bg-yellow-700 dark:bg-yellow-600 dark:hover:bg-yellow-700 text-white rounded-lg transition-colors',
-  // 小尺寸主要按钮
-  primarySmall:
-    'px-2 py-1 text-xs font-medium bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700 text-white rounded-md transition-colors',
-  // 小尺寸成功按钮
-  successSmall:
-    'px-2 py-1 text-xs font-medium bg-green-600 hover:bg-green-700 dark:bg-green-600 dark:hover:bg-green-700 text-white rounded-md transition-colors',
-  // 小尺寸危险按钮
-  dangerSmall:
-    'px-2 py-1 text-xs font-medium bg-red-600 hover:bg-red-700 dark:bg-red-600 dark:hover:bg-red-700 text-white rounded-md transition-colors',
-  // 小尺寸次要按钮
-  secondarySmall:
-    'px-2 py-1 text-xs font-medium bg-gray-600 hover:bg-gray-700 dark:bg-gray-600 dark:hover:bg-gray-700 text-white rounded-md transition-colors',
-  // 小尺寸警告按钮
-  warningSmall:
-    'px-2 py-1 text-xs font-medium bg-yellow-600 hover:bg-yellow-700 dark:bg-yellow-600 dark:hover:bg-yellow-700 text-white rounded-md transition-colors',
-  // 圆角小按钮（用于表格操作）
-  roundedPrimary:
-    'inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 hover:bg-blue-200 dark:bg-blue-900/40 dark:hover:bg-blue-900/60 dark:text-blue-200 transition-colors',
-  roundedSuccess:
-    'inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium bg-green-100 text-green-800 hover:bg-green-200 dark:bg-green-900/40 dark:hover:bg-green-900/60 dark:text-green-200 transition-colors',
-  roundedDanger:
-    'inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium bg-red-100 text-red-800 hover:bg-red-200 dark:bg-red-900/40 dark:hover:bg-red-900/60 dark:text-red-200 transition-colors',
-  roundedSecondary:
-    'inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 hover:bg-gray-200 dark:bg-gray-700/40 dark:hover:bg-gray-700/60 dark:text-gray-200 transition-colors',
-  roundedWarning:
-    'inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 hover:bg-yellow-200 dark:bg-yellow-900/40 dark:hover:bg-yellow-900/60 dark:text-yellow-200 transition-colors',
-  roundedPurple:
-    'inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800 hover:bg-purple-200 dark:bg-purple-900/40 dark:hover:bg-purple-900/60 dark:text-purple-200 transition-colors',
-  // 禁用状态
-  disabled:
-    'px-3 py-1.5 text-sm font-medium bg-gray-400 dark:bg-gray-600 cursor-not-allowed text-white rounded-lg transition-colors',
-  disabledSmall:
-    'px-2 py-1 text-xs font-medium bg-gray-400 dark:bg-gray-600 cursor-not-allowed text-white rounded-md transition-colors',
-  // 开关按钮样式
-  toggleOn: 'bg-green-600 dark:bg-green-600',
-  toggleOff: 'bg-gray-200 dark:bg-gray-700',
-  toggleThumb: 'bg-white',
-  toggleThumbOn: 'translate-x-6',
-  toggleThumbOff: 'translate-x-1',
-  // 快速操作按钮样式
-  quickAction:
-    'px-3 py-1.5 text-xs font-medium text-gray-600 dark:text-gray-400 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-md transition-colors',
-};
 
 const DEFAULT_GROUP_PERMISSIONS = [...ALL_FEATURE_PERMISSION_KEYS];
 
@@ -559,14 +498,14 @@ function AdminPageClient() {
       <PageLayout activePath='/admin'>
         <div className='px-2 sm:px-10 py-4 sm:py-8'>
           <div className='max-w-[95%] mx-auto'>
-            <h1 className='text-2xl font-bold text-gray-900 dark:text-gray-100 mb-8'>
+            <h1 className='text-2xl font-bold text-foreground mb-8'>
               管理员设置
             </h1>
             <div className='space-y-4'>
               {Array.from({ length: 3 }).map((_, index) => (
                 <div
                   key={index}
-                  className='h-20 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse'
+                  className='h-20 bg-muted rounded-lg animate-pulse'
                 />
               ))}
             </div>
@@ -582,26 +521,26 @@ function AdminPageClient() {
       <PageLayout activePath='/admin'>
         <div className='min-h-screen flex items-center justify-center px-4'>
           <div className='max-w-md w-full'>
-            <div className='bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8 text-center'>
+            <div className='bg-card rounded-lg shadow-lg p-8 text-center'>
               <div className='mb-6'>
-                <div className='mx-auto w-16 h-16 bg-red-100 dark:bg-red-900/20 rounded-full flex items-center justify-center'>
-                  <AlertCircle className='w-8 h-8 text-red-600 dark:text-red-400' />
+                <div className='mx-auto w-16 h-16 bg-muted rounded-full flex items-center justify-center'>
+                  <AlertCircle className='w-8 h-8 text-destructive' />
                 </div>
               </div>
-              <h2 className='text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4'>
+              <h2 className='text-2xl font-bold text-foreground mb-4'>
                 无权限访问
               </h2>
-              <p className='text-gray-600 dark:text-gray-400 mb-6'>{error}</p>
+              <p className='text-muted-foreground mb-6'>{error}</p>
               <div className='space-y-3'>
                 <button
                   onClick={() => (window.location.href = '/')}
-                  className='w-full px-6 py-3 bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700 text-white rounded-lg font-medium transition-colors'
+                  className='w-full px-6 py-3 bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg font-medium transition-colors'
                 >
                   返回首页
                 </button>
                 <button
                   onClick={() => (window.location.href = '/login')}
-                  className='w-full px-6 py-3 bg-gray-600 hover:bg-gray-700 dark:bg-gray-600 dark:hover:bg-gray-700 text-white rounded-lg font-medium transition-colors'
+                  className='w-full px-6 py-3 bg-secondary hover:bg-secondary/80 text-secondary-foreground rounded-lg font-medium transition-colors'
                 >
                   重新登录
                 </button>
@@ -623,7 +562,7 @@ function AdminPageClient() {
     children?: AdminNavItem[];
   };
 
-  const navIconClass = 'text-gray-600 dark:text-gray-400';
+  const navIconClass = 'text-muted-foreground';
   const navItems: AdminNavItem[] = [
     {
       key: 'configFile',
@@ -755,7 +694,7 @@ function AdminPageClient() {
       key: 'mediaLibrary',
       title: '私人影库',
       icon: (
-        <Database size={20} className='text-yellow-700 dark:text-yellow-400' />
+        <Database size={20} className={navIconClass} />
       ),
       children: [
         {
@@ -913,13 +852,13 @@ function AdminPageClient() {
               <>
                 <button
                   onClick={handleResetConfig}
-                  className={`rounded-md px-3 py-1 text-xs transition-colors ${buttonStyles.dangerSmall}`}
+                  className={`rounded-md px-3 py-1 text-xs transition-colors ${adminButtonStyles.dangerSmall}`}
                 >
                   重置配置
                 </button>
                 <button
                   onClick={handleReloadConfig}
-                  className={`rounded-md px-3 py-1 text-xs transition-colors ${buttonStyles.primarySmall}`}
+                  className={`rounded-md px-3 py-1 text-xs transition-colors ${adminButtonStyles.primarySmall}`}
                 >
                   重载配置
                 </button>
