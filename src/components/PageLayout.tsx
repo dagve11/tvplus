@@ -18,7 +18,11 @@ interface PageLayoutProps {
   hideNavigation?: boolean; // 控制是否隐藏顶部和底部导航栏
 }
 
-const PageLayout = ({ children, activePath = '/', hideNavigation = false }: PageLayoutProps) => {
+const PageLayout = ({
+  children,
+  activePath = '/',
+  hideNavigation = false,
+}: PageLayoutProps) => {
   const router = useRouter();
   const [backgroundImage, setBackgroundImage] = useState('');
   const shouldShowSharedBackground = !hideNavigation && activePath !== '/play';
@@ -34,13 +38,7 @@ const PageLayout = ({ children, activePath = '/', hideNavigation = false }: Page
       return;
     }
 
-    const homeBg = (
-      window as Window & {
-        RUNTIME_CONFIG?: {
-          HOME_BACKGROUND_IMAGE?: string;
-        };
-      }
-    ).RUNTIME_CONFIG?.HOME_BACKGROUND_IMAGE;
+    const homeBg = window.RUNTIME_CONFIG?.HOME_BACKGROUND_IMAGE;
     if (!homeBg) {
       setBackgroundImage('');
       return;
@@ -69,13 +67,15 @@ const PageLayout = ({ children, activePath = '/', hideNavigation = false }: Page
               className='absolute inset-0 pointer-events-none bg-cover bg-center bg-no-repeat opacity-45'
               style={{ backgroundImage: `url(${backgroundImage})` }}
             />
-            <div className='absolute inset-0 pointer-events-none bg-white/50 dark:bg-gray-950/50' />
+            <div className='absolute inset-0 pointer-events-none bg-background/50' />
           </>
         )}
 
         {/* 移动端头部 */}
         {!hideNavigation && (
-          <MobileHeader showBackButton={['/play', '/live'].includes(activePath)} />
+          <MobileHeader
+            showBackButton={['/play', '/live'].includes(activePath)}
+          />
         )}
 
         {/* 主要布局容器 */}
