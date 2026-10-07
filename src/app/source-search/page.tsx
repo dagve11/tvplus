@@ -24,9 +24,9 @@ import { ApiSite } from '@/lib/config';
 import { appendSpecialSourceParam } from '@/lib/special-source.client';
 import { SearchResult } from '@/lib/types';
 
-import CapsuleSwitch from '@/components/CapsuleSwitch';
 import PageLayout from '@/components/PageLayout';
 import VideoCard from '@/components/VideoCard';
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 
 type Category = CategoryNode;
 
@@ -475,7 +475,7 @@ function SourceSearchPageClient() {
 
         {/* 源选择和分类选择 */}
         <div className='max-w-4xl mx-auto mb-8 space-y-6'>
-          {/* 源选择 CapsuleSwitch */}
+          {/* 源选择 */}
           <div className='relative'>
             <div className='flex items-center justify-between gap-3 mb-3'>
               <label className='block text-sm font-medium text-gray-700 dark:text-gray-300'>
@@ -539,17 +539,26 @@ function SourceSearchPageClient() {
               </div>
             ) : (
               <div className='flex'>
-                <CapsuleSwitch
-                  options={filteredApiSites.map((site) => ({
-                    label: site.name,
-                    value: site.key,
-                  }))}
-                  active={selectedSource}
-                  onChange={(value) => {
+                <ToggleGroup
+                  type='single'
+                  value={selectedSource}
+                  onValueChange={(value) => {
+                    if (!value) return;
                     setSelectedSource(value);
                     handleBackToBrowse();
                   }}
-                />
+                  className='inline-flex max-w-full rounded-full bg-muted p-1'
+                >
+                  {filteredApiSites.map((site) => (
+                    <ToggleGroupItem
+                      key={site.key}
+                      value={site.key}
+                      className='whitespace-nowrap rounded-full data-[state=on]:bg-background data-[state=on]:text-foreground data-[state=on]:shadow-sm'
+                    >
+                      {site.name}
+                    </ToggleGroupItem>
+                  ))}
+                </ToggleGroup>
               </div>
             )}
           </div>
@@ -615,14 +624,24 @@ function SourceSearchPageClient() {
                       选择类型
                     </label>
                     <div className='flex'>
-                      <CapsuleSwitch
-                        options={parentCategories.map((category) => ({
-                          label: category.name,
-                          value: category.id,
-                        }))}
-                        active={selectedParentCategory}
-                        onChange={handleParentCategoryChange}
-                      />
+                      <ToggleGroup
+                        type='single'
+                        value={selectedParentCategory}
+                        onValueChange={(value) => {
+                          if (value) handleParentCategoryChange(value);
+                        }}
+                        className='inline-flex max-w-full rounded-full bg-muted p-1'
+                      >
+                        {parentCategories.map((category) => (
+                          <ToggleGroupItem
+                            key={category.id}
+                            value={category.id}
+                            className='whitespace-nowrap rounded-full data-[state=on]:bg-background data-[state=on]:text-foreground data-[state=on]:shadow-sm'
+                          >
+                            {category.name}
+                          </ToggleGroupItem>
+                        ))}
+                      </ToggleGroup>
                     </div>
                   </div>
                   {subCategories.length > 0 && (
@@ -631,14 +650,24 @@ function SourceSearchPageClient() {
                         选择分类
                       </label>
                       <div className='flex'>
-                        <CapsuleSwitch
-                          options={subCategories.map((category) => ({
-                            label: category.name,
-                            value: category.id,
-                          }))}
-                          active={selectedCategory}
-                          onChange={handleCategoryChange}
-                        />
+                        <ToggleGroup
+                          type='single'
+                          value={selectedCategory}
+                          onValueChange={(value) => {
+                            if (value) handleCategoryChange(value);
+                          }}
+                          className='inline-flex max-w-full rounded-full bg-muted p-1'
+                        >
+                          {subCategories.map((category) => (
+                            <ToggleGroupItem
+                              key={category.id}
+                              value={category.id}
+                              className='whitespace-nowrap rounded-full data-[state=on]:bg-background data-[state=on]:text-foreground data-[state=on]:shadow-sm'
+                            >
+                              {category.name}
+                            </ToggleGroupItem>
+                          ))}
+                        </ToggleGroup>
                       </div>
                     </div>
                   )}
@@ -649,14 +678,24 @@ function SourceSearchPageClient() {
                     选择分类
                   </label>
                   <div className='flex'>
-                    <CapsuleSwitch
-                      options={categories.map((category) => ({
-                        label: category.name,
-                        value: category.id,
-                      }))}
-                      active={selectedCategory}
-                      onChange={handleCategoryChange}
-                    />
+                    <ToggleGroup
+                      type='single'
+                      value={selectedCategory}
+                      onValueChange={(value) => {
+                        if (value) handleCategoryChange(value);
+                      }}
+                      className='inline-flex max-w-full rounded-full bg-muted p-1'
+                    >
+                      {categories.map((category) => (
+                        <ToggleGroupItem
+                          key={category.id}
+                          value={category.id}
+                          className='whitespace-nowrap rounded-full data-[state=on]:bg-background data-[state=on]:text-foreground data-[state=on]:shadow-sm'
+                        >
+                          {category.name}
+                        </ToggleGroupItem>
+                      ))}
+                    </ToggleGroup>
                   </div>
                 </div>
               )}

@@ -9,9 +9,9 @@ import { createPortal } from 'react-dom';
 
 import { base58Encode } from '@/lib/utils';
 
-import CapsuleSwitch from '@/components/CapsuleSwitch';
 import PageLayout from '@/components/PageLayout';
 import VideoCard from '@/components/VideoCard';
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 
 type LibrarySourceType = 'openlist' | 'emby' | 'xiaoya' | `emby:${string}` | `emby_${string}`;
 
@@ -622,15 +622,39 @@ export default function PrivateLibraryPage() {
         {/* 第一级：源类型选择（OpenList / Emby / 小雅） */}
         {mounted && (
           <div className='mb-6 flex justify-center'>
-            <CapsuleSwitch
-              options={[
-                ...(runtimeConfig.OPENLIST_ENABLED ? [{ label: 'OpenList', value: 'openlist' }] : []),
-                ...(runtimeConfig.EMBY_ENABLED ? [{ label: 'Emby', value: 'emby' }] : []),
-                ...(runtimeConfig.XIAOYA_ENABLED ? [{ label: '小雅', value: 'xiaoya' }] : []),
-              ]}
-              active={sourceType}
-              onChange={(value) => setSourceType(value as LibrarySourceType)}
-            />
+            <ToggleGroup
+              type='single'
+              value={sourceType}
+              onValueChange={(value) => {
+                if (value) setSourceType(value as LibrarySourceType);
+              }}
+              className='inline-flex max-w-full rounded-full bg-muted p-1'
+            >
+              {runtimeConfig.OPENLIST_ENABLED && (
+                <ToggleGroupItem
+                  value='openlist'
+                  className='whitespace-nowrap rounded-full data-[state=on]:bg-background data-[state=on]:text-foreground data-[state=on]:shadow-sm'
+                >
+                  OpenList
+                </ToggleGroupItem>
+              )}
+              {runtimeConfig.EMBY_ENABLED && (
+                <ToggleGroupItem
+                  value='emby'
+                  className='whitespace-nowrap rounded-full data-[state=on]:bg-background data-[state=on]:text-foreground data-[state=on]:shadow-sm'
+                >
+                  Emby
+                </ToggleGroupItem>
+              )}
+              {runtimeConfig.XIAOYA_ENABLED && (
+                <ToggleGroupItem
+                  value='xiaoya'
+                  className='whitespace-nowrap rounded-full data-[state=on]:bg-background data-[state=on]:text-foreground data-[state=on]:shadow-sm'
+                >
+                  小雅
+                </ToggleGroupItem>
+              )}
+            </ToggleGroup>
           </div>
         )}
 

@@ -2,13 +2,29 @@
 
 import { AlertCircle, CheckCircle } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useEffect,useState } from 'react';
-import { createPortal } from 'react-dom';
+import { useEffect, useState } from 'react';
 
 import { getTMDBImageUrl } from '@/lib/tmdb.client';
 import { processImageUrl } from '@/lib/utils';
 
 import PageLayout from '@/components/PageLayout';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 
 interface TMDBResult {
   id: number;
@@ -207,18 +223,18 @@ export default function MovieRequestPage() {
     <PageLayout activePath='/movie-request'>
       <div className='container mx-auto px-4 py-6'>
         <div className='mb-6'>
-          <h1 className='text-2xl font-bold text-gray-900 dark:text-gray-100'>
+          <h1 className='text-2xl font-bold text-foreground'>
             求片
           </h1>
-          <p className='text-sm text-gray-500 dark:text-gray-400 mt-1'>
+          <p className='text-sm text-muted-foreground mt-1'>
             {isFeatureEnabled ? '搜索并提交您想看的影片' : '求片功能已关闭，仅可查看已求片列表'}
           </p>
         </div>
 
         {/* 功能关闭提示 */}
         {!isFeatureEnabled && (
-          <div className='mb-6 p-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg'>
-            <p className='text-sm text-yellow-800 dark:text-yellow-200'>
+          <div className='mb-6 p-4 bg-muted border border-border rounded-lg'>
+            <p className='text-sm text-foreground'>
               求片功能已被管理员关闭，您可以查看已提交的求片记录
             </p>
           </div>
@@ -236,12 +252,12 @@ export default function MovieRequestPage() {
                 onKeyDown={(e) => {
                   if (e.key === 'Enter') handleSearch();
                 }}
-                className='flex-1 px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500'
+                className='flex-1 px-4 py-2 rounded-lg border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring'
               />
               <button
                 onClick={handleSearch}
                 disabled={!searchKeyword.trim() || isSearching}
-                className='px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed'
+                className='px-6 py-2 bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg disabled:opacity-50 disabled:cursor-not-allowed'
               >
                 {isSearching ? '搜索中...' : '搜索'}
               </button>
@@ -252,15 +268,15 @@ export default function MovieRequestPage() {
         {/* 我的求片列表 */}
         {searchResults.length === 0 && (
           <div className='mb-8'>
-            <h2 className='text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4'>
+            <h2 className='text-lg font-semibold text-foreground mb-4'>
               我的求片
             </h2>
             {loadingMyRequests ? (
               <div className='flex justify-center py-8'>
-                <div className='w-5 h-5 border-2 border-blue-600 border-t-transparent rounded-full animate-spin' />
+                <div className='w-5 h-5 border-2 border-primary border-t-transparent rounded-full animate-spin' />
               </div>
             ) : myRequests.length === 0 ? (
-              <div className='text-center py-8 text-gray-500 dark:text-gray-400'>
+              <div className='text-center py-8 text-muted-foreground'>
                 暂无求片记录
               </div>
             ) : (
@@ -268,7 +284,7 @@ export default function MovieRequestPage() {
                 {myRequests.map((request) => (
                   <div
                     key={request.id}
-                    className='bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow hover:shadow-lg transition-shadow'
+                    className='bg-card rounded-lg overflow-hidden shadow hover:shadow-lg transition-shadow'
                   >
                     {request.poster ? (
                       <img
@@ -277,21 +293,21 @@ export default function MovieRequestPage() {
                         className='w-full aspect-[2/3] object-cover'
                       />
                     ) : (
-                      <div className='w-full aspect-[2/3] bg-gray-200 dark:bg-gray-700 flex items-center justify-center'>
-                        <span className='text-gray-400'>无海报</span>
+                      <div className='w-full aspect-[2/3] bg-muted flex items-center justify-center'>
+                        <span className='text-muted-foreground'>无海报</span>
                       </div>
                     )}
                     <div className='p-3'>
-                      <h3 className='text-sm font-medium text-gray-900 dark:text-gray-100 truncate mb-1'>
+                      <h3 className='text-sm font-medium text-foreground truncate mb-1'>
                         {request.title}
                       </h3>
-                      <p className='text-xs text-gray-500 dark:text-gray-400 mb-2'>
+                      <p className='text-xs text-muted-foreground mb-2'>
                         {request.year || '未知'} · {request.requestCount}人求片
                       </p>
                       <div className={`text-xs px-2 py-1 rounded text-center ${
                         request.status === 'fulfilled'
-                          ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300'
-                          : 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300'
+                          ? 'bg-primary/10 text-primary'
+                          : 'bg-muted text-muted-foreground'
                       }`}>
                         {request.status === 'fulfilled' ? '已上架' : '待处理'}
                       </div>
@@ -309,7 +325,7 @@ export default function MovieRequestPage() {
             {searchResults.map((item) => (
               <div
                 key={item.id}
-                className='bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow hover:shadow-lg transition-shadow'
+                className='bg-card rounded-lg overflow-hidden shadow hover:shadow-lg transition-shadow'
               >
                 {item.poster_path ? (
                   <img
@@ -318,21 +334,21 @@ export default function MovieRequestPage() {
                     className='w-full aspect-[2/3] object-cover'
                   />
                 ) : (
-                  <div className='w-full aspect-[2/3] bg-gray-200 dark:bg-gray-700 flex items-center justify-center'>
-                    <span className='text-gray-400'>无海报</span>
+                  <div className='w-full aspect-[2/3] bg-muted flex items-center justify-center'>
+                    <span className='text-muted-foreground'>无海报</span>
                   </div>
                 )}
                 <div className='p-3'>
-                  <h3 className='text-sm font-medium text-gray-900 dark:text-gray-100 truncate mb-1'>
+                  <h3 className='text-sm font-medium text-foreground truncate mb-1'>
                     {item.title || item.name}
                   </h3>
-                  <p className='text-xs text-gray-500 dark:text-gray-400 mb-2'>
+                  <p className='text-xs text-muted-foreground mb-2'>
                     {(item.release_date || item.first_air_date)?.split('-')[0] || '未知'}
                   </p>
                   <button
                     onClick={() => handleRequest(item)}
                     disabled={submitting || !isFeatureEnabled}
-                    className='w-full px-3 py-1.5 text-sm bg-blue-600 hover:bg-blue-700 text-white rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed'
+                    className='w-full px-3 py-1.5 text-sm bg-primary hover:bg-primary/90 text-primary-foreground rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed'
                   >
                     {submitting ? '处理中...' : !isFeatureEnabled ? '功能已关闭' : '求片'}
                   </button>
@@ -341,93 +357,94 @@ export default function MovieRequestPage() {
             ))}
           </div>
         ) : searchKeyword && !isSearching ? (
-          <div className='text-center py-12 text-gray-500 dark:text-gray-400'>
+          <div className='text-center py-12 text-muted-foreground'>
             未找到相关影片
           </div>
         ) : null}
       </div>
 
       {/* 提示弹窗 */}
-      {alertModal.isOpen && typeof window !== 'undefined' && createPortal(
-        <div className='fixed inset-0 bg-black/50 z-[1002] flex items-center justify-center p-4'>
-          <div className='bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-sm w-full p-6'>
-            <div className='flex justify-center mb-4'>
+      <AlertDialog
+        open={alertModal.isOpen}
+        onOpenChange={(open) => {
+          if (!open) setAlertModal({ ...alertModal, isOpen: false });
+        }}
+      >
+        <AlertDialogContent className='max-w-sm'>
+          <AlertDialogHeader>
+            <div className='flex justify-center mb-2'>
               {alertModal.type === 'success' ? (
-                <CheckCircle className='w-12 h-12 text-green-500' />
+                <CheckCircle className='w-12 h-12 text-foreground' />
               ) : (
-                <AlertCircle className='w-12 h-12 text-red-500' />
+                <AlertCircle className='w-12 h-12 text-destructive' />
               )}
             </div>
-            <h3 className='text-lg font-semibold text-gray-900 dark:text-gray-100 text-center mb-2'>
-              {alertModal.title}
-            </h3>
-            <p className='text-gray-600 dark:text-gray-400 text-center mb-4'>
+            <AlertDialogTitle className='text-center'>{alertModal.title}</AlertDialogTitle>
+            <AlertDialogDescription className='text-center'>
               {alertModal.message}
-            </p>
-            <button
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter className='sm:justify-center'>
+            <AlertDialogAction
               onClick={() => setAlertModal({ ...alertModal, isOpen: false })}
-              className='w-full px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg'
             >
               确定
-            </button>
-          </div>
-        </div>,
-        document.body
-      )}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
       {/* 季度选择弹窗 */}
-      {showSeasonDialog && typeof window !== 'undefined' && createPortal(
-        <>
-          <div
-            className='fixed inset-0 bg-black/50 backdrop-blur-sm z-[1000]'
-            onClick={() => setShowSeasonDialog(false)}
-          />
-          <div className='fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md bg-white dark:bg-gray-900 rounded-xl shadow-xl z-[1001] p-6'>
-            <h3 className='text-lg font-bold text-gray-800 dark:text-gray-200 mb-4'>
-              选择季度
-            </h3>
-            <p className='text-sm text-gray-600 dark:text-gray-400 mb-4'>
+      <Dialog
+        open={showSeasonDialog}
+        onOpenChange={(open) => {
+          if (!open) setShowSeasonDialog(false);
+        }}
+      >
+        <DialogContent className='max-w-md'>
+          <DialogHeader>
+            <DialogTitle>选择季度</DialogTitle>
+            <DialogDescription>
               {selectedItem?.title || selectedItem?.name}
-            </p>
-            {loadingSeasons ? (
-              <div className='flex justify-center py-8'>
-                <div className='w-6 h-6 border-2 border-blue-600 border-t-transparent rounded-full animate-spin' />
-              </div>
-            ) : (
-              <div className='space-y-2 mb-4 max-h-60 overflow-y-auto'>
-                {seasons.map((season) => (
-                  <button
-                    key={season.season_number}
-                    onClick={() => setSelectedSeason(season.season_number)}
-                    className={`w-full p-3 rounded-lg text-left transition-colors ${
-                      selectedSeason === season.season_number
-                        ? 'bg-blue-600 text-white'
-                        : 'bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 hover:bg-gray-200 dark:hover:bg-gray-700'
-                    }`}
-                  >
-                    {season.name}
-                  </button>
-                ))}
-              </div>
-            )}
-            <div className='flex gap-2'>
-              <button
-                onClick={() => setShowSeasonDialog(false)}
-                className='flex-1 px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600'
-              >
-                取消
-              </button>
-              <button
-                onClick={handleSeasonConfirm}
-                className='flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg'
-              >
-                确认
-              </button>
+            </DialogDescription>
+          </DialogHeader>
+          {loadingSeasons ? (
+            <div className='flex justify-center py-8'>
+              <div className='w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin' />
             </div>
-          </div>
-        </>,
-        document.body
-      )}
+          ) : (
+            <div className='space-y-2 mb-4 max-h-60 overflow-y-auto'>
+              {seasons.map((season) => (
+                <button
+                  key={season.season_number}
+                  onClick={() => setSelectedSeason(season.season_number)}
+                  className={`w-full p-3 rounded-lg text-left transition-colors ${
+                    selectedSeason === season.season_number
+                      ? 'bg-primary text-primary-foreground'
+                      : 'bg-muted text-foreground hover:bg-accent'
+                  }`}
+                >
+                  {season.name}
+                </button>
+              ))}
+            </div>
+          )}
+          <DialogFooter className='gap-2 sm:gap-2'>
+            <button
+              onClick={() => setShowSeasonDialog(false)}
+              className='flex-1 px-4 py-2 bg-muted text-foreground rounded-lg hover:bg-accent'
+            >
+              取消
+            </button>
+            <button
+              onClick={handleSeasonConfirm}
+              className='flex-1 px-4 py-2 bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg'
+            >
+              确认
+            </button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </PageLayout>
   );
 }

@@ -42,7 +42,6 @@ import {
 import { processImageUrl } from '@/lib/utils';
 
 import AcgSearch from '@/components/AcgSearch';
-import CapsuleSwitch from '@/components/CapsuleSwitch';
 import ContinueWatching from '@/components/ContinueWatching';
 import ImageViewer from '@/components/ImageViewer';
 import PageLayout from '@/components/PageLayout';
@@ -54,6 +53,7 @@ import SearchResultFilter, {
 import SearchSuggestions from '@/components/SearchSuggestions';
 import VideoCard, { VideoCardHandle } from '@/components/VideoCard';
 import VirtualScrollableGrid from '@/components/VirtualScrollableGrid';
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { loadTraditionalToSimplifiedConverter } from '@/lib/danmaku/traditional-to-simplified';
 
 const PANSOU_CLOUD_TYPE_OPTIONS = Object.entries(CLOUD_TYPE_NAMES).map(
@@ -1868,37 +1868,41 @@ export function SearchPageClient({ searchBase = '/search' }: { searchBase?: stri
           {/* 选项卡：特殊源入口（/under）只有影视搜索，整块隐藏 */}
           {!isSpecialEntry && (
             <div className='flex justify-center mt-6'>
-              <CapsuleSwitch
-                options={[
-                  {
-                    label: '影视搜索',
-                    value: 'video',
-                    icon: <Film size={16} />,
-                  },
-                  ...(netdiskSearchEnabled
-                    ? [
-                        {
-                          label: '网盘搜索',
-                          value: 'pansou' as const,
-                          icon: <HardDrive size={16} />,
-                        },
-                      ]
-                    : []),
-                  ...(magnetSearchEnabled
-                    ? [
-                        {
-                          label: '动漫磁力',
-                          value: 'acg' as const,
-                          icon: <Magnet size={16} />,
-                        },
-                      ]
-                    : []),
-                ]}
-                active={activeTab}
-                onChange={(value) =>
-                  handleTabChange(value as 'video' | 'pansou' | 'acg')
-                }
-              />
+              <ToggleGroup
+                type='single'
+                value={activeTab}
+                onValueChange={(value) => {
+                  if (value)
+                    handleTabChange(value as 'video' | 'pansou' | 'acg');
+                }}
+                className='inline-flex max-w-full rounded-full bg-muted p-1'
+              >
+                <ToggleGroupItem
+                  value='video'
+                  className='whitespace-nowrap rounded-full data-[state=on]:bg-background data-[state=on]:text-foreground data-[state=on]:shadow-sm'
+                >
+                  <Film size={16} />
+                  影视搜索
+                </ToggleGroupItem>
+                {netdiskSearchEnabled && (
+                  <ToggleGroupItem
+                    value='pansou'
+                    className='whitespace-nowrap rounded-full data-[state=on]:bg-background data-[state=on]:text-foreground data-[state=on]:shadow-sm'
+                  >
+                    <HardDrive size={16} />
+                    网盘搜索
+                  </ToggleGroupItem>
+                )}
+                {magnetSearchEnabled && (
+                  <ToggleGroupItem
+                    value='acg'
+                    className='whitespace-nowrap rounded-full data-[state=on]:bg-background data-[state=on]:text-foreground data-[state=on]:shadow-sm'
+                  >
+                    <Magnet size={16} />
+                    动漫磁力
+                  </ToggleGroupItem>
+                )}
+              </ToggleGroup>
             </div>
           )}
 

@@ -21,9 +21,9 @@ import {
 } from '@/lib/category-tree';
 import { SearchResult } from '@/lib/types';
 
-import CapsuleSwitch from '@/components/CapsuleSwitch';
 import PageLayout from '@/components/PageLayout';
 import VideoCard from '@/components/VideoCard';
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 
 interface DuanjuSource {
   key: string;
@@ -522,14 +522,24 @@ function DuanjuPageClient() {
                   类型
                 </div>
                 <div className='flex px-4 mb-4'>
-                  <CapsuleSwitch
-                    options={parentCategories.map((category) => ({
-                      label: category.name,
-                      value: category.id,
-                    }))}
-                    active={selectedParentCategory}
-                    onChange={handleParentCategoryChange}
-                  />
+                  <ToggleGroup
+                    type='single'
+                    value={selectedParentCategory}
+                    onValueChange={(value) => {
+                      if (value) handleParentCategoryChange(value);
+                    }}
+                    className='inline-flex max-w-full rounded-full bg-muted p-1'
+                  >
+                    {parentCategories.map((category) => (
+                      <ToggleGroupItem
+                        key={category.id}
+                        value={category.id}
+                        className='whitespace-nowrap rounded-full data-[state=on]:bg-background data-[state=on]:text-foreground data-[state=on]:shadow-sm'
+                      >
+                        {category.name}
+                      </ToggleGroupItem>
+                    ))}
+                  </ToggleGroup>
                 </div>
                 {subCategories.length > 0 && (
                   <div>
@@ -537,14 +547,24 @@ function DuanjuPageClient() {
                       分类
                     </div>
                     <div className='flex px-4'>
-                      <CapsuleSwitch
-                        options={subCategories.map((category) => ({
-                          label: category.name,
-                          value: category.id,
-                        }))}
-                        active={selectedCategory}
-                        onChange={handleCategoryChange}
-                      />
+                      <ToggleGroup
+                        type='single'
+                        value={selectedCategory}
+                        onValueChange={(value) => {
+                          if (value) handleCategoryChange(value);
+                        }}
+                        className='inline-flex max-w-full rounded-full bg-muted p-1'
+                      >
+                        {subCategories.map((category) => (
+                          <ToggleGroupItem
+                            key={category.id}
+                            value={category.id}
+                            className='whitespace-nowrap rounded-full data-[state=on]:bg-background data-[state=on]:text-foreground data-[state=on]:shadow-sm'
+                          >
+                            {category.name}
+                          </ToggleGroupItem>
+                        ))}
+                      </ToggleGroup>
                     </div>
                   </div>
                 )}
@@ -555,14 +575,24 @@ function DuanjuPageClient() {
                   分类
                 </div>
                 <div className='flex px-4'>
-                  <CapsuleSwitch
-                    options={flatCategories.map((category) => ({
-                      label: category.name,
-                      value: category.id,
-                    }))}
-                    active={selectedCategory}
-                    onChange={handleCategoryChange}
-                  />
+                  <ToggleGroup
+                    type='single'
+                    value={selectedCategory}
+                    onValueChange={(value) => {
+                      if (value) handleCategoryChange(value);
+                    }}
+                    className='inline-flex max-w-full rounded-full bg-muted p-1'
+                  >
+                    {flatCategories.map((category) => (
+                      <ToggleGroupItem
+                        key={category.id}
+                        value={category.id}
+                        className='whitespace-nowrap rounded-full data-[state=on]:bg-background data-[state=on]:text-foreground data-[state=on]:shadow-sm'
+                      >
+                        {category.name}
+                      </ToggleGroupItem>
+                    ))}
+                  </ToggleGroup>
                 </div>
               </div>
             )}

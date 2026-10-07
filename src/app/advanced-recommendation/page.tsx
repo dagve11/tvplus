@@ -6,9 +6,9 @@ import { useEffect, useRef, useState } from 'react';
 
 import { SearchResult } from '@/lib/types';
 
-import CapsuleSwitch from '@/components/CapsuleSwitch';
 import PageLayout from '@/components/PageLayout';
 import VideoCard from '@/components/VideoCard';
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 
 interface ScriptSourceOption {
   key: string;
@@ -166,14 +166,24 @@ export default function AdvancedRecommendationPage() {
               </div>
             ) : (
               <div className='flex justify-center'>
-                <CapsuleSwitch
-                  options={sources.map((item) => ({
-                    label: item.name,
-                    value: item.key,
-                  }))}
-                  active={selectedSource}
-                  onChange={setSelectedSource}
-                />
+                <ToggleGroup
+                  type='single'
+                  value={selectedSource}
+                  onValueChange={(value) => {
+                    if (value) setSelectedSource(value);
+                  }}
+                  className='inline-flex max-w-full rounded-full bg-muted p-1'
+                >
+                  {sources.map((item) => (
+                    <ToggleGroupItem
+                      key={item.key}
+                      value={item.key}
+                      className='whitespace-nowrap rounded-full data-[state=on]:bg-background data-[state=on]:text-foreground data-[state=on]:shadow-sm'
+                    >
+                      {item.name}
+                    </ToggleGroupItem>
+                  ))}
+                </ToggleGroup>
               </div>
             )}
           </div>

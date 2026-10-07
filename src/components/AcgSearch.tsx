@@ -11,7 +11,7 @@ import {
 } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-import CapsuleSwitch from '@/components/CapsuleSwitch';
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { showError, showSuccess } from '@/lib/toast';
 
 interface AcgSearchItem {
@@ -743,11 +743,24 @@ export default function AcgSearch({
 
   const sourceSwitch = (
     <div className='flex justify-center'>
-      <CapsuleSwitch
-        options={acgSourceOptions}
-        active={source}
-        onChange={(value) => handleSourceChange(value as AcgSearchSource)}
-      />
+      <ToggleGroup
+        type='single'
+        value={source}
+        onValueChange={(value) => {
+          if (value) handleSourceChange(value as AcgSearchSource);
+        }}
+        className='inline-flex max-w-full rounded-full bg-muted p-1'
+      >
+        {acgSourceOptions.map((opt) => (
+          <ToggleGroupItem
+            key={opt.value}
+            value={opt.value}
+            className='whitespace-nowrap rounded-full data-[state=on]:bg-background data-[state=on]:text-foreground data-[state=on]:shadow-sm'
+          >
+            {opt.label}
+          </ToggleGroupItem>
+        ))}
+      </ToggleGroup>
     </div>
   );
 
