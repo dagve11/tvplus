@@ -31,6 +31,10 @@ const createNextConfig = (phase) => {
     // 在生产构建时忽略 ESLint 错误
     ignoreDuringBuilds: true,
   },
+  // TEMP(refactor/ui 门禁降级): 构建期跳过 tsc（scoped tsc 单独跑）；合入主线前必须删除
+  typescript: {
+    ignoreBuildErrors: true,
+  },
 
   reactStrictMode: false,
   swcMinify: true,
