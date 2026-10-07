@@ -13,14 +13,16 @@ import {
   SPECIAL_SOURCE_PATH,
 } from './special-source.client';
 
-type WindowWithRuntimeConfig = Window & {
+// 刻意不与 Window 相交：runtime-config.d.ts 给 window.RUNTIME_CONFIG 挂了
+// 全字段必填的全局声明，相交后这里只给一个键会被要求补齐 60+ 属性。
+type RuntimeConfigHost = {
   RUNTIME_CONFIG?: { SPECIAL_SOURCE_APIS?: string[] };
 };
 
 const gotoPath = (path: string) => window.history.replaceState({}, '', path);
 
 const setSpecialSourceApis = (apis: string[]) => {
-  (window as WindowWithRuntimeConfig).RUNTIME_CONFIG = {
+  (window as unknown as RuntimeConfigHost).RUNTIME_CONFIG = {
     SPECIAL_SOURCE_APIS: apis,
   };
 };
