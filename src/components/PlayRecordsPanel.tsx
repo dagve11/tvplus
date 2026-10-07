@@ -168,19 +168,19 @@ export default function PlayRecordsPanel({
   return (
     <>
       <div
-        className='fixed inset-0 bg-black/50 backdrop-blur-sm z-[1000]'
+        className='fixed inset-0 bg-black/50 backdrop-blur-sm z-modal'
         onClick={onClose}
       />
 
-      <div className='fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-4xl max-h-[85vh] bg-white dark:bg-gray-900 rounded-xl shadow-xl z-[1001] flex flex-col overflow-hidden'>
-        <div className='flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-700'>
+      <div className='fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-4xl max-h-[85vh] bg-card rounded-xl shadow-xl z-popover flex flex-col overflow-hidden'>
+        <div className='flex items-center justify-between px-6 py-4 border-b border-border'>
           <div className='flex items-center gap-2'>
-            <History className='w-5 h-5 text-sky-500' />
-            <h3 className='text-lg font-bold text-gray-800 dark:text-gray-200'>
+            <History className='w-5 h-5 text-primary' />
+            <h3 className='text-lg font-bold text-foreground'>
               播放记录
             </h3>
             {playRecords.length > 0 && (
-              <span className='px-2 py-0.5 text-xs font-medium bg-sky-100 text-sky-800 dark:bg-sky-900/30 dark:text-sky-300 rounded-full'>
+              <span className='px-2 py-0.5 text-xs font-medium bg-secondary text-secondary-foreground rounded-full'>
                 {playRecords.length} 项
               </span>
             )}
@@ -193,21 +193,21 @@ export default function PlayRecordsPanel({
                     onClick={
                       allSelected ? () => setSelectedKeys(new Set()) : selectAll
                     }
-                    className='text-xs text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white transition-colors'
+                    className='text-xs text-muted-foreground hover:text-foreground transition-colors'
                   >
                     {allSelected ? '取消全选' : '全选'}
                   </button>
                   <button
                     onClick={() => setShowDeleteSelectedDialog(true)}
                     disabled={selectedCount === 0 || deletingSelected}
-                    className='inline-flex items-center gap-1 text-xs text-red-500 hover:text-red-700 disabled:cursor-not-allowed disabled:opacity-40 dark:text-red-400 dark:hover:text-red-300 transition-colors'
+                    className='inline-flex items-center gap-1 text-xs text-destructive hover:text-destructive/80 disabled:cursor-not-allowed disabled:opacity-40 transition-colors'
                   >
                     <Trash2 className='w-3.5 h-3.5' />
                     删除{selectedCount > 0 ? `(${selectedCount})` : ''}
                   </button>
                   <button
                     onClick={toggleEditMode}
-                    className='text-xs text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors'
+                    className='text-xs text-muted-foreground hover:text-foreground transition-colors'
                   >
                     取消
                   </button>
@@ -216,13 +216,13 @@ export default function PlayRecordsPanel({
                 <>
                   <button
                     onClick={toggleEditMode}
-                    className='text-xs text-sky-600 hover:text-sky-700 dark:text-sky-400 dark:hover:text-sky-300 transition-colors'
+                    className='text-xs text-primary hover:text-primary/80 transition-colors'
                   >
                     编辑
                   </button>
                   <button
                     onClick={() => setShowConfirmDialog(true)}
-                    className='text-xs text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 transition-colors'
+                    className='text-xs text-destructive hover:text-destructive/80 transition-colors'
                   >
                     清空全部
                   </button>
@@ -230,7 +230,7 @@ export default function PlayRecordsPanel({
               ))}
             <button
               onClick={onClose}
-              className='w-8 h-8 p-1 rounded-full flex items-center justify-center text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors'
+              className='w-8 h-8 p-1 rounded-full flex items-center justify-center text-muted-foreground hover:bg-accent transition-colors'
               aria-label='Close'
             >
               <X className='w-full h-full' />
@@ -241,10 +241,10 @@ export default function PlayRecordsPanel({
         <div className='flex-1 overflow-y-auto p-6'>
           {loading ? (
             <div className='flex items-center justify-center py-12'>
-              <div className='w-8 h-8 border-4 border-sky-500 border-t-transparent rounded-full animate-spin'></div>
+              <div className='w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin'></div>
             </div>
           ) : playRecords.length === 0 ? (
-            <div className='flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400'>
+            <div className='flex flex-col items-center justify-center py-12 text-muted-foreground'>
               <History className='w-12 h-12 mb-3 opacity-30' />
               <p className='text-sm'>暂无播放记录</p>
             </div>
@@ -291,14 +291,14 @@ export default function PlayRecordsPanel({
                         }}
                         className={`absolute inset-0 z-20 rounded-lg transition-colors ${
                           checked
-                            ? 'bg-sky-500/15 ring-2 ring-sky-500'
-                            : 'bg-black/5 hover:bg-sky-500/10 dark:bg-black/20'
+                            ? 'bg-primary/15 ring-2 ring-ring'
+                            : 'bg-black/5 hover:bg-primary/10 dark:bg-black/20'
                         }`}
                       >
                         <span
                           className={`absolute left-2 top-2 flex h-6 w-6 items-center justify-center rounded-full border-2 shadow-md transition-colors ${
                             checked
-                              ? 'border-sky-500 bg-sky-500 text-white'
+                              ? 'border-primary bg-primary text-primary-foreground'
                               : 'border-white bg-black/40 text-transparent'
                           }`}
                         >

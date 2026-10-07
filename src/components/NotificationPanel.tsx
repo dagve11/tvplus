@@ -161,21 +161,21 @@ export const NotificationPanel: React.FC<NotificationPanelProps> = ({
     <>
       {/* 背景遮罩 */}
       <div
-        className='fixed inset-0 bg-black/50 backdrop-blur-sm z-[1000]'
+        className='fixed inset-0 bg-black/50 backdrop-blur-sm z-modal'
         onClick={onClose}
       />
 
       {/* 通知面板 */}
-      <div className='fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-lg min-h-[520px] max-h-[80vh] bg-white dark:bg-gray-900 rounded-xl shadow-xl z-[1001] flex flex-col overflow-hidden max-sm:min-h-[70vh]'>
+      <div className='fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-lg min-h-[520px] max-h-[80vh] bg-card rounded-xl shadow-xl z-popover flex flex-col overflow-hidden max-sm:min-h-[70vh]'>
         {/* 标题栏 */}
-        <div className='flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-700'>
+        <div className='flex items-center justify-between px-6 py-4 border-b border-border'>
           <div className='flex items-center gap-2'>
-            <Bell className='w-5 h-5 text-gray-600 dark:text-gray-400' />
-            <h3 className='text-lg font-bold text-gray-800 dark:text-gray-200'>
+            <Bell className='w-5 h-5 text-muted-foreground' />
+            <h3 className='text-lg font-bold text-foreground'>
               通知中心
             </h3>
             {notifications.length > 0 && (
-              <span className='px-2 py-0.5 text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300 rounded-full'>
+              <span className='px-2 py-0.5 text-xs font-medium bg-secondary text-secondary-foreground rounded-full'>
                 {notifications.filter((n) => !n.read).length} 条未读
               </span>
             )}
@@ -184,14 +184,14 @@ export const NotificationPanel: React.FC<NotificationPanelProps> = ({
             {notifications.length > 0 && (
               <button
                 onClick={clearAll}
-                className='text-xs text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 transition-colors'
+                className='text-xs text-destructive hover:text-destructive/80 transition-colors'
               >
                 清空全部
               </button>
             )}
             <button
               onClick={onClose}
-              className='w-8 h-8 p-1 rounded-full flex items-center justify-center text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors'
+              className='w-8 h-8 p-1 rounded-full flex items-center justify-center text-muted-foreground hover:bg-accent transition-colors'
               aria-label='Close'
             >
               <X className='w-full h-full' />
@@ -205,15 +205,15 @@ export const NotificationPanel: React.FC<NotificationPanelProps> = ({
               <button
                 type='button'
                 onClick={handleOpenNotificationSettings}
-                className='mb-3 flex w-full items-center gap-2 rounded-lg border border-blue-200 bg-blue-50 px-3 py-2.5 text-left transition-colors hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:border-blue-800 dark:bg-blue-900/20 dark:hover:bg-blue-900/30 dark:focus:ring-offset-gray-900'
+                className='mb-3 flex w-full items-center gap-2 rounded-lg border border-border bg-muted px-3 py-2.5 text-left transition-colors hover:bg-accent focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2'
               >
-                <div className='flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-blue-100 text-blue-600 dark:bg-blue-900/40 dark:text-blue-300'>
+                <div className='flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-secondary text-secondary-foreground'>
                   <Settings className='h-4 w-4' />
                 </div>
-                <span className='min-w-0 flex-1 text-sm text-gray-700 dark:text-gray-200'>
+                <span className='min-w-0 flex-1 text-sm text-foreground'>
                   开启邮件通知或当前设备浏览器系统通知后，重要更新可在站外提醒您
                 </span>
-                <span className='shrink-0 text-xs font-medium text-blue-700 dark:text-blue-200'>
+                <span className='shrink-0 text-xs font-medium text-primary'>
                   去配置
                 </span>
               </button>
@@ -221,10 +221,10 @@ export const NotificationPanel: React.FC<NotificationPanelProps> = ({
 
           {loading ? (
             <div className='flex items-center justify-center py-12'>
-              <div className='w-8 h-8 border-4 border-green-500 border-t-transparent rounded-full animate-spin'></div>
+              <div className='w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin'></div>
             </div>
           ) : notifications.length === 0 ? (
-            <div className='flex flex-1 flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400'>
+            <div className='flex flex-1 flex-col items-center justify-center py-12 text-muted-foreground'>
               <Bell className='w-12 h-12 mb-3 opacity-30' />
               <p className='text-sm'>暂无通知</p>
             </div>
@@ -235,27 +235,27 @@ export const NotificationPanel: React.FC<NotificationPanelProps> = ({
                   key={notification.id}
                   className={`group relative p-4 rounded-lg border transition-all cursor-pointer ${
                     notification.read
-                      ? 'bg-gray-50 dark:bg-gray-800/50 border-gray-200 dark:border-gray-700'
-                      : 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800'
+                      ? 'bg-muted border-border'
+                      : 'bg-accent border-border'
                   } hover:shadow-md`}
                   onClick={() => handleNotificationClick(notification)}
                 >
                   {/* 未读标识 */}
                   {!notification.read && (
-                    <div className='absolute top-4 right-4 w-2 h-2 bg-green-500 rounded-full'></div>
+                    <div className='absolute top-4 right-4 w-2 h-2 bg-primary rounded-full'></div>
                   )}
 
                   {/* 通知内容 */}
                   <div className='pr-8'>
                     <div className='flex items-start justify-between mb-1'>
-                      <h4 className='text-sm font-semibold text-gray-900 dark:text-gray-100'>
+                      <h4 className='text-sm font-semibold text-foreground'>
                         {notification.title}
                       </h4>
                     </div>
-                    <p className='text-sm text-gray-600 dark:text-gray-400 mb-2'>
+                    <p className='text-sm text-muted-foreground mb-2'>
                       {notification.message}
                     </p>
-                    <p className='text-xs text-gray-500 dark:text-gray-500'>
+                    <p className='text-xs text-muted-foreground'>
                       {new Date(notification.timestamp).toLocaleString('zh-CN')}
                     </p>
                   </div>
@@ -268,10 +268,10 @@ export const NotificationPanel: React.FC<NotificationPanelProps> = ({
                           e.stopPropagation();
                           markAsRead(notification.id);
                         }}
-                        className='p-1.5 rounded-full bg-white dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors'
+                        className='p-1.5 rounded-full bg-secondary hover:bg-accent transition-colors'
                         title='标记为已读'
                       >
-                        <Check className='w-3.5 h-3.5 text-green-600 dark:text-green-400' />
+                        <Check className='w-3.5 h-3.5 text-primary' />
                       </button>
                     )}
                     <button
@@ -279,10 +279,10 @@ export const NotificationPanel: React.FC<NotificationPanelProps> = ({
                         e.stopPropagation();
                         deleteNotification(notification.id);
                       }}
-                      className='p-1.5 rounded-full bg-white dark:bg-gray-700 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors'
+                      className='p-1.5 rounded-full bg-secondary hover:bg-destructive/10 transition-colors'
                       title='删除'
                     >
-                      <Trash2 className='w-3.5 h-3.5 text-red-600 dark:text-red-400' />
+                      <Trash2 className='w-3.5 h-3.5 text-destructive' />
                     </button>
                   </div>
                 </div>

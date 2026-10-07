@@ -125,21 +125,21 @@ export const FavoritesPanel: React.FC<FavoritesPanelProps> = ({
     <>
       {/* 背景遮罩 */}
       <div
-        className='fixed inset-0 bg-black/50 backdrop-blur-sm z-[1000]'
+        className='fixed inset-0 bg-black/50 backdrop-blur-sm z-modal'
         onClick={onClose}
       />
 
       {/* 收藏面板 */}
-      <div className='fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-4xl max-h-[85vh] bg-white dark:bg-gray-900 rounded-xl shadow-xl z-[1001] flex flex-col overflow-hidden'>
+      <div className='fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-4xl max-h-[85vh] bg-card rounded-xl shadow-xl z-popover flex flex-col overflow-hidden'>
         {/* 标题栏 */}
-        <div className='flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-700'>
+        <div className='flex items-center justify-between px-6 py-4 border-b border-border'>
           <div className='flex items-center gap-2'>
-            <Star className='w-5 h-5 text-yellow-500' />
-            <h3 className='text-lg font-bold text-gray-800 dark:text-gray-200'>
+            <Star className='w-5 h-5 text-primary' />
+            <h3 className='text-lg font-bold text-foreground'>
               我的收藏
             </h3>
             {favoriteItems.length > 0 && (
-              <span className='px-2 py-0.5 text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300 rounded-full'>
+              <span className='px-2 py-0.5 text-xs font-medium bg-secondary text-secondary-foreground rounded-full'>
                 {favoriteItems.length} 项
               </span>
             )}
@@ -148,14 +148,14 @@ export const FavoritesPanel: React.FC<FavoritesPanelProps> = ({
             {favoriteItems.length > 0 && (
               <button
                 onClick={() => setShowConfirmDialog(true)}
-                className='text-xs text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 transition-colors'
+                className='text-xs text-destructive hover:text-destructive/80 transition-colors'
               >
                 清空全部
               </button>
             )}
             <button
               onClick={onClose}
-              className='w-8 h-8 p-1 rounded-full flex items-center justify-center text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors'
+              className='w-8 h-8 p-1 rounded-full flex items-center justify-center text-muted-foreground hover:bg-accent transition-colors'
               aria-label='Close'
             >
               <X className='w-full h-full' />
@@ -167,10 +167,10 @@ export const FavoritesPanel: React.FC<FavoritesPanelProps> = ({
         <div className='flex-1 overflow-y-auto p-6'>
           {loading ? (
             <div className='flex items-center justify-center py-12'>
-              <div className='w-8 h-8 border-4 border-yellow-500 border-t-transparent rounded-full animate-spin'></div>
+              <div className='w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin'></div>
             </div>
           ) : favoriteItems.length === 0 ? (
-            <div className='flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400'>
+            <div className='flex flex-col items-center justify-center py-12 text-muted-foreground'>
               <Star className='w-12 h-12 mb-3 opacity-30' />
               <p className='text-sm'>暂无收藏内容</p>
             </div>
