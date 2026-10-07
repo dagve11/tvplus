@@ -3,7 +3,6 @@
 'use client';
 
 import {
-  AlertCircle,
   ChevronRight,
   Download,
   ExternalLink,
@@ -34,8 +33,8 @@ import { useLiveSync } from '@/hooks/useLiveSync';
 
 import EpgScrollableRow from '@/components/EpgScrollableRow';
 import LoadingStyle, {
-  LoadingErrorStyle,
   type LoadingStep,
+  LoadingErrorStyle,
 } from '@/components/LoadingStyle';
 import PageLayout from '@/components/PageLayout';
 
@@ -2825,7 +2824,7 @@ function LivePageClient() {
                                         loading="lazy"
                                       />
                                     ) : (
-                                      <Tv className='w-5 h-5 text-gray-500' />
+                                      <Tv className='w-5 h-5 text-muted-foreground' />
                                     )}
                                   </div>
                                   <div className='flex-1 min-w-0'>
@@ -2899,7 +2898,7 @@ function LivePageClient() {
                                         loading='lazy'
                                       />
                                     ) : (
-                                      <Tv className='w-5 h-5 text-gray-500' />
+                                      <Tv className='w-5 h-5 text-muted-foreground' />
                                     )}
                                   </div>
                                   <div className='flex-1 min-w-0'>
@@ -2919,13 +2918,13 @@ function LivePageClient() {
                                       {isTestingLines && (
                                         <>
                                           <span>·</span>
-                                          <span className='text-amber-600 dark:text-amber-400'>测速中...</span>
+                                          <span className='text-muted-foreground'>测速中...</span>
                                         </>
                                       )}
                                       {!isTestingLines && bestLine && (
                                         <>
                                           <span>·</span>
-                                          <span className='text-green-600 dark:text-green-400'>{`推荐线路${bestLineIndex + 1}${bestLineLabel ? ` ${bestLineLabel}` : ''}`}</span>
+                                          <span className='text-foreground'>{`推荐线路${bestLineIndex + 1}${bestLineLabel ? ` ${bestLineLabel}` : ''}`}</span>
                                         </>
                                       )}
                                     </div>
@@ -2944,7 +2943,7 @@ function LivePageClient() {
                                         e.stopPropagation();
                                         toggleMergedChannel(item.key);
                                       }}
-                                      className='text-xs px-2 py-1 rounded border border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-300'
+                                      className='text-xs px-2 py-1 rounded border border-border text-muted-foreground'
                                     >
                                       {isExpanded ? '收起' : '展开'}
                                     </span>
@@ -2975,8 +2974,8 @@ function LivePageClient() {
                                         }`}
                                       >
                                         <div className='flex items-center justify-between gap-3'>
-                                          <span className='font-medium text-gray-900 dark:text-gray-100 flex items-center gap-2'>
-                                            <GitBranch className='w-4 h-4 text-gray-500 dark:text-gray-400' />
+                                          <span className='font-medium text-foreground flex items-center gap-2'>
+                                            <GitBranch className='w-4 h-4 text-muted-foreground' />
                                             {`线路${index + 1}`}
                                           </span>
                                           <div className='flex items-center gap-2 text-xs'>
@@ -2992,12 +2991,12 @@ function LivePageClient() {
                                               </span>
                                             )}
                                             {isBestLine && (
-                                              <span className='rounded bg-green-100 px-2 py-0.5 text-green-700 dark:bg-green-900/40 dark:text-green-300'>
+                                              <span className='rounded bg-accent px-2 py-0.5 text-foreground'>
                                                 推荐
                                               </span>
                                             )}
                                             {isActive && (
-                                              <span className='text-green-600 dark:text-green-400'>
+                                              <span className='text-primary'>
                                                 当前播放
                                               </span>
                                             )}
@@ -3013,29 +3012,17 @@ function LivePageClient() {
                         })
                       ) : (
                         <div className='flex flex-col items-center justify-center py-12 text-center'>
-                          <div className='w-16 h-16 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mb-4'>
+                          <div className='w-16 h-16 bg-muted rounded-full flex items-center justify-center mb-4'>
                             {searchKeyword ? (
-                              <svg
-                                className='w-8 h-8 text-gray-400 dark:text-gray-600'
-                                fill='none'
-                                stroke='currentColor'
-                                viewBox='0 0 24 24'
-                              >
-                                <path
-                                  strokeLinecap='round'
-                                  strokeLinejoin='round'
-                                  strokeWidth={2}
-                                  d='M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z'
-                                />
-                              </svg>
+                              <Search className='w-8 h-8 text-muted-foreground' />
                             ) : (
-                              <Tv className='w-8 h-8 text-gray-400 dark:text-gray-600' />
+                              <Tv className='w-8 h-8 text-muted-foreground' />
                             )}
                           </div>
-                          <p className='text-gray-500 dark:text-gray-400 font-medium'>
+                          <p className='text-muted-foreground font-medium'>
                             {searchKeyword ? '未找到匹配的频道' : '暂无可用频道'}
                           </p>
-                          <p className='text-sm text-gray-400 dark:text-gray-500 mt-1'>
+                          <p className='text-sm text-muted-foreground mt-1'>
                             {searchKeyword ? '请尝试其他搜索关键词' : '请选择其他直播源或稍后再试'}
                           </p>
                         </div>
@@ -3057,13 +3044,13 @@ function LivePageClient() {
                               onClick={() => !isCurrentSource && handleSourceChange(source)}
                               className={`flex items-start gap-3 px-2 py-3 rounded-lg transition-all select-none duration-200 relative
                                 ${isCurrentSource
-                                  ? 'bg-green-500/10 dark:bg-green-500/20 border-green-500/30 border'
-                                  : 'hover:bg-gray-200/50 dark:hover:bg-white/10 hover:scale-[1.02] cursor-pointer'
+                                  ? 'bg-accent border border-border'
+                                  : 'hover:bg-accent hover:scale-[1.02] cursor-pointer'
                                 }`.trim()}
                             >
                               {/* 图标 */}
-                              <div className='w-12 h-12 bg-gray-200 dark:bg-gray-600 rounded-lg flex items-center justify-center flex-shrink-0'>
-                                <Radio className='w-6 h-6 text-gray-500' />
+                              <div className='w-12 h-12 bg-muted rounded-lg flex items-center justify-center flex-shrink-0'>
+                                <Radio className='w-6 h-6 text-muted-foreground' />
                               </div>
 
                               {/* 信息 */}
@@ -3071,27 +3058,27 @@ function LivePageClient() {
                                 <div className='text-sm font-medium text-foreground truncate'>
                                   {source.name}
                                 </div>
-                                <div className='text-xs text-gray-500 dark:text-gray-400 mt-1'>
+                                <div className='text-xs text-muted-foreground mt-1'>
                                   {!source.channelNumber || source.channelNumber === 0 ? '-' : `${source.channelNumber} 个频道`}
                                 </div>
                               </div>
 
                               {/* 当前标识 */}
                               {isCurrentSource && (
-                                <div className='absolute top-2 right-2 w-2 h-2 bg-green-500 rounded-full'></div>
+                                <div className='absolute top-2 right-2 w-2 h-2 bg-primary rounded-full'></div>
                               )}
                             </div>
                           );
                         })
                       ) : (
                         <div className='flex flex-col items-center justify-center py-12 text-center'>
-                          <div className='w-16 h-16 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mb-4'>
-                            <Radio className='w-8 h-8 text-gray-400 dark:text-gray-600' />
+                          <div className='w-16 h-16 bg-muted rounded-full flex items-center justify-center mb-4'>
+                            <Radio className='w-8 h-8 text-muted-foreground' />
                           </div>
-                          <p className='text-gray-500 dark:text-gray-400 font-medium'>
+                          <p className='text-muted-foreground font-medium'>
                             暂无可用直播源
                           </p>
-                          <p className='text-sm text-gray-400 dark:text-gray-500 mt-1'>
+                          <p className='text-sm text-muted-foreground mt-1'>
                             请检查网络连接或联系管理员添加直播源
                           </p>
                         </div>
@@ -3111,7 +3098,7 @@ function LivePageClient() {
               {/* 频道图标+名称 - 在小屏幕上占100%，大屏幕占20% */}
               <div className='w-full flex-shrink-0'>
                 <div className='flex items-center gap-4'>
-                  <div className='w-20 h-20 bg-gray-300 dark:bg-gray-700 rounded-lg flex items-center justify-center flex-shrink-0 overflow-hidden'>
+                  <div className='w-20 h-20 bg-muted rounded-lg flex items-center justify-center flex-shrink-0 overflow-hidden'>
                     {currentChannel.logo ? (
                       <img
                         src={getLogoUrl(currentChannel.logo, currentSource?.key || '')}
@@ -3120,12 +3107,12 @@ function LivePageClient() {
                         loading="lazy"
                       />
                     ) : (
-                      <Tv className='w-10 h-10 text-gray-500' />
+                      <Tv className='w-10 h-10 text-muted-foreground' />
                     )}
                   </div>
                   <div className='flex-1 min-w-0'>
                     <div className='flex items-center gap-3'>
-                      <h3 className='text-lg font-semibold text-gray-900 dark:text-gray-100 truncate'>
+                      <h3 className='text-lg font-semibold text-foreground truncate'>
                         {currentChannel.name}
                       </h3>
                       <button
@@ -3139,7 +3126,7 @@ function LivePageClient() {
                         <FavoriteIcon filled={favorited} />
                       </button>
                     </div>
-                    <p className='text-sm text-gray-500 dark:text-gray-400 truncate'>
+                    <p className='text-sm text-muted-foreground truncate'>
                       {currentSource?.name} {' > '} {currentChannel.group}
                     </p>
                   </div>
@@ -3163,25 +3150,10 @@ function LivePageClient() {
 // FavoriteIcon 组件
 const FavoriteIcon = ({ filled }: { filled: boolean }) => {
   if (filled) {
-    return (
-      <svg
-        className='h-6 w-6'
-        viewBox='0 0 24 24'
-        xmlns='http://www.w3.org/2000/svg'
-      >
-        <path
-          d='M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z'
-          fill='#ef4444' /* Tailwind red-500 */
-          stroke='#ef4444'
-          strokeWidth='2'
-          strokeLinecap='round'
-          strokeLinejoin='round'
-        />
-      </svg>
-    );
+    return <Heart className='h-6 w-6 fill-current text-foreground' />;
   }
   return (
-    <Heart className='h-6 w-6 stroke-[1] text-gray-600 dark:text-gray-300' />
+    <Heart className='h-6 w-6 stroke-[1] text-muted-foreground' />
   );
 };
 
