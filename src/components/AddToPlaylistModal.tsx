@@ -67,12 +67,12 @@ function MusicLoadingIndicator({
           }
         }
       `}</style>
-      <div className={`flex items-center justify-center gap-3 text-zinc-400 ${className}`}>
+      <div className={`flex items-center justify-center gap-3 text-muted-foreground ${className}`}>
         <div className="flex items-end gap-1.5">
           {[0, 1, 2].map((index) => (
             <svg
               key={index}
-              className={`${iconSize} text-green-400`}
+              className={`${iconSize} text-foreground`}
               fill="currentColor"
               viewBox="0 0 24 24"
               style={{ animation: `music-note-bounce 0.9s ease-in-out ${index * 0.14}s infinite` }}
@@ -198,20 +198,20 @@ export default function AddToPlaylistModal({
 
   return (
     <div
-      className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[110] flex items-center justify-center p-4"
+      className="fixed inset-0 bg-black/50 backdrop-blur-sm z-modal flex items-center justify-center p-4"
       onClick={onClose}
     >
       <div
-        className="bg-zinc-900 rounded-xl max-w-md w-full max-h-[80vh] overflow-hidden border border-white/10"
+        className="bg-card rounded-xl max-w-md w-full max-h-[80vh] overflow-hidden border border-border"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="p-4 border-b border-white/10">
+        <div className="p-4 border-b border-border">
           <div className="flex items-center justify-between">
-            <h3 className="text-lg font-bold text-white">添加到歌单</h3>
+            <h3 className="text-lg font-bold text-foreground">添加到歌单</h3>
             <button
               onClick={onClose}
-              className="text-zinc-400 hover:text-white transition-colors"
+              className="text-muted-foreground hover:text-foreground transition-colors"
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -219,7 +219,7 @@ export default function AddToPlaylistModal({
             </button>
           </div>
           {song && (
-            <div className="mt-2 text-sm text-zinc-400">
+            <div className="mt-2 text-sm text-muted-foreground">
               {song.name} - {song.artist}
             </div>
           )}
@@ -231,7 +231,7 @@ export default function AddToPlaylistModal({
           {!showCreateForm && (
             <button
               onClick={() => setShowCreateForm(true)}
-              className="w-full mb-4 px-4 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors flex items-center justify-center gap-2"
+              className="w-full mb-4 px-4 py-3 bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg transition-colors flex items-center justify-center gap-2"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -242,28 +242,28 @@ export default function AddToPlaylistModal({
 
           {/* Create Form */}
           {showCreateForm && (
-            <div className="mb-4 p-4 bg-white/5 rounded-lg border border-white/10">
+            <div className="mb-4 p-4 bg-muted rounded-lg border border-border">
               <input
                 type="text"
                 placeholder="歌单名称"
                 value={newPlaylistName}
                 onChange={(e) => setNewPlaylistName(e.target.value)}
-                className="w-full px-3 py-2 bg-zinc-800 text-white rounded-lg border border-white/10 focus:border-green-500 focus:outline-none mb-2"
+                className="w-full px-3 py-2 bg-background text-foreground rounded-lg border border-input focus:border-ring focus:outline-none mb-2"
               />
               <textarea
                 placeholder="歌单描述（可选）"
                 value={newPlaylistDescription}
                 onChange={(e) => setNewPlaylistDescription(e.target.value)}
-                className="w-full px-3 py-2 bg-zinc-800 text-white rounded-lg border border-white/10 focus:border-green-500 focus:outline-none resize-none"
+                className="w-full px-3 py-2 bg-background text-foreground rounded-lg border border-input focus:border-ring focus:outline-none resize-none"
                 rows={2}
               />
               <div className="flex gap-2 mt-2">
                 <button
                   onClick={handleCreatePlaylist}
                   disabled={creating}
-                  className="flex-1 px-4 py-2 bg-green-600 hover:bg-green-700 disabled:bg-zinc-700 text-white rounded-lg transition-colors flex items-center justify-center"
+                  className="flex-1 px-4 py-2 bg-primary hover:bg-primary/90 disabled:bg-muted text-primary-foreground rounded-lg transition-colors flex items-center justify-center"
                 >
-                  {creating ? <MusicLoadingIndicator size="sm" className="gap-2 text-white" /> : '确定'}
+                  {creating ? <MusicLoadingIndicator size="sm" className="gap-2 text-primary-foreground" /> : '确定'}
                 </button>
                 <button
                   onClick={() => {
@@ -271,7 +271,7 @@ export default function AddToPlaylistModal({
                     setNewPlaylistName('');
                     setNewPlaylistDescription('');
                   }}
-                  className="flex-1 px-4 py-2 bg-zinc-700 hover:bg-zinc-600 text-white rounded-lg transition-colors"
+                  className="flex-1 px-4 py-2 bg-secondary hover:bg-secondary/80 text-secondary-foreground rounded-lg transition-colors"
                 >
                   取消
                 </button>
@@ -283,7 +283,7 @@ export default function AddToPlaylistModal({
           {loading ? (
             <MusicLoadingIndicator className="py-8" />
           ) : playlists.length === 0 ? (
-            <div className="text-center py-8 text-zinc-400">
+            <div className="text-center py-8 text-muted-foreground">
               还没有歌单，创建一个吧
             </div>
           ) : (
@@ -293,7 +293,7 @@ export default function AddToPlaylistModal({
                   key={playlist.id}
                   onClick={() => handleAddToPlaylist(playlist.id)}
                   disabled={addingToPlaylistId !== null}
-                  className="w-full px-4 py-3 bg-white/5 hover:bg-white/10 disabled:bg-white/5 disabled:cursor-not-allowed rounded-lg transition-colors text-left flex items-center gap-3"
+                  className="w-full px-4 py-3 bg-muted hover:bg-accent disabled:bg-muted disabled:cursor-not-allowed rounded-lg transition-colors text-left flex items-center gap-3"
                 >
                   {playlist.cover ? (
                     <img
@@ -302,22 +302,22 @@ export default function AddToPlaylistModal({
                       className="w-12 h-12 rounded object-cover"
                     />
                   ) : (
-                    <div className="w-12 h-12 rounded bg-zinc-800 flex items-center justify-center">
-                      <svg className="w-6 h-6 text-zinc-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div className="w-12 h-12 rounded bg-muted flex items-center justify-center">
+                      <svg className="w-6 h-6 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
                       </svg>
                     </div>
                   )}
                   <div className="flex-1 min-w-0">
-                    <div className="text-white font-medium truncate">{playlist.name}</div>
+                    <div className="text-foreground font-medium truncate">{playlist.name}</div>
                     {playlist.description && (
-                      <div className="text-xs text-zinc-500 truncate">{playlist.description}</div>
+                      <div className="text-xs text-muted-foreground truncate">{playlist.description}</div>
                     )}
                   </div>
                   {addingToPlaylistId === playlist.id ? (
                     <MusicLoadingIndicator size="sm" className="gap-1" />
                   ) : (
-                    <svg className="w-5 h-5 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-5 h-5 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                     </svg>
                   )}

@@ -57,7 +57,7 @@ const CARD_CLASS = cn(
   'bg-card'
 );
 const DANGER_BUTTON_CLASS =
-  'cursor-pointer rounded-md bg-red-600 px-4 py-2 text-sm font-medium text-white transition-colors duration-200 hover:bg-red-700';
+  'cursor-pointer rounded-md bg-destructive px-4 py-2 text-sm font-medium text-destructive-foreground transition-colors duration-200 hover:bg-destructive/90';
 
 function looksLikeInternalHref(value?: string) {
   if (!value) return false;
@@ -412,7 +412,7 @@ export default function BookHistoryPage() {
         mounted &&
         createPortal(
           <div
-            className='fixed inset-0 z-[60] flex items-center justify-center bg-black/55 px-4 backdrop-blur-sm'
+            className='fixed inset-0 z-modal flex items-center justify-center bg-black/55 px-4 backdrop-blur-sm'
             onClick={() => setConfirmAction(null)}
           >
             <div
@@ -426,7 +426,7 @@ export default function BookHistoryPage() {
                   LIBRARY_SERIF
                 )}
               >
-                <Trash2 className='h-4 w-4 text-red-600 dark:text-red-400' />
+                <Trash2 className='h-4 w-4 text-destructive' />
                 {confirmAction.type === 'clear-all'
                   ? '清空全部缓存'
                   : '删除缓存'}

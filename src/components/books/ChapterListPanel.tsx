@@ -205,7 +205,7 @@ export default function ChapterListPanel(props: ChapterListPanelProps) {
               <span className='min-w-0 flex-1 truncate'>{item.label}</span>
               <div
                 className={cn(
-                  'pointer-events-none absolute bottom-full left-1/2 z-[100] mb-2 -translate-x-1/2 whitespace-nowrap rounded-lg px-3 py-2 text-sm opacity-0 invisible shadow-xl transition-all duration-200 ease-out group-hover:visible group-hover:opacity-100',
+                  'pointer-events-none absolute bottom-full left-1/2 z-sticky mb-2 -translate-x-1/2 whitespace-nowrap rounded-lg px-3 py-2 text-sm opacity-0 invisible shadow-xl transition-all duration-200 ease-out group-hover:visible group-hover:opacity-100',
                   READER_TOOLTIP
                 )}
               >

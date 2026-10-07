@@ -139,29 +139,29 @@ export default function AdvancedRecommendationPage() {
     <PageLayout activePath='/advanced-recommendation'>
       <div className='px-4 sm:px-10 py-4 sm:py-8 mb-10'>
         <div className='mb-6'>
-          <h1 className='text-2xl font-bold text-gray-800 dark:text-gray-200 flex items-center gap-2'>
-            <Blend className='w-6 h-6 text-green-500' />
+          <h1 className='text-2xl font-bold text-foreground flex items-center gap-2'>
+            <Blend className='w-6 h-6 text-foreground' />
             高级推荐
           </h1>
-          <p className='text-sm text-gray-500 dark:text-gray-400 mt-1'>
+          <p className='text-sm text-muted-foreground mt-1'>
             浏览视频源脚本提供的推荐内容
           </p>
         </div>
 
         <div className='max-w-6xl mx-auto space-y-6'>
           <div>
-            <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3'>
+            <label className='block text-sm font-medium text-foreground mb-3'>
               选择脚本源
             </label>
             {isLoadingSources ? (
-              <div className='flex items-center justify-center h-12 bg-gray-50/80 rounded-lg border border-gray-200/50 dark:bg-gray-800 dark:border-gray-700'>
-                <Loader2 className='h-5 w-5 animate-spin text-gray-400' />
-                <span className='ml-2 text-sm text-gray-500 dark:text-gray-400'>
+              <div className='flex items-center justify-center h-12 bg-muted rounded-lg border border-border'>
+                <Loader2 className='h-5 w-5 animate-spin text-muted-foreground' />
+                <span className='ml-2 text-sm text-muted-foreground'>
                   加载脚本源中...
                 </span>
               </div>
             ) : sources.length === 0 ? (
-              <div className='flex items-center justify-center h-24 rounded-xl border border-dashed border-gray-300 bg-gray-50/70 text-sm text-gray-500 dark:border-gray-700 dark:bg-gray-800/50 dark:text-gray-400'>
+              <div className='flex items-center justify-center h-24 rounded-xl border border-dashed border-border bg-muted text-sm text-muted-foreground'>
                 暂无可用的视频源脚本
               </div>
             ) : (
@@ -189,7 +189,7 @@ export default function AdvancedRecommendationPage() {
           </div>
 
           {!!error && (
-            <div className='rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600 dark:border-red-900/50 dark:bg-red-900/10 dark:text-red-300'>
+            <div className='rounded-xl border border-destructive/20 bg-destructive/10 px-4 py-3 text-sm text-destructive'>
               {error}
             </div>
           )}
@@ -219,14 +219,14 @@ export default function AdvancedRecommendationPage() {
                   ))}
                 </div>
               ) : !isLoadingVideos && !error ? (
-                <div className='flex items-center justify-center h-32 rounded-xl border border-dashed border-gray-300 bg-gray-50/70 text-sm text-gray-500 dark:border-gray-700 dark:bg-gray-800/50 dark:text-gray-400'>
+                <div className='flex items-center justify-center h-32 rounded-xl border border-dashed border-border bg-muted text-sm text-muted-foreground'>
                   当前脚本暂无推荐内容
                 </div>
               ) : null}
 
               {isLoadingVideos && (
                 <div className='flex justify-center py-6'>
-                  <Loader2 className='h-6 w-6 animate-spin text-gray-400' />
+                  <Loader2 className='h-6 w-6 animate-spin text-muted-foreground' />
                 </div>
               )}
 

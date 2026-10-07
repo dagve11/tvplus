@@ -82,8 +82,8 @@ export function SourcePill({
     ? getSourceDisplayLabel(normalized)
     : musicSources.find((item) => item.key === normalized)?.label || source || '未知';
   const variantClass = variant === 'accent'
-    ? 'rounded-lg border-red-500/50 bg-red-500/20 leading-none text-red-400'
-    : 'rounded-full border-white/10 bg-white/5 text-zinc-400';
+    ? 'rounded-lg border-destructive/50 bg-destructive/20 leading-none text-destructive'
+    : 'rounded-full border-border bg-muted text-muted-foreground';
 
   return React.createElement(
     'span',

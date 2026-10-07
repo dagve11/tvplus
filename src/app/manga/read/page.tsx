@@ -1029,7 +1029,7 @@ export default function MangaReadPage() {
                       <span className='block truncate'>{chapter.name}</span>
                       <div
                         className={cn(
-                          'pointer-events-none invisible absolute bottom-full left-1/2 z-[100] mb-2 -translate-x-1/2 whitespace-nowrap rounded-lg px-3 py-2 text-sm opacity-0 shadow-xl transition-all duration-200 ease-out group-hover:visible group-hover:opacity-100',
+                          'pointer-events-none invisible absolute bottom-full left-1/2 z-sticky mb-2 -translate-x-1/2 whitespace-nowrap rounded-lg px-3 py-2 text-sm opacity-0 shadow-xl transition-all duration-200 ease-out group-hover:visible group-hover:opacity-100',
                           READER_TOOLTIP
                         )}
                       >

@@ -683,10 +683,10 @@ export const UserMenu: React.FC = () => {
 
   const roleBadgeClassName =
     currentRole === 'owner'
-      ? 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300'
+      ? 'bg-muted text-muted-foreground'
       : currentRole === 'admin'
-      ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300'
-      : 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300';
+      ? 'bg-muted text-muted-foreground'
+      : 'bg-muted text-muted-foreground';
   const handleOpenProfileCenter = () => {
     setIsOpen(false);
     setIsProfileCenterOpen(true);
@@ -715,18 +715,18 @@ export const UserMenu: React.FC = () => {
       <div className='relative'>
         <button
           onClick={handleMenuClick}
-          className='w-10 h-10 p-2 rounded-full flex items-center justify-center text-gray-600 hover:bg-gray-200/50 dark:text-gray-300 dark:hover:bg-gray-700/50 transition-colors'
+          className='w-10 h-10 p-2 rounded-full flex items-center justify-center text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-colors'
           aria-label='User Menu'
         >
           <User className='w-full h-full' />
         </button>
         {/* 版本更新红点 */}
         {updateStatus === UpdateStatus.HAS_UPDATE && (
-          <div className='absolute top-[2px] right-[2px] w-2 h-2 bg-yellow-500 rounded-full'></div>
+          <div className='absolute top-[2px] right-[2px] w-2 h-2 bg-primary rounded-full'></div>
         )}
         {/* 未读通知红点 */}
         {unreadCount > 0 && (
-          <div className='absolute top-[2px] right-[2px] w-2 h-2 bg-red-500 rounded-full'></div>
+          <div className='absolute top-[2px] right-[2px] w-2 h-2 bg-primary rounded-full'></div>
         )}
       </div>
 
@@ -737,20 +737,20 @@ export const UserMenu: React.FC = () => {
     <>
       {/* 背景遮罩 - 普通菜单无需模糊 */}
       <div
-        className='fixed inset-0 bg-transparent z-[1000]'
+        className='fixed inset-0 bg-transparent z-modal'
         onClick={handleCloseMenu}
       />
 
       {/* 菜单面板 */}
-      <div className='fixed top-14 right-4 w-56 bg-white dark:bg-gray-900 rounded-lg shadow-xl z-[1001] border border-gray-200/50 dark:border-gray-700/50 overflow-hidden select-none'>
+      <div className='fixed top-14 right-4 w-56 bg-card rounded-lg shadow-xl z-popover border border-border overflow-hidden select-none'>
         {/* 用户信息区域 */}
-        <div className='px-3 py-1 border-b border-gray-200 dark:border-gray-700 bg-gradient-to-r from-gray-50 to-gray-100/50 dark:from-gray-800 dark:to-gray-800/50'>
+        <div className='px-3 py-1 border-b border-border bg-muted'>
           <div className='flex items-start justify-between gap-3'>
             <button
               onClick={handleOpenProfileCenter}
-              className='flex items-center gap-3 rounded-xl px-2 py-1 text-left hover:bg-white/70 dark:hover:bg-gray-700/40 transition-colors'
+              className='flex items-center gap-3 rounded-xl px-2 py-1 text-left hover:bg-accent transition-colors'
             >
-              <div className='relative flex h-11 w-11 items-center justify-center rounded-full bg-blue-500 text-lg font-semibold text-white shadow-sm'>
+              <div className='relative flex h-11 w-11 items-center justify-center rounded-full bg-primary text-lg font-semibold text-primary-foreground shadow-sm'>
                 <span>{avatarText}</span>
                 {shouldShowRoleBadge && (
                   <span
@@ -761,14 +761,14 @@ export const UserMenu: React.FC = () => {
                 )}
               </div>
               <div className='min-w-0'>
-                <span className='block max-w-[84px] truncate text-sm font-semibold text-gray-900 dark:text-gray-100 leading-none'>
+                <span className='block max-w-[84px] truncate text-sm font-semibold text-foreground leading-none'>
                   {currentUsername}
                 </span>
               </div>
             </button>
 
             <div className='pt-1 text-right'>
-              <div className='text-[10px] text-gray-400 dark:text-gray-500'>
+              <div className='text-[10px] text-muted-foreground'>
                 <div>数据存储</div>
                 <div className='mt-0.5'>
                   {displayStorageType === 'localstorage'
@@ -788,12 +788,12 @@ export const UserMenu: React.FC = () => {
               setIsOpen(false);
               setIsNotificationPanelOpen(true);
             }}
-            className='w-full px-3 py-2 text-left flex items-center gap-2.5 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-sm relative'
+            className='w-full px-3 py-2 text-left flex items-center gap-2.5 text-foreground hover:bg-accent hover:text-accent-foreground transition-colors text-sm relative'
           >
-            <Bell className='w-4 h-4 text-gray-500 dark:text-gray-400' />
+            <Bell className='w-4 h-4 text-muted-foreground' />
             <span className='font-medium'>通知中心</span>
             {unreadCount > 0 && (
-              <span className='ml-auto px-2 py-0.5 text-xs font-medium bg-red-500 text-white rounded-full'>
+              <span className='ml-auto px-2 py-0.5 text-xs font-medium bg-primary text-primary-foreground rounded-full'>
                 {unreadCount > 99 ? '99+' : unreadCount}
               </span>
             )}
@@ -805,18 +805,18 @@ export const UserMenu: React.FC = () => {
               setIsOpen(false);
               setIsFavoritesPanelOpen(true);
             }}
-            className='w-full px-3 py-2 text-left flex items-center gap-2.5 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-sm relative'
+            className='w-full px-3 py-2 text-left flex items-center gap-2.5 text-foreground hover:bg-accent hover:text-accent-foreground transition-colors text-sm relative'
           >
-            <Star className='w-4 h-4 text-gray-500 dark:text-gray-400' />
+            <Star className='w-4 h-4 text-muted-foreground' />
             <span className='font-medium'>我的收藏</span>
           </button>
 
           {/* 设置按钮 */}
           <button
             onClick={handleSettings}
-            className='w-full px-3 py-2 text-left flex items-center gap-2.5 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-sm'
+            className='w-full px-3 py-2 text-left flex items-center gap-2.5 text-foreground hover:bg-accent hover:text-accent-foreground transition-colors text-sm'
           >
-            <Settings className='w-4 h-4 text-gray-500 dark:text-gray-400' />
+            <Settings className='w-4 h-4 text-muted-foreground' />
             <span className='font-medium'>设置</span>
           </button>
 
@@ -824,9 +824,9 @@ export const UserMenu: React.FC = () => {
           {showAdminPanel && (
             <button
               onClick={handleAdminPanel}
-              className='w-full px-3 py-2 text-left flex items-center gap-2.5 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-sm'
+              className='w-full px-3 py-2 text-left flex items-center gap-2.5 text-foreground hover:bg-accent hover:text-accent-foreground transition-colors text-sm'
             >
-              <Shield className='w-4 h-4 text-gray-500 dark:text-gray-400' />
+              <Shield className='w-4 h-4 text-muted-foreground' />
               <span className='font-medium'>管理面板</span>
             </button>
           )}
@@ -838,9 +838,9 @@ export const UserMenu: React.FC = () => {
                 setIsOfflineDownloadPanelOpen(true);
                 setIsOpen(false);
               }}
-              className='w-full px-3 py-2 text-left flex items-center gap-2.5 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-sm'
+              className='w-full px-3 py-2 text-left flex items-center gap-2.5 text-foreground hover:bg-accent hover:text-accent-foreground transition-colors text-sm'
             >
-              <Download className='w-4 h-4 text-gray-500 dark:text-gray-400' />
+              <Download className='w-4 h-4 text-muted-foreground' />
               <span className='font-medium'>离线下载</span>
             </button>
           )}
@@ -848,9 +848,9 @@ export const UserMenu: React.FC = () => {
           {/* 电视访问按钮 */}
           <button
             onClick={handleSubscribe}
-            className='w-full px-3 py-2 text-left flex items-center gap-2.5 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-sm'
+            className='w-full px-3 py-2 text-left flex items-center gap-2.5 text-foreground hover:bg-accent hover:text-accent-foreground transition-colors text-sm'
           >
-            <Monitor className='w-4 h-4 text-gray-500 dark:text-gray-400' />
+            <Monitor className='w-4 h-4 text-muted-foreground' />
             <span className='font-medium'>电视访问</span>
           </button>
 
@@ -860,26 +860,26 @@ export const UserMenu: React.FC = () => {
               setIsOpen(false);
               setIsEcoAppsOpen(true);
             }}
-            className='w-full px-3 py-2 text-left flex items-center gap-2.5 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-sm'
+            className='w-full px-3 py-2 text-left flex items-center gap-2.5 text-foreground hover:bg-accent hover:text-accent-foreground transition-colors text-sm'
           >
-            <Package className='w-4 h-4 text-gray-500 dark:text-gray-400' />
+            <Package className='w-4 h-4 text-muted-foreground' />
             <span className='font-medium'>生态应用</span>
           </button>
 
           {/* 分割线 */}
-          <div className='my-1 border-t border-gray-200 dark:border-gray-700'></div>
+          <div className='my-1 border-t border-border'></div>
 
           {/* 登出按钮 */}
           <button
             onClick={handleLogout}
-            className='w-full px-3 py-2 text-left flex items-center gap-2.5 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors text-sm'
+            className='w-full px-3 py-2 text-left flex items-center gap-2.5 text-destructive hover:bg-destructive/10 transition-colors text-sm'
           >
             <LogOut className='w-4 h-4' />
             <span className='font-medium'>登出</span>
           </button>
 
           {/* 分割线 */}
-          <div className='my-1 border-t border-gray-200 dark:border-gray-700'></div>
+          <div className='my-1 border-t border-border'></div>
 
           {/* 版本信息 */}
           <button
@@ -887,7 +887,7 @@ export const UserMenu: React.FC = () => {
               setIsVersionPanelOpen(true);
               handleCloseMenu();
             }}
-            className='w-full px-3 py-2 text-center flex items-center justify-center text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors text-xs'
+            className='w-full px-3 py-2 text-center flex items-center justify-center text-muted-foreground hover:bg-accent transition-colors text-xs'
           >
             <div className='flex items-center gap-1'>
               <span className='font-mono'>v{CURRENT_VERSION}</span>
@@ -897,9 +897,9 @@ export const UserMenu: React.FC = () => {
                   <div
                     className={`w-2 h-2 rounded-full -translate-y-2 ${
                       updateStatus === UpdateStatus.HAS_UPDATE
-                        ? 'bg-yellow-500'
+                        ? 'bg-foreground'
                         : updateStatus === UpdateStatus.NO_UPDATE
-                        ? 'bg-green-400'
+                        ? 'bg-foreground'
                         : ''
                     }`}
                   ></div>
@@ -1081,18 +1081,18 @@ export const UserMenu: React.FC = () => {
       {confirmDialog.isOpen &&
         mounted &&
         createPortal(
-          <div className='fixed inset-0 z-[10000] flex items-center justify-center bg-black/50 backdrop-blur-sm'>
-            <div className='bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-md m-4'>
+          <div className='fixed inset-0 z-toast flex items-center justify-center bg-black/50 backdrop-blur-sm'>
+            <div className='bg-card rounded-lg shadow-xl w-full max-w-md m-4'>
               {/* 标题 */}
-              <div className='p-6 border-b border-gray-200 dark:border-gray-700'>
-                <h3 className='text-lg font-semibold text-gray-900 dark:text-gray-100'>
+              <div className='p-6 border-b border-border'>
+                <h3 className='text-lg font-semibold text-foreground'>
                   {confirmDialog.title}
                 </h3>
               </div>
 
               {/* 内容 */}
               <div className='p-6'>
-                <p className='text-gray-700 dark:text-gray-300'>
+                <p className='text-foreground'>
                   {confirmDialog.message}
                 </p>
               </div>
@@ -1103,13 +1103,13 @@ export const UserMenu: React.FC = () => {
                   onClick={() =>
                     setConfirmDialog({ ...confirmDialog, isOpen: false })
                   }
-                  className='px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 rounded-lg transition-colors'
+                  className='px-4 py-2 text-sm font-medium bg-secondary text-secondary-foreground hover:bg-secondary/80 rounded-lg transition-colors'
                 >
                   取消
                 </button>
                 <button
                   onClick={confirmDialog.onConfirm}
-                  className='px-4 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 dark:bg-red-600 dark:hover:bg-red-700 rounded-lg transition-colors'
+                  className='px-4 py-2 text-sm font-medium bg-destructive text-destructive-foreground hover:bg-destructive/90 rounded-lg transition-colors'
                 >
                   确定
                 </button>

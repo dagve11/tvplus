@@ -34,9 +34,9 @@ export default function SpecialSourceToggle({
   };
 
   const track = `relative inline-flex h-8 w-14 items-center rounded-full p-1 transition-colors ${
-    enabled ? 'bg-rose-600' : 'bg-gray-300 dark:bg-slate-700'
+    enabled ? 'bg-primary' : 'bg-input'
   }`;
-  const thumb = `h-6 w-6 rounded-full bg-white transition-transform ${
+  const thumb = `h-6 w-6 rounded-full bg-background transition-transform ${
     enabled ? 'translate-x-6' : 'translate-x-0'
   }`;
 
@@ -48,7 +48,7 @@ export default function SpecialSourceToggle({
       aria-checked={enabled}
       aria-label={enabled ? '特殊源入口已开启' : '特殊源入口已关闭'}
       title='点击切换本机的特殊源入口'
-      className={`${track} focus:outline-none focus:ring-2 focus:ring-rose-400 focus:ring-offset-2`}
+      className={`${track} focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2`}
     >
       <span className={thumb} />
     </button>

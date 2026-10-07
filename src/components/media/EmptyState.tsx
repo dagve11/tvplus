@@ -28,7 +28,7 @@ export default function EmptyState({
     return (
       <div
         className={cn(
-          'flex flex-wrap items-center justify-between gap-3 rounded-md border border-red-300/70 bg-red-50 p-4 text-sm text-red-700 dark:border-red-500/25 dark:bg-red-950/25 dark:text-red-300',
+          'flex flex-wrap items-center justify-between gap-3 rounded-md border border-destructive/20 bg-destructive/10 p-4 text-sm text-destructive',
           className
         )}
       >

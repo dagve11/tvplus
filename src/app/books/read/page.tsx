@@ -1268,7 +1268,7 @@ function ChapterReader({ manifest }: { manifest: BookReadManifest }) {
       : 0;
   const palette = THEME_STYLES[settings.theme];
 
-  if (error) return <div className='p-4 text-sm text-red-500'>{error}</div>;
+  if (error) return <div className='p-4 text-sm text-destructive'>{error}</div>;
   if (!chaptersLoaded || (loading && !chapter)) {
     return (
       <div className={cn('flex h-[calc(100vh-3.5rem)] items-center justify-center px-4', LIBRARY_PAGE)}>
@@ -1649,7 +1649,7 @@ function ChapterReader({ manifest }: { manifest: BookReadManifest }) {
                   />
                 </label>
                 {ttsError ? (
-                  <div className='mt-3 text-xs text-red-500'>{ttsError}</div>
+                  <div className='mt-3 text-xs text-destructive'>{ttsError}</div>
                 ) : null}
               </div>
             </div>
@@ -3193,7 +3193,7 @@ export default function BookReadPage() {
   const ttsVolumeValue = parseSignedNumber(ttsSettings.volume, '%');
   const displayedTtsTime = ttsSeeking ? ttsSeekValue : ttsCurrentTime;
 
-  if (error) return <div className='p-4 text-sm text-red-500'>{error}</div>;
+  if (error) return <div className='p-4 text-sm text-destructive'>{error}</div>;
   if (!manifest) {
     return (
       <div className={cn('flex h-[calc(100vh-3.5rem)] items-center justify-center px-4', LIBRARY_PAGE)}>
@@ -3640,7 +3640,7 @@ export default function BookReadPage() {
                 </div>
 
                 {ttsError ? (
-                  <div className='mt-3 text-xs text-red-500'>{ttsError}</div>
+                  <div className='mt-3 text-xs text-destructive'>{ttsError}</div>
                 ) : null}
               </div>
             </div>
