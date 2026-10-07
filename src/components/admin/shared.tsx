@@ -175,6 +175,40 @@ export const AdminField = ({
   </div>
 );
 
+/* ----------------------------- 加载状态 ----------------------------- */
+
+/**
+ * 节级通用加载状态管理（原 admin/page.tsx 本地 hook，Phase 4 抽取时收编）。
+ * 行为与签名与 page.tsx 原版逐字一致。
+ */
+export const useLoadingState = () => {
+  const [loadingStates, setLoadingStates] = useState<Record<string, boolean>>(
+    {}
+  );
+
+  const setLoading = (key: string, loading: boolean) => {
+    setLoadingStates((prev) => ({ ...prev, [key]: loading }));
+  };
+
+  const isLoading = (key: string) => loadingStates[key] || false;
+
+  const withLoading = async (
+    key: string,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    operation: () => Promise<any>
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  ): Promise<any> => {
+    setLoading(key, true);
+    try {
+      return await operation();
+    } finally {
+      setLoading(key, false);
+    }
+  };
+
+  return { loadingStates, setLoading, isLoading, withLoading };
+};
+
 /* ----------------------------- 表格样式 ----------------------------- */
 
 export const adminTableStyles = {
