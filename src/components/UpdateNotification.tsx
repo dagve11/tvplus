@@ -39,9 +39,9 @@ export const UpdateNotification: React.FC = () => {
     <>
       <button
         onClick={() => setIsVersionPanelOpen(true)}
-        className='flex items-center px-3 py-1.5 bg-yellow-100 dark:bg-yellow-900/30 border border-yellow-300 dark:border-yellow-700 rounded-full hover:bg-yellow-200 dark:hover:bg-yellow-900/50 transition-colors cursor-pointer'
+        className='flex items-center px-3 py-1.5 bg-secondary border border-border rounded-full hover:bg-secondary/80 transition-colors cursor-pointer'
       >
-        <span className='text-xs font-medium text-yellow-800 dark:text-yellow-300'>
+        <span className='text-xs font-medium text-secondary-foreground'>
           有更新
         </span>
       </button>
