@@ -404,13 +404,13 @@ export default function CorrectDialog({
   const dialogContent = (
     <>
       {/* 头部 */}
-      <div className='flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700'>
-        <h2 className='text-lg font-semibold text-gray-900 dark:text-gray-100'>
+      <div className='flex items-center justify-between p-4 border-b border-border'>
+        <h2 className='text-lg font-semibold text-foreground'>
           纠错：{currentTitle}
         </h2>
         <button
           onClick={onClose}
-          className='text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
+          className='text-muted-foreground hover:text-foreground'
         >
           <X size={24} />
         </button>
@@ -418,7 +418,7 @@ export default function CorrectDialog({
 
         {/* 搜索框 */}
         {!showManualInput && (
-          <div className='p-4 border-b border-gray-200 dark:border-gray-700'>
+          <div className='p-4 border-b border-border'>
             <div className='flex gap-2'>
               <input
                 type='text'
@@ -430,19 +430,19 @@ export default function CorrectDialog({
                   }
                 }}
                 placeholder='输入搜索关键词'
-                className='flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent'
+                className='flex-1 px-3 py-2 border border-input rounded-lg bg-background text-foreground focus:ring-2 focus:ring-ring focus:border-transparent'
               />
               <button
                 onClick={handleSearch}
                 disabled={searching}
-                className='px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center gap-2'
+                className='px-4 py-2 bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg transition-colors disabled:bg-muted disabled:cursor-not-allowed flex items-center gap-2'
               >
                 <Search size={20} />
                 <span className='hidden sm:inline'>{searching ? '搜索中...' : '搜索'}</span>
               </button>
             </div>
             {error && (
-              <p className='mt-2 text-sm text-red-600 dark:text-red-400'>{error}</p>
+              <p className='mt-2 text-sm text-destructive'>{error}</p>
             )}
           </div>
         )}
@@ -455,7 +455,7 @@ export default function CorrectDialog({
               <div className='mb-4 flex items-center gap-2'>
                 <button
                   onClick={handleBackToSearch}
-                  className='text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 flex items-center gap-1'
+                  className='text-primary hover:text-primary/80 flex items-center gap-1'
                 >
                   <span>←</span>
                   <span>返回搜索</span>
@@ -465,21 +465,21 @@ export default function CorrectDialog({
               <div className='space-y-4'>
                 {/* 标题 - 必填 */}
                 <div>
-                  <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
-                    影片标题 <span className='text-red-500'>*</span>
+                  <label className='block text-sm font-medium text-foreground mb-1'>
+                    影片标题 <span className='text-destructive'>*</span>
                   </label>
                   <input
                     type='text'
                     value={manualData.title}
                     onChange={(e) => setManualData({ ...manualData, title: e.target.value })}
                     placeholder='请输入影片标题'
-                    className='w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent'
+                    className='w-full px-3 py-2 border border-input rounded-lg bg-background text-foreground focus:ring-2 focus:ring-ring focus:border-transparent'
                   />
                 </div>
 
                 {/* TMDB ID - 可选 */}
                 <div>
-                  <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                  <label className='block text-sm font-medium text-foreground mb-1'>
                     TMDB ID（可选）
                   </label>
                   <input
@@ -487,16 +487,16 @@ export default function CorrectDialog({
                     value={manualData.tmdbId}
                     onChange={(e) => setManualData({ ...manualData, tmdbId: e.target.value })}
                     placeholder='例如：550'
-                    className='w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent'
+                    className='w-full px-3 py-2 border border-input rounded-lg bg-background text-foreground focus:ring-2 focus:ring-ring focus:border-transparent'
                   />
-                  <p className='mt-1 text-xs text-gray-500 dark:text-gray-400'>
+                  <p className='mt-1 text-xs text-muted-foreground'>
                     可在 TMDB 网站查找影片对应的 ID
                   </p>
                 </div>
 
                 {/* 豆瓣 ID - 可选 */}
                 <div>
-                  <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                  <label className='block text-sm font-medium text-foreground mb-1'>
                     豆瓣 ID（可选）
                   </label>
                   <input
@@ -504,16 +504,16 @@ export default function CorrectDialog({
                     value={manualData.doubanId}
                     onChange={(e) => setManualData({ ...manualData, doubanId: e.target.value })}
                     placeholder='例如：1292052'
-                    className='w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent'
+                    className='w-full px-3 py-2 border border-input rounded-lg bg-background text-foreground focus:ring-2 focus:ring-ring focus:border-transparent'
                   />
-                  <p className='mt-1 text-xs text-gray-500 dark:text-gray-400'>
+                  <p className='mt-1 text-xs text-muted-foreground'>
                     可在豆瓣网站查找影片对应的 ID
                   </p>
                 </div>
 
                 {/* 媒体类型 */}
                 <div>
-                  <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                  <label className='block text-sm font-medium text-foreground mb-1'>
                     类型
                   </label>
                   <div className='flex gap-4'>
@@ -525,7 +525,7 @@ export default function CorrectDialog({
                         onChange={(e) => setManualData({ ...manualData, mediaType: e.target.value as 'movie' | 'tv' })}
                         className='mr-2'
                       />
-                      <span className='text-gray-900 dark:text-gray-100'>电影</span>
+                      <span className='text-foreground'>电影</span>
                     </label>
                     <label className='flex items-center'>
                       <input
@@ -535,7 +535,7 @@ export default function CorrectDialog({
                         onChange={(e) => setManualData({ ...manualData, mediaType: e.target.value as 'movie' | 'tv' })}
                         className='mr-2'
                       />
-                      <span className='text-gray-900 dark:text-gray-100'>电视剧</span>
+                      <span className='text-foreground'>电视剧</span>
                     </label>
                   </div>
                 </div>
@@ -544,7 +544,7 @@ export default function CorrectDialog({
                 {manualData.mediaType === 'tv' && (
                   <>
                     <div>
-                      <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                      <label className='block text-sm font-medium text-foreground mb-1'>
                         季数（可选）
                       </label>
                       <input
@@ -552,11 +552,11 @@ export default function CorrectDialog({
                         value={manualData.seasonNumber}
                         onChange={(e) => setManualData({ ...manualData, seasonNumber: e.target.value })}
                         placeholder='例如：1'
-                        className='w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent'
+                        className='w-full px-3 py-2 border border-input rounded-lg bg-background text-foreground focus:ring-2 focus:ring-ring focus:border-transparent'
                       />
                     </div>
                     <div>
-                      <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                      <label className='block text-sm font-medium text-foreground mb-1'>
                         季名称（可选）
                       </label>
                       <input
@@ -564,7 +564,7 @@ export default function CorrectDialog({
                         value={manualData.seasonName}
                         onChange={(e) => setManualData({ ...manualData, seasonName: e.target.value })}
                         placeholder='例如：第 1 季'
-                        className='w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent'
+                        className='w-full px-3 py-2 border border-input rounded-lg bg-background text-foreground focus:ring-2 focus:ring-ring focus:border-transparent'
                       />
                     </div>
                   </>
@@ -572,7 +572,7 @@ export default function CorrectDialog({
 
                 {/* 封面图链接 */}
                 <div>
-                  <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                  <label className='block text-sm font-medium text-foreground mb-1'>
                     封面图链接（可选）
                   </label>
                   <input
@@ -580,26 +580,26 @@ export default function CorrectDialog({
                     value={manualData.posterPath}
                     onChange={(e) => setManualData({ ...manualData, posterPath: e.target.value })}
                     placeholder='请输入图片链接'
-                    className='w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent'
+                    className='w-full px-3 py-2 border border-input rounded-lg bg-background text-foreground focus:ring-2 focus:ring-ring focus:border-transparent'
                   />
                 </div>
 
                 {/* 上映日期 */}
                 <div>
-                  <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                  <label className='block text-sm font-medium text-foreground mb-1'>
                     上映日期（可选）
                   </label>
                   <input
                     type='date'
                     value={manualData.releaseDate}
                     onChange={(e) => setManualData({ ...manualData, releaseDate: e.target.value })}
-                    className='w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent'
+                    className='w-full px-3 py-2 border border-input rounded-lg bg-background text-foreground focus:ring-2 focus:ring-ring focus:border-transparent'
                   />
                 </div>
 
                 {/* 评分 */}
                 <div>
-                  <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                  <label className='block text-sm font-medium text-foreground mb-1'>
                     评分（可选，0-10）
                   </label>
                   <input
@@ -607,13 +607,13 @@ export default function CorrectDialog({
                     value={manualData.voteAverage}
                     onChange={(e) => setManualData({ ...manualData, voteAverage: e.target.value })}
                     placeholder='例如：8.5'
-                    className='w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent'
+                    className='w-full px-3 py-2 border border-input rounded-lg bg-background text-foreground focus:ring-2 focus:ring-ring focus:border-transparent'
                   />
                 </div>
 
                 {/* 简介 */}
                 <div>
-                  <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1'>
+                  <label className='block text-sm font-medium text-foreground mb-1'>
                     简介（可选）
                   </label>
                   <textarea
@@ -621,20 +621,20 @@ export default function CorrectDialog({
                     onChange={(e) => setManualData({ ...manualData, overview: e.target.value })}
                     placeholder='请输入影片简介'
                     rows={3}
-                    className='w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent'
+                    className='w-full px-3 py-2 border border-input rounded-lg bg-background text-foreground focus:ring-2 focus:ring-ring focus:border-transparent'
                   />
                 </div>
 
                 {/* 错误提示 */}
                 {error && (
-                  <p className='text-sm text-red-600 dark:text-red-400'>{error}</p>
+                  <p className='text-sm text-destructive'>{error}</p>
                 )}
 
                 {/* 提交按钮 */}
                 <button
                   onClick={handleManualSubmit}
                   disabled={correcting}
-                  className='w-full px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed'
+                  className='w-full px-4 py-2 bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg transition-colors disabled:bg-muted disabled:cursor-not-allowed'
                 >
                   {correcting ? '提交中...' : '提交纠错'}
                 </button>
@@ -646,7 +646,7 @@ export default function CorrectDialog({
               <div className='mb-4 flex items-center gap-2'>
                 <button
                   onClick={handleBackToResults}
-                  className='text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 flex items-center gap-1'
+                  className='text-primary hover:text-primary/80 flex items-center gap-1'
                 >
                   <span>←</span>
                   <span>返回搜索结果</span>
@@ -654,22 +654,22 @@ export default function CorrectDialog({
               </div>
 
               {selectedResult && (
-                <div className='mb-4 p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg'>
-                  <h3 className='font-semibold text-gray-900 dark:text-gray-100'>
+                <div className='mb-4 p-3 bg-muted rounded-lg'>
+                  <h3 className='font-semibold text-foreground'>
                     {selectedResult.title || selectedResult.name}
                   </h3>
-                  <p className='text-sm text-gray-600 dark:text-gray-400 mt-1'>
+                  <p className='text-sm text-muted-foreground mt-1'>
                     请选择季度：
                   </p>
                 </div>
               )}
 
               {loadingSeasons ? (
-                <div className='text-center py-12 text-gray-500 dark:text-gray-400'>
+                <div className='text-center py-12 text-muted-foreground'>
                   加载季度列表中...
                 </div>
               ) : seasons.length === 0 ? (
-                <div className='text-center py-12 text-gray-500 dark:text-gray-400'>
+                <div className='text-center py-12 text-muted-foreground'>
                   未找到季度信息
                 </div>
               ) : (
@@ -677,10 +677,10 @@ export default function CorrectDialog({
                   {seasons.map((season) => (
                     <div
                       key={season.id}
-                      className='flex gap-3 p-3 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors'
+                      className='flex gap-3 p-3 border border-border rounded-lg hover:bg-accent transition-colors'
                     >
                       {/* 海报 */}
-                      <div className='flex-shrink-0 w-16 h-24 relative rounded overflow-hidden bg-gray-200 dark:bg-gray-700'>
+                      <div className='flex-shrink-0 w-16 h-24 relative rounded overflow-hidden bg-muted'>
                         {season.poster_path ? (
                           <Image
                             src={processImageUrl(getTMDBImageUrl(season.poster_path))}
@@ -690,7 +690,7 @@ export default function CorrectDialog({
                             referrerPolicy='no-referrer'
                           />
                         ) : (
-                          <div className='w-full h-full flex items-center justify-center text-gray-400 text-xs'>
+                          <div className='w-full h-full flex items-center justify-center text-muted-foreground text-xs'>
                             无海报
                           </div>
                         )}
@@ -698,14 +698,14 @@ export default function CorrectDialog({
 
                       {/* 信息 */}
                       <div className='flex-1 min-w-0'>
-                        <h3 className='font-semibold text-gray-900 dark:text-gray-100'>
+                        <h3 className='font-semibold text-foreground'>
                           {season.name}
                         </h3>
-                        <p className='text-sm text-gray-600 dark:text-gray-400 mt-1'>
+                        <p className='text-sm text-muted-foreground mt-1'>
                           {season.episode_count} 集
                           {season.air_date && ` • ${season.air_date.split('-')[0]}`}
                         </p>
-                        <p className='text-xs text-gray-500 dark:text-gray-500 mt-1 line-clamp-2'>
+                        <p className='text-xs text-muted-foreground mt-1 line-clamp-2'>
                           {season.overview || '暂无简介'}
                         </p>
                       </div>
@@ -715,7 +715,7 @@ export default function CorrectDialog({
                         <button
                           onClick={() => handleSelectSeason(season)}
                           disabled={correcting}
-                          className='px-3 py-1.5 bg-green-600 hover:bg-green-700 text-white text-sm rounded-lg transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed'
+                          className='px-3 py-1.5 bg-primary hover:bg-primary/90 text-primary-foreground text-sm rounded-lg transition-colors disabled:bg-muted disabled:cursor-not-allowed'
                         >
                           {correcting ? '处理中...' : '选择'}
                         </button>
@@ -728,16 +728,16 @@ export default function CorrectDialog({
           ) : results.length === 0 ? (
             // 空状态
             <>
-              <div className='text-center py-12 text-gray-500 dark:text-gray-400'>
+              <div className='text-center py-12 text-muted-foreground'>
                 {searching ? '搜索中...' : '请输入关键词搜索'}
               </div>
 
               {/* 手动纠错入口 */}
               {!searching && (
-                <div className='mt-6 pt-4 border-t border-gray-200 dark:border-gray-700 text-center'>
+                <div className='mt-6 pt-4 border-t border-border text-center'>
                   <button
                     onClick={handleShowManualInput}
-                    className='text-xs text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors'
+                    className='text-xs text-muted-foreground hover:text-foreground transition-colors'
                   >
                     搜不到影片？手动纠错
                   </button>
@@ -751,10 +751,10 @@ export default function CorrectDialog({
                 {results.map((result) => (
                   <div
                     key={result.id}
-                    className='flex gap-3 p-3 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors'
+                    className='flex gap-3 p-3 border border-border rounded-lg hover:bg-accent transition-colors'
                   >
                     {/* 海报 */}
-                    <div className='flex-shrink-0 w-16 h-24 relative rounded overflow-hidden bg-gray-200 dark:bg-gray-700'>
+                    <div className='flex-shrink-0 w-16 h-24 relative rounded overflow-hidden bg-muted'>
                       {result.poster_path ? (
                         <Image
                           src={processImageUrl(getTMDBImageUrl(result.poster_path))}
@@ -764,7 +764,7 @@ export default function CorrectDialog({
                           referrerPolicy='no-referrer'
                         />
                       ) : (
-                        <div className='w-full h-full flex items-center justify-center text-gray-400 text-xs'>
+                        <div className='w-full h-full flex items-center justify-center text-muted-foreground text-xs'>
                           无海报
                         </div>
                       )}
@@ -772,17 +772,17 @@ export default function CorrectDialog({
 
                     {/* 信息 */}
                     <div className='flex-1 min-w-0'>
-                      <h3 className='font-semibold text-gray-900 dark:text-gray-100 truncate'>
+                      <h3 className='font-semibold text-foreground truncate'>
                         {result.title || result.name}
                       </h3>
-                      <p className='text-sm text-gray-600 dark:text-gray-400 mt-1'>
+                      <p className='text-sm text-muted-foreground mt-1'>
                         {result.media_type === 'movie' ? '电影' : '电视剧'} •{' '}
                         {result.release_date?.split('-')[0] ||
                           result.first_air_date?.split('-')[0] ||
                           '未知'}{' '}
                         • 评分: {result.vote_average.toFixed(1)}
                       </p>
-                      <p className='text-xs text-gray-500 dark:text-gray-500 mt-1 line-clamp-2'>
+                      <p className='text-xs text-muted-foreground mt-1 line-clamp-2'>
                         {result.overview || '暂无简介'}
                       </p>
                     </div>
@@ -792,7 +792,7 @@ export default function CorrectDialog({
                       <button
                         onClick={() => handleSelectResult(result)}
                         disabled={correcting || loadingSeasons}
-                        className='px-3 py-1.5 bg-green-600 hover:bg-green-700 text-white text-sm rounded-lg transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed'
+                        className='px-3 py-1.5 bg-primary hover:bg-primary/90 text-primary-foreground text-sm rounded-lg transition-colors disabled:bg-muted disabled:cursor-not-allowed'
                       >
                         {correcting || loadingSeasons ? '处理中...' : '选择'}
                       </button>
@@ -802,10 +802,10 @@ export default function CorrectDialog({
               </div>
 
               {/* 手动纠错入口 */}
-              <div className='mt-6 pt-4 border-t border-gray-200 dark:border-gray-700 text-center'>
+              <div className='mt-6 pt-4 border-t border-border text-center'>
                 <button
                   onClick={handleShowManualInput}
-                  className='text-xs text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors'
+                  className='text-xs text-muted-foreground hover:text-foreground transition-colors'
                 >
                   搜不到影片？手动纠错
                 </button>
@@ -818,14 +818,14 @@ export default function CorrectDialog({
 
   return createPortal(
     useDrawer ? (
-      <div className='fixed inset-0 z-[9999] flex items-center justify-end pointer-events-none'>
-        <div className={`relative ${drawerWidth} h-full bg-white dark:bg-gray-800 shadow-2xl flex flex-col pointer-events-auto`}>
+      <div className='fixed inset-0 z-modal flex items-center justify-end pointer-events-none'>
+        <div className={`relative ${drawerWidth} h-full bg-card shadow-2xl flex flex-col pointer-events-auto`}>
           {dialogContent}
         </div>
       </div>
     ) : (
-      <div className='fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 backdrop-blur-sm'>
-        <div className='bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-2xl max-h-[80vh] overflow-hidden flex flex-col m-4'>
+      <div className='fixed inset-0 z-modal flex items-center justify-center bg-black/50 backdrop-blur-sm'>
+        <div className='bg-card rounded-lg shadow-xl w-full max-w-2xl max-h-[80vh] overflow-hidden flex flex-col m-4'>
           {dialogContent}
         </div>
       </div>

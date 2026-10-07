@@ -23,16 +23,16 @@ export default function DanmakuSourceSelector({
 
   return (
     <div className='fixed inset-0 z-modal flex items-center justify-center bg-black/60 backdrop-blur-sm'>
-      <div className='relative w-full max-w-2xl max-h-[80vh] mx-4 bg-white dark:bg-gray-800 rounded-2xl shadow-2xl overflow-hidden'>
+      <div className='relative w-full max-w-2xl max-h-[80vh] mx-4 bg-card rounded-2xl shadow-2xl overflow-hidden'>
         {/* 标题栏 */}
-        <div className='sticky top-0 z-10 bg-gradient-to-r from-green-500 to-emerald-600 px-6 py-4'>
-          <h3 className='text-xl font-bold text-white flex items-center gap-2'>
+        <div className='sticky top-0 z-10 bg-primary px-6 py-4'>
+          <h3 className='text-xl font-bold text-primary-foreground flex items-center gap-2'>
             <svg className='w-6 h-6' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
               <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z' />
             </svg>
             选择弹幕源
           </h3>
-          <p className='text-sm text-white/90 mt-1'>
+          <p className='text-sm text-primary-foreground/90 mt-1'>
             找到 {danmakuMatches.length} 个匹配的弹幕源，请选择一个
           </p>
         </div>
@@ -44,30 +44,30 @@ export default function DanmakuSourceSelector({
               <button
                 key={anime.animeId}
                 onClick={() => onSelect(anime, index)}
-                className='w-full flex flex-col p-5 bg-gray-50 dark:bg-gray-700/50
-                         hover:bg-gray-100 dark:hover:bg-gray-700 rounded-xl transition-all
+                className='w-full flex flex-col p-5 bg-muted
+                         hover:bg-accent rounded-xl transition-all
                          duration-200 text-left group border-2 border-transparent
-                         hover:border-green-500 hover:shadow-lg'
+                         hover:border-primary hover:shadow-lg'
               >
                 {/* 顶部：序号和标题 */}
                 <div className='flex items-start gap-3 mb-3'>
                   {/* 序号 */}
-                  <div className='flex-shrink-0 w-8 h-8 rounded-full bg-green-500 text-white
+                  <div className='flex-shrink-0 w-8 h-8 rounded-full bg-primary text-primary-foreground
                                 flex items-center justify-center font-bold text-sm
-                                group-hover:bg-green-600 transition-colors duration-200'>
+                                group-hover:bg-primary/90 transition-colors duration-200'>
                     {index + 1}
                   </div>
 
                   {/* 标题 */}
-                  <h4 className='flex-1 text-lg font-bold text-gray-900 dark:text-white
-                               group-hover:text-green-600 dark:group-hover:text-green-400
+                  <h4 className='flex-1 text-lg font-bold text-foreground
+                               group-hover:text-primary
                                transition-colors duration-200 leading-tight'>
                     {anime.animeTitle}
                   </h4>
 
                   {/* 选择图标 */}
                   <div className='flex-shrink-0'>
-                    <svg className='w-6 h-6 text-gray-400 group-hover:text-green-500
+                    <svg className='w-6 h-6 text-muted-foreground group-hover:text-primary
                                   transition-colors duration-200'
                       fill='none' stroke='currentColor' viewBox='0 0 24 24'>
                       <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2}
@@ -99,34 +99,31 @@ export default function DanmakuSourceSelector({
                     <div className='flex flex-wrap gap-2'>
                       {anime.typeDescription && (
                         <span className='inline-flex items-center px-2.5 py-1 rounded-md
-                                       bg-blue-100 dark:bg-blue-900/30 text-blue-700
-                                       dark:text-blue-300 text-sm font-medium'>
+                                       bg-muted text-muted-foreground text-sm font-medium'>
                           📺 {anime.typeDescription}
                         </span>
                       )}
                       {anime.episodeCount && (
                         <span className='inline-flex items-center px-2.5 py-1 rounded-md
-                                       bg-purple-100 dark:bg-purple-900/30 text-purple-700
-                                       dark:text-purple-300 text-sm font-medium'>
+                                       bg-muted text-muted-foreground text-sm font-medium'>
                           🎬 {anime.episodeCount} 集
                         </span>
                       )}
                       {anime.startDate && (
                         <span className='inline-flex items-center px-2.5 py-1 rounded-md
-                                       bg-gray-100 dark:bg-gray-600 text-gray-700
-                                       dark:text-gray-300 text-sm font-medium'>
+                                       bg-muted text-muted-foreground text-sm font-medium'>
                           📅 {anime.startDate}
                         </span>
                       )}
                     </div>
 
                     {/* 动漫ID */}
-                    <div className='text-xs text-gray-500 dark:text-gray-400'>
+                    <div className='text-xs text-muted-foreground'>
                       弹幕库 ID: {anime.animeId}
                     </div>
 
                     {/* 提示信息 */}
-                    <div className='text-sm text-gray-600 dark:text-gray-300 pt-1
+                    <div className='text-sm text-muted-foreground pt-1
                                   opacity-0 group-hover:opacity-100 transition-opacity duration-200'>
                       点击选择此弹幕源
                     </div>
@@ -138,13 +135,13 @@ export default function DanmakuSourceSelector({
         </div>
 
         {/* 底部操作栏 */}
-        <div className='sticky bottom-0 z-10 bg-white dark:bg-gray-800 border-t
-                      border-gray-200 dark:border-gray-700 px-6 py-4'>
+        <div className='sticky bottom-0 z-10 bg-card border-t
+                      border-border px-6 py-4'>
           <button
             onClick={onCancel}
-            className='w-full px-4 py-2.5 bg-gray-100 dark:bg-gray-700
-                     hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700
-                     dark:text-gray-300 rounded-lg font-medium transition-colors
+            className='w-full px-4 py-2.5 bg-secondary
+                     hover:bg-secondary/80 text-secondary-foreground
+                     rounded-lg font-medium transition-colors
                      duration-200'
           >
             取消

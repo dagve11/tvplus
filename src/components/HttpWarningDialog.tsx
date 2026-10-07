@@ -63,13 +63,13 @@ export default function HttpWarningDialog({ onClose }: HttpWarningDialogProps) {
 
   return createPortal(
     <div
-      className={`fixed inset-0 bg-black bg-opacity-50 z-[9999] flex items-center justify-center p-4 transition-opacity duration-300 ${
+      className={`fixed inset-0 bg-black/50 z-modal flex items-center justify-center p-4 transition-opacity duration-300 ${
         isVisible ? 'opacity-100' : 'opacity-0'
       }`}
       onClick={handleClose}
     >
       <div
-        className={`bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-md w-full border border-yellow-200 dark:border-yellow-800 transition-all duration-300 ${
+        className={`bg-card rounded-lg shadow-xl max-w-md w-full border border-border transition-all duration-300 ${
           isVisible ? 'scale-100' : 'scale-95'
         }`}
         onClick={(e) => e.stopPropagation()}
@@ -78,13 +78,13 @@ export default function HttpWarningDialog({ onClose }: HttpWarningDialogProps) {
           {/* 图标和标题 */}
           <div className="flex items-start gap-4 mb-4">
             <div className="flex-shrink-0">
-              <AlertTriangle className="w-8 h-8 text-yellow-500" />
+              <AlertTriangle className="w-8 h-8 text-foreground" />
             </div>
             <div className="flex-1">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">
+              <h3 className="text-lg font-semibold text-foreground mb-2">
                 HTTP 环境功能限制提示
               </h3>
-              <div className="text-sm text-gray-600 dark:text-gray-400 space-y-2">
+              <div className="text-sm text-muted-foreground space-y-2">
                 <p>
                   检测到您正在使用 HTTP 协议访问本站。由于浏览器安全策略限制，以下功能将无法正常使用:
                 </p>
@@ -93,7 +93,7 @@ export default function HttpWarningDialog({ onClose }: HttpWarningDialogProps) {
                   <li>麦克风语音功能</li>
                   <li>其他需要安全上下文的高级功能</li>
                 </ul>
-                <p className="mt-3 text-yellow-600 dark:text-yellow-500 font-medium">
+                <p className="mt-3 text-foreground font-medium">
                   建议配置 HTTPS 证书以获得完整功能体验。
                 </p>
               </div>
@@ -104,13 +104,13 @@ export default function HttpWarningDialog({ onClose }: HttpWarningDialogProps) {
           <div className="flex gap-3 mt-6">
             <button
               onClick={handleDontShowAgain}
-              className="flex-1 px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg transition-colors"
+              className="flex-1 px-4 py-2 text-sm font-medium bg-secondary text-secondary-foreground hover:bg-secondary/80 rounded-lg transition-colors"
             >
               不再提示
             </button>
             <button
               onClick={handleClose}
-              className="flex-1 px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors"
+              className="flex-1 px-4 py-2 text-sm font-medium bg-primary text-primary-foreground hover:bg-primary/90 rounded-lg transition-colors"
             >
               我知道了
             </button>
