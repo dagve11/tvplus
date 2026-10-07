@@ -8,13 +8,14 @@ import { createPortal } from 'react-dom';
 import type { PlayRecord } from '@/lib/db.client';
 import {
   clearAllPlayRecords,
-  getCachedPlayRecordsSnapshot,
   getAllPlayRecords,
+  getCachedPlayRecordsSnapshot,
   subscribeToDataUpdates,
 } from '@/lib/db.client';
 
 import PlayRecordsPanel from '@/components/PlayRecordsPanel';
 import { ConfirmDialog } from '@/components/ui/confirm-dialog';
+import { Skeleton } from '@/components/ui/skeleton';
 import VideoCard from '@/components/VideoCard';
 import VirtualScrollableRow from '@/components/VirtualScrollableRow';
 
@@ -110,19 +111,19 @@ export default function ContinueWatching({ className }: ContinueWatchingProps) {
     <>
       <section className={`mb-8 ${className || ''}`}>
         <div className='mb-4 flex items-center justify-between'>
-          <h2 className='text-xl font-bold text-gray-800 dark:text-gray-200'>
+          <h2 className='text-xl font-bold text-foreground'>
             继续观看
           </h2>
           {!loading && playRecords.length > 0 && (
             <div className='flex items-center gap-1'>
               <button
-                className='text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
+                className='text-sm text-muted-foreground hover:text-foreground'
                 onClick={() => setShowConfirmDialog(true)}
               >
                 清空
               </button>
               <button
-                className='inline-flex h-8 w-8 items-center justify-center rounded-full text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-200'
+                className='inline-flex h-8 w-8 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-accent hover:text-foreground'
                 onClick={() => setShowPlayRecordsPanel(true)}
                 aria-label='查看全部播放记录'
               >
@@ -138,11 +139,11 @@ export default function ContinueWatching({ className }: ContinueWatchingProps) {
                 key={index}
                 className='min-w-[180px] w-48 sm:min-w-[200px] sm:w-52'
               >
-                <div className='relative aspect-[3/2] w-full overflow-hidden rounded-lg bg-gray-200 animate-pulse dark:bg-gray-800'>
-                  <div className='absolute inset-0 bg-gray-300 dark:bg-gray-700' />
-                </div>
-                <div className='mt-1 h-1 rounded bg-gray-200 animate-pulse dark:bg-gray-800' />
-                <div className='mt-2 h-4 w-3/4 rounded bg-gray-200 animate-pulse dark:bg-gray-800' />
+                <Skeleton className='relative aspect-[3/2] w-full overflow-hidden rounded-lg'>
+                  <Skeleton className='absolute inset-0' />
+                </Skeleton>
+                <Skeleton className='mt-1 h-1' />
+                <Skeleton className='mt-2 h-4 w-3/4' />
               </div>
             ))}
           </div>
@@ -183,49 +184,35 @@ export default function ContinueWatching({ className }: ContinueWatchingProps) {
                     />
                     {record.new_episodes && record.new_episodes > 0 && (
                       <div
+                        className='z-popover'
                         style={{
                           position: 'absolute',
                           top: '-6px',
                           right: '-6px',
-                          zIndex: 100,
                           pointerEvents: 'none',
                           width: '28px',
                           height: '28px',
                         }}
                       >
                         <div
+                          className='absolute inset-0 rounded-full bg-primary'
                           style={{
-                            position: 'absolute',
-                            inset: '0',
-                            borderRadius: '9999px',
-                            backgroundColor: 'rgb(14 165 233)',
                             animation:
                               'ping-scale 1.5s cubic-bezier(0, 0, 0.2, 1) infinite',
                           }}
                         />
                         <div
+                          className='absolute inset-0 rounded-full bg-primary'
                           style={{
-                            position: 'absolute',
-                            inset: '0',
-                            borderRadius: '9999px',
-                            backgroundColor: 'rgb(14 165 233)',
                             animation:
                               'pulse-scale 2.5s cubic-bezier(0.4, 0, 0.6, 1) infinite',
                           }}
                         />
                         <div
+                          className='absolute inset-0 flex items-center justify-center rounded-full bg-primary text-primary-foreground'
                           style={{
-                            position: 'absolute',
-                            inset: '0',
-                            borderRadius: '9999px',
-                            background:
-                              'linear-gradient(to bottom right, rgb(14 165 233), rgb(2 132 199))',
-                            color: 'white',
                             fontSize: '11px',
                             fontWeight: 'bold',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
                             boxShadow:
                               '0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)',
                             animation: 'badge-scale 2s ease-in-out infinite',

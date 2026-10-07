@@ -83,14 +83,14 @@ export default function DoubanRecommendations({ doubanId }: DoubanRecommendation
   if (loading) {
     return (
       <div className='flex justify-center items-center py-8'>
-        <div className='animate-spin rounded-full h-8 w-8 border-b-2 border-green-500'></div>
+        <div className='animate-spin rounded-full h-8 w-8 border-b-2 border-primary'></div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className='text-center py-8 text-gray-500 dark:text-gray-400'>
+      <div className='text-center py-8 text-muted-foreground'>
         {error}
       </div>
     );

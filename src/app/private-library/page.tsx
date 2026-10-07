@@ -600,17 +600,17 @@ export default function PrivateLibraryPage() {
       <div className='container mx-auto px-4 py-6'>
         <div className='mb-6 flex justify-between items-start'>
           <div>
-            <h1 className='text-2xl font-bold text-gray-900 dark:text-gray-100'>
+            <h1 className='text-2xl font-bold text-foreground '>
               私人影库
             </h1>
-            <p className='text-sm text-gray-500 dark:text-gray-400 mt-1'>
+            <p className='text-sm text-muted-foreground mt-1'>
               观看自我收藏的高清视频吧
             </p>
           </div>
           {mounted && (
             <button
               onClick={() => router.push('/movie-request')}
-              className='flex items-center gap-2 px-3 py-2 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors'
+              className='flex items-center gap-2 px-3 py-2 text-muted-foreground hover:text-primary transition-colors'
               style={{ marginTop: '10px' }}
             >
               <Film size={20} />
@@ -661,7 +661,7 @@ export default function PrivateLibraryPage() {
         {/* 第二级：Emby源选择（仅当选择Emby且有多个源时显示） */}
         {sourceType === 'emby' && embySourceOptions.length > 1 && (
           <div className='mb-6'>
-            <div className='text-xs text-gray-500 dark:text-gray-400 mb-2 px-4'>
+            <div className='text-xs text-muted-foreground mb-2 px-4'>
               服务
             </div>
             <div className='relative'>
@@ -703,8 +703,8 @@ export default function PrivateLibraryPage() {
                       onClick={() => setEmbyKey(option.key)}
                       className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors whitespace-nowrap flex-shrink-0 ${
                         embyKey === option.key
-                          ? 'bg-blue-600 text-white'
-                          : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
+                          ? 'bg-primary text-white'
+                          : 'bg-muted  text-foreground  hover:bg-muted '
                       }`}
                     >
                       {option.name}
@@ -719,7 +719,7 @@ export default function PrivateLibraryPage() {
         {/* OpenList 分类筛选（PathMeta） */}
         {sourceType === 'openlist' && openlistCategories.length > 0 && (
           <div className='mb-6'>
-            <div className='text-xs text-gray-500 dark:text-gray-400 mb-2 px-4'>
+            <div className='text-xs text-muted-foreground mb-2 px-4'>
               分类
             </div>
             <div className='relative'>
@@ -736,8 +736,8 @@ export default function PrivateLibraryPage() {
                     onClick={() => setOpenlistCategory('all')}
                     className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors whitespace-nowrap flex-shrink-0 ${
                       openlistCategory === 'all'
-                        ? 'bg-blue-600 text-white'
-                        : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
+                        ? 'bg-primary text-white'
+                        : 'bg-muted  text-foreground  hover:bg-muted '
                     }`}
                   >
                     全部
@@ -748,8 +748,8 @@ export default function PrivateLibraryPage() {
                       onClick={() => setOpenlistCategory(cat)}
                       className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors whitespace-nowrap flex-shrink-0 ${
                         openlistCategory === cat
-                          ? 'bg-blue-600 text-white'
-                          : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
+                          ? 'bg-primary text-white'
+                          : 'bg-muted  text-foreground  hover:bg-muted '
                       }`}
                     >
                       {cat}
@@ -764,12 +764,12 @@ export default function PrivateLibraryPage() {
         {/* 第三级：Emby 媒体库分类选择器 */}
         {sourceType === 'emby' && (
           <div className='mb-6'>
-            <div className='text-xs text-gray-500 dark:text-gray-400 mb-2 px-4'>
+            <div className='text-xs text-muted-foreground mb-2 px-4'>
               分类
             </div>
             {loadingViews ? (
               <div className='flex justify-center'>
-                <div className='w-5 h-5 border-2 border-blue-600 border-t-transparent rounded-full animate-spin' />
+                <div className='w-5 h-5 border-2 border-border border-t-transparent rounded-full animate-spin' />
               </div>
             ) : embyViews.length > 0 ? (
               <div className='relative'>
@@ -786,8 +786,8 @@ export default function PrivateLibraryPage() {
                       onClick={() => setSelectedView('all')}
                       className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors whitespace-nowrap flex-shrink-0 ${
                         selectedView === 'all'
-                          ? 'bg-blue-600 text-white'
-                          : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
+                          ? 'bg-primary text-white'
+                          : 'bg-muted  text-foreground  hover:bg-muted '
                       }`}
                     >
                       全部
@@ -798,8 +798,8 @@ export default function PrivateLibraryPage() {
                         onClick={() => setSelectedView(view.id)}
                         className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors whitespace-nowrap flex-shrink-0 ${
                           selectedView === view.id
-                            ? 'bg-blue-600 text-white'
-                            : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
+                            ? 'bg-primary text-white'
+                            : 'bg-muted  text-foreground  hover:bg-muted '
                         }`}
                       >
                         {view.name}
@@ -815,7 +815,7 @@ export default function PrivateLibraryPage() {
         {/* Emby 排序选择器 */}
         {sourceType === 'emby' && (
           <div className='mb-6'>
-            <div className='text-xs text-gray-500 dark:text-gray-400 mb-2 px-4'>
+            <div className='text-xs text-muted-foreground mb-2 px-4'>
               排序
             </div>
             <div className='px-4'>
@@ -827,11 +827,11 @@ export default function PrivateLibraryPage() {
                     className={`relative z-10 px-1.5 py-0.5 sm:px-2 sm:py-1 md:px-4 md:py-2 text-xs sm:text-sm font-medium rounded-full transition-all duration-200 whitespace-nowrap ${
                       showSortDropdown
                         ? isDefaultSort()
-                          ? 'text-gray-900 dark:text-gray-100 cursor-default'
-                          : 'text-green-600 dark:text-green-400 cursor-default'
+                          ? 'text-foreground  cursor-default'
+                          : 'text-primary  cursor-default'
                         : isDefaultSort()
-                          ? 'text-gray-700 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 cursor-pointer'
-                          : 'text-green-600 hover:text-green-700 dark:text-green-400 dark:hover:text-green-300 cursor-pointer'
+                          ? 'text-foreground hover:text-foreground   cursor-pointer'
+                          : 'text-primary hover:text-primary   cursor-pointer'
                     }`}
                   >
                     <span>{getSortDisplayText()}</span>
@@ -854,8 +854,8 @@ export default function PrivateLibraryPage() {
                     onClick={toggleSortOrder}
                     className={`relative z-10 px-1.5 py-0.5 sm:px-2 sm:py-1 md:px-4 md:py-2 text-xs sm:text-sm font-medium rounded-full transition-all duration-200 whitespace-nowrap ${
                       isDefaultSort()
-                        ? 'text-gray-700 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 cursor-pointer'
-                        : 'text-green-600 hover:text-green-700 dark:text-green-400 dark:hover:text-green-300 cursor-pointer'
+                        ? 'text-foreground hover:text-foreground   cursor-pointer'
+                        : 'text-primary hover:text-primary   cursor-pointer'
                     }`}
                     aria-label={sortOrder === 'Ascending' ? '升序' : '降序'}
                   >
@@ -875,7 +875,7 @@ export default function PrivateLibraryPage() {
         {mounted && showSortDropdown && createPortal(
           <div
             ref={sortDropdownRef}
-            className='fixed z-[9999] bg-white/95 dark:bg-gray-800/95 rounded-xl border border-gray-200/50 dark:border-gray-700/50 backdrop-blur-sm max-h-[50vh] flex flex-col'
+            className='fixed z-[9999] bg-card/95 rounded-xl border border-border backdrop-blur-sm max-h-[50vh] flex flex-col'
             style={{
               left: `${sortDropdownPosition.x}px`,
               top: `${sortDropdownPosition.y}px`,
@@ -892,8 +892,8 @@ export default function PrivateLibraryPage() {
                     onClick={() => handleSortOptionSelect(option.value)}
                     className={`px-2 py-1.5 sm:px-3 sm:py-2 text-xs sm:text-sm rounded-lg transition-all duration-200 text-left ${
                       sortBy === option.value
-                        ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 border border-green-200 dark:border-green-700'
-                        : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100/80 dark:hover:bg-gray-700/80'
+                        ? 'bg-accent text-primary   border border-border '
+                        : 'text-foreground  hover:bg-muted/80 '
                     }`}
                   >
                     {option.label}
@@ -906,8 +906,8 @@ export default function PrivateLibraryPage() {
         )}
 
         {error && (
-          <div className='bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 mb-6'>
-            <p className='text-red-800 dark:text-red-200'>{error}</p>
+          <div className='bg-destructive/10 border border-destructive rounded-lg p-4 mb-6'>
+            <p className='text-destructive '>{error}</p>
           </div>
         )}
 
@@ -917,12 +917,12 @@ export default function PrivateLibraryPage() {
             <div className='space-y-4'>
               {/* 文件夹骨架屏 */}
               <div className='space-y-2'>
-                <div className='h-5 w-16 bg-gray-200 dark:bg-gray-700 rounded animate-pulse' />
+                <div className='h-5 w-16 bg-muted rounded animate-pulse' />
                 <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2'>
                   {Array.from({ length: 12 }).map((_, index) => (
                     <div
                       key={index}
-                      className='h-12 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse'
+                      className='h-12 bg-muted rounded-lg animate-pulse'
                     />
                   ))}
                 </div>
@@ -934,7 +934,7 @@ export default function PrivateLibraryPage() {
               {Array.from({ length: pageSize }).map((_, index) => (
                 <div
                   key={index}
-                  className='animate-pulse bg-gray-200 dark:bg-gray-700 rounded-lg aspect-[2/3]'
+                  className='animate-pulse bg-muted rounded-lg aspect-[2/3]'
                 />
               ))}
             </div>
@@ -955,7 +955,7 @@ export default function PrivateLibraryPage() {
                       handleXiaoyaSearch();
                     }
                   }}
-                  className='w-full px-4 py-2 pr-10 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500'
+                  className='w-full px-4 py-2 pr-10 rounded-lg border border-border bg-card text-foreground focus:outline-none focus:ring-2 focus:ring-ring'
                 />
                 {xiaoyaSearchKeyword ? (
                   <button
@@ -963,7 +963,7 @@ export default function PrivateLibraryPage() {
                       setXiaoyaSearchKeyword('');
                       setXiaoyaSearchResults([]);
                     }}
-                    className='absolute right-2 top-1/2 -translate-y-1/2 p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300'
+                    className='absolute right-2 top-1/2 -translate-y-1/2 p-1 text-muted-foreground hover:text-muted-foreground '
                   >
                     <svg className='w-5 h-5' fill='currentColor' viewBox='0 0 20 20'>
                       <path fillRule='evenodd' d='M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z' clipRule='evenodd' />
@@ -973,7 +973,7 @@ export default function PrivateLibraryPage() {
                   <button
                     onClick={handleXiaoyaSearch}
                     disabled={!xiaoyaSearchKeyword.trim() || isSearching}
-                    className='absolute right-2 top-1/2 -translate-y-1/2 p-1 text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 disabled:opacity-50 disabled:cursor-not-allowed'
+                    className='absolute right-2 top-1/2 -translate-y-1/2 p-1 text-muted-foreground hover:text-primary disabled:opacity-50 disabled:cursor-not-allowed'
                   >
                     <svg className='w-5 h-5' fill='currentColor' viewBox='0 0 20 20'>
                       <path fillRule='evenodd' d='M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z' clipRule='evenodd' />
@@ -987,7 +987,7 @@ export default function PrivateLibraryPage() {
             {xiaoyaSearchResults.length > 0 ? (
               <div className='space-y-2'>
                 <div className='flex items-center justify-between'>
-                  <h3 className='text-sm font-medium text-gray-700 dark:text-gray-300'>
+                  <h3 className='text-sm font-medium text-foreground '>
                     搜索结果 ({xiaoyaSearchResults.length})
                   </h3>
                   <button
@@ -995,7 +995,7 @@ export default function PrivateLibraryPage() {
                       setXiaoyaSearchKeyword('');
                       setXiaoyaSearchResults([]);
                     }}
-                    className='text-sm text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300'
+                    className='text-sm text-primary hover:text-primary '
                   >
                     返回浏览
                   </button>
@@ -1031,20 +1031,20 @@ export default function PrivateLibraryPage() {
                             setXiaoyaSearchResults([]);
                           }
                         }}
-                        className='flex items-center gap-2 p-3 bg-gray-100 dark:bg-gray-800 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors text-left'
+                        className='flex items-center gap-2 p-3 bg-muted rounded-lg hover:bg-muted transition-colors text-left'
                       >
                         {isVideoFile ? (
-                          <svg className='w-5 h-5 text-green-600 flex-shrink-0' fill='currentColor' viewBox='0 0 20 20'>
+                          <svg className='w-5 h-5 text-primary flex-shrink-0' fill='currentColor' viewBox='0 0 20 20'>
                             <path d='M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z' />
                           </svg>
                         ) : (
-                          <svg className='w-5 h-5 text-blue-600 flex-shrink-0' fill='currentColor' viewBox='0 0 20 20'>
+                          <svg className='w-5 h-5 text-primary flex-shrink-0' fill='currentColor' viewBox='0 0 20 20'>
                             <path d='M2 6a2 2 0 012-2h5l2 2h5a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V6z' />
                           </svg>
                         )}
                         <div className='flex-1 min-w-0'>
                           <div className='text-sm truncate'>{item.name}</div>
-                          <div className='text-xs text-gray-500 dark:text-gray-400 truncate'>{item.path}</div>
+                          <div className='text-xs text-muted-foreground truncate'>{item.path}</div>
                         </div>
                       </button>
                     );
@@ -1053,18 +1053,18 @@ export default function PrivateLibraryPage() {
               </div>
             ) : isSearching ? (
               <div className='flex justify-center py-8'>
-                <div className='flex items-center gap-2 text-gray-600 dark:text-gray-400'>
-                  <div className='w-5 h-5 border-2 border-blue-600 border-t-transparent rounded-full animate-spin' />
+                <div className='flex items-center gap-2 text-muted-foreground '>
+                  <div className='w-5 h-5 border-2 border-border border-t-transparent rounded-full animate-spin' />
                   <span>搜索中...</span>
                 </div>
               </div>
             ) : (
               <>
             {/* 面包屑导航 */}
-            <div className='flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400'>
+            <div className='flex items-center gap-2 text-sm text-muted-foreground '>
               <button
                 onClick={() => setXiaoyaPath('/')}
-                className='hover:text-blue-600 dark:hover:text-blue-400'
+                className='hover:text-primary '
               >
                 根目录
               </button>
@@ -1075,7 +1075,7 @@ export default function PrivateLibraryPage() {
                     <span>/</span>
                     <button
                       onClick={() => setXiaoyaPath(path)}
-                      className='hover:text-blue-600 dark:hover:text-blue-400'
+                      className='hover:text-primary '
                     >
                       {part}
                     </button>
@@ -1087,15 +1087,15 @@ export default function PrivateLibraryPage() {
             {/* 文件夹列表 */}
             {xiaoyaFolders.length > 0 && (
               <div className='space-y-2'>
-                <h3 className='text-sm font-medium text-gray-700 dark:text-gray-300'>文件夹</h3>
+                <h3 className='text-sm font-medium text-foreground '>文件夹</h3>
                 <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2'>
                   {xiaoyaFolders.map((folder) => (
                     <button
                       key={folder.path}
                       onClick={() => setXiaoyaPath(folder.path)}
-                      className='flex items-center gap-2 p-3 bg-gray-100 dark:bg-gray-800 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors text-left'
+                      className='flex items-center gap-2 p-3 bg-muted rounded-lg hover:bg-muted transition-colors text-left'
                     >
-                      <svg className='w-5 h-5 text-blue-600' fill='currentColor' viewBox='0 0 20 20'>
+                      <svg className='w-5 h-5 text-primary' fill='currentColor' viewBox='0 0 20 20'>
                         <path d='M2 6a2 2 0 012-2h5l2 2h5a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V6z' />
                       </svg>
                       <span className='text-sm truncate'>{folder.name}</span>
@@ -1108,7 +1108,7 @@ export default function PrivateLibraryPage() {
             {/* 视频文件列表 */}
             {xiaoyaFiles.length > 0 && (
               <div className='space-y-2'>
-                <h3 className='text-sm font-medium text-gray-700 dark:text-gray-300'>视频文件</h3>
+                <h3 className='text-sm font-medium text-foreground '>视频文件</h3>
                 <div className='grid grid-cols-1 gap-2'>
                   {xiaoyaFiles.map((file) => {
                     // 从当前路径提取文件夹名作为标题
@@ -1127,9 +1127,9 @@ export default function PrivateLibraryPage() {
                           const encodedDirPath = base58Encode(xiaoyaPath);
                           router.push(`/play?source=xiaoya&id=${encodeURIComponent(encodedDirPath)}&fileName=${encodeURIComponent(file.name)}&title=${encodeURIComponent(title)}`);
                         }}
-                        className='flex items-center gap-2 p-3 bg-gray-100 dark:bg-gray-800 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors text-left'
+                        className='flex items-center gap-2 p-3 bg-muted rounded-lg hover:bg-muted transition-colors text-left'
                       >
-                        <svg className='w-5 h-5 text-green-600' fill='currentColor' viewBox='0 0 20 20'>
+                        <svg className='w-5 h-5 text-primary' fill='currentColor' viewBox='0 0 20 20'>
                           <path d='M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z' />
                         </svg>
                         <span className='text-sm truncate'>{file.name}</span>
@@ -1142,7 +1142,7 @@ export default function PrivateLibraryPage() {
 
             {xiaoyaFolders.length === 0 && xiaoyaFiles.length === 0 && (
               <div className='text-center py-12'>
-                <p className='text-gray-500 dark:text-gray-400'>此目录为空</p>
+                <p className='text-muted-foreground '>此目录为空</p>
               </div>
             )}
               </>
@@ -1150,7 +1150,7 @@ export default function PrivateLibraryPage() {
           </div>
         ) : videos.length === 0 ? (
           <div className='text-center py-12'>
-            <p className='text-gray-500 dark:text-gray-400'>
+            <p className='text-muted-foreground '>
               {sourceType === 'openlist'
                 ? '暂无视频，请在管理面板配置 OpenList 并刷新'
                 : '暂无视频，请在管理面板配置 Emby'}
@@ -1191,13 +1191,13 @@ export default function PrivateLibraryPage() {
             {/* 滚动加载指示器 - 始终渲染以便 observer 可以监听 */}
             <div ref={observerTarget} className='flex justify-center items-center py-8 min-h-[100px]'>
               {loadingMore && (
-                <div className='flex items-center gap-2 text-gray-600 dark:text-gray-400'>
-                  <div className='w-5 h-5 border-2 border-blue-600 border-t-transparent rounded-full animate-spin' />
+                <div className='flex items-center gap-2 text-muted-foreground '>
+                  <div className='w-5 h-5 border-2 border-border border-t-transparent rounded-full animate-spin' />
                   <span>加载中...</span>
                 </div>
               )}
               {!hasMore && videos.length > 0 && !loadingMore && (
-                <div className='text-gray-500 dark:text-gray-400'>
+                <div className='text-muted-foreground '>
                   已加载全部内容
                 </div>
               )}

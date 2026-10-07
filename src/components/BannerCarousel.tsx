@@ -17,12 +17,12 @@ import {
   useState,
 } from 'react';
 
+import { getDoubanDetail } from '@/lib/douban.client';
 import {
   type TMDBItem,
   getGenreNames,
   getTMDBImageUrl,
 } from '@/lib/tmdb.client';
-import { getDoubanDetail } from '@/lib/douban.client';
 
 import ProxyImage from '@/components/ProxyImage';
 
@@ -482,7 +482,7 @@ export default function BannerCarousel({
   if (isLoading || !shouldLoad) {
     return (
       <div
-        className={`relative w-full ${bannerHeightClassMap[bannerHeightScale]} bg-gradient-to-b from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-900 overflow-hidden flex items-center justify-center`}
+        className={`relative w-full ${bannerHeightClassMap[bannerHeightScale]} bg-gradient-to-b from-muted to-background overflow-hidden flex items-center justify-center`}
       >
         <Image
           src='/logo.png'
@@ -597,7 +597,7 @@ export default function BannerCarousel({
 
           <div className='flex items-center gap-2 md:gap-3 text-sm md:text-base text-white/90 flex-wrap'>
             {currentItem.vote_average > 0 && (
-              <span className='px-2 py-1 bg-yellow-500 text-black font-semibold rounded'>
+              <span className='px-2 py-1 bg-primary text-primary-foreground font-semibold rounded'>
                 {currentItem.vote_average.toFixed(1)}
               </span>
             )}
@@ -643,7 +643,7 @@ export default function BannerCarousel({
               e.stopPropagation();
               handlePlay(currentItem.title);
             }}
-            className='hidden md:flex items-center gap-2 px-6 py-3 bg-gray-500/30 hover:bg-gray-500/50 backdrop-blur-sm text-white font-semibold rounded-lg transition-all pointer-events-auto'
+            className='hidden md:flex items-center gap-2 px-6 py-3 bg-black/30 hover:bg-black/50 backdrop-blur-sm text-white font-semibold rounded-lg transition-all pointer-events-auto'
           >
             <Play className='w-5 h-5 fill-white' />
             立即播放

@@ -344,16 +344,16 @@ export default function AIChatPanel({
           return (
             <div
               key={i}
-              className='flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300'
+              className='flex items-center gap-2 text-sm text-muted-foreground'
             >
               {live && status === 'running' ? (
-                <Loader2 size={14} className='animate-spin text-purple-500' />
+                <Loader2 size={14} className='animate-spin text-primary' />
               ) : (
                 <span
                   className={
                     status === 'failed'
-                      ? 'text-red-500'
-                      : 'text-green-500'
+                      ? 'text-destructive'
+                      : 'text-foreground'
                   }
                 >
                   {status === 'failed' ? '✕' : '✓'}
@@ -361,7 +361,7 @@ export default function AIChatPanel({
               )}
               <span className='flex-1 whitespace-nowrap'>{label}</span>
               {keyText && (
-                <span className='max-w-[60%] truncate text-xs text-gray-400 dark:text-gray-500'>
+                <span className='max-w-[60%] truncate text-xs text-muted-foreground'>
                   {keyText}
                 </span>
               )}
@@ -426,16 +426,16 @@ export default function AIChatPanel({
       return (
         <div
           key={segmentIndex}
-          className='not-prose overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm ring-1 ring-black/5 dark:border-gray-700 dark:bg-gray-900 dark:ring-white/10'
+          className='not-prose overflow-hidden rounded-xl border border-border bg-card shadow-sm ring-1 ring-border/40'
         >
           <div className='overflow-x-auto'>
             <table className='m-0 min-w-full border-separate border-spacing-0 text-left text-sm'>
               <thead>
-                <tr className='bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-950/40 dark:to-blue-950/40'>
+                <tr className='bg-muted'>
                 {segment.header.map((cell, cellIndex) => (
                   <th
                     key={cellIndex}
-                    className='whitespace-nowrap border-b border-gray-200 px-4 py-3 font-semibold text-gray-800 first:rounded-tl-xl last:rounded-tr-xl dark:border-gray-700 dark:text-gray-100'
+                    className='whitespace-nowrap border-b border-border px-4 py-3 font-semibold text-foreground first:rounded-tl-xl last:rounded-tr-xl'
                     style={{ textAlign: segment.align[cellIndex] }}
                   >
                     <ReactMarkdown components={inlineMarkdownComponents}>
@@ -445,16 +445,16 @@ export default function AIChatPanel({
                 ))}
                 </tr>
               </thead>
-              <tbody className='divide-y divide-gray-100 dark:divide-gray-800'>
+              <tbody className='divide-y divide-border'>
               {segment.rows.map((row, rowIndex) => (
                 <tr
                   key={rowIndex}
-                  className='transition-colors odd:bg-white even:bg-gray-50/70 hover:bg-purple-50/70 dark:odd:bg-gray-900 dark:even:bg-gray-800/40 dark:hover:bg-purple-950/25'
+                  className='transition-colors odd:bg-card even:bg-muted/50 hover:bg-accent'
                 >
                   {row.map((cell, cellIndex) => (
                     <td
                       key={cellIndex}
-                      className='px-4 py-3 align-top leading-relaxed text-gray-700 dark:text-gray-200'
+                      className='px-4 py-3 align-top leading-relaxed text-foreground'
                       style={{ textAlign: segment.align[cellIndex] }}
                     >
                       <ReactMarkdown components={inlineMarkdownComponents}>
@@ -650,6 +650,7 @@ export default function AIChatPanel({
         let streamError = '';
         let buffer = ''; // 缓冲区，用于保存不完整的行
 
+        // eslint-disable-next-line no-constant-condition
         while (true) {
           const { done, value } = await reader.read();
           if (done) break;
@@ -863,27 +864,27 @@ export default function AIChatPanel({
   const modalContent = useDrawer ? (
     // 抽屉模式
     <div
-      className={`fixed inset-0 z-[1002] flex items-center justify-end transition-opacity duration-200 pointer-events-none ${
+      className={`fixed inset-0 z-popover flex items-center justify-end transition-opacity duration-200 pointer-events-none ${
         isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
       }`}
     >
       <div
-        className={`relative ${drawerWidth} h-full bg-white dark:bg-gray-900 shadow-2xl flex flex-col transition-transform duration-300 ease-out pointer-events-auto ${
+        className={`relative ${drawerWidth} h-full bg-card shadow-2xl flex flex-col transition-transform duration-300 ease-out pointer-events-auto ${
           isOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
         {/* 头部 */}
-        <div className='flex items-center justify-between border-b border-gray-200 p-4 dark:border-gray-700'>
+        <div className='flex items-center justify-between border-b border-border p-4'>
           <div className='flex items-center gap-3 min-w-0 flex-1'>
-            <div className='flex h-10 w-10 items-center justify-center rounded-full bg-purple-500 flex-shrink-0'>
-              <Sparkles size={20} className='text-white' />
+            <div className='flex h-10 w-10 items-center justify-center rounded-full bg-primary flex-shrink-0'>
+              <Sparkles size={20} className='text-primary-foreground' />
             </div>
             <div className='min-w-0 flex-1'>
-              <h2 className='text-lg font-semibold text-gray-900 dark:text-white'>
+              <h2 className='text-lg font-semibold text-foreground'>
                 AI影视助手
               </h2>
               {context?.title && (
-                <p className='text-xs text-gray-500 dark:text-gray-400 truncate'>
+                <p className='text-xs text-muted-foreground truncate'>
                   正在讨论: {context.title}
                   {context.year && ` (${context.year})`}
                 </p>
@@ -892,7 +893,7 @@ export default function AIChatPanel({
           </div>
           <button
             onClick={onClose}
-            className='rounded-lg p-2 text-gray-500 transition-colors hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800 flex-shrink-0'
+            className='rounded-lg p-2 text-muted-foreground transition-colors hover:bg-accent flex-shrink-0'
           >
             <X size={20} />
           </button>
@@ -917,16 +918,16 @@ export default function AIChatPanel({
                   <div
                     className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${
                       message.role === 'user'
-                        ? 'bg-blue-500'
-                        : 'bg-purple-500'
+                        ? 'bg-primary'
+                        : 'bg-muted'
                     }`}
                   >
                     {message.role === 'user' ? (
-                      <span className='text-xs font-semibold text-white'>
+                      <span className='text-xs font-semibold text-primary-foreground'>
                         {userAvatarText}
                       </span>
                     ) : (
-                      <Bot size={16} className='text-white' />
+                      <Bot size={16} className='text-foreground' />
                     )}
                   </div>
 
@@ -934,8 +935,8 @@ export default function AIChatPanel({
                   <div
                     className={`rounded-2xl px-4 py-2 ${
                       message.role === 'user'
-                        ? 'bg-blue-500 text-white'
-                        : 'flex-1 bg-gray-100 text-gray-900 dark:bg-gray-800 dark:text-white'
+                        ? 'bg-primary text-primary-foreground'
+                        : 'flex-1 bg-muted text-foreground'
                     }`}
                   >
                     {message.role === 'user' ? (
@@ -957,7 +958,7 @@ export default function AIChatPanel({
                         {isStreaming &&
                           index === messages.length - 1 &&
                           renderToolChain(toolChain, true)}
-                        <div className='prose prose-sm max-w-none dark:prose-invert prose-p:my-2 prose-p:leading-relaxed prose-pre:bg-gray-800 prose-pre:text-gray-100 dark:prose-pre:bg-gray-900 prose-code:text-purple-600 dark:prose-code:text-purple-400 prose-code:bg-purple-50 dark:prose-code:bg-purple-900/20 prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-code:before:content-none prose-code:after:content-none prose-a:text-inherit dark:prose-a:text-inherit prose-a:no-underline hover:prose-a:underline prose-strong:text-gray-900 dark:prose-strong:text-white prose-ul:my-2 prose-ol:my-2 prose-li:my-1'>
+                        <div className='prose prose-sm max-w-none prose-p:my-2 prose-p:leading-relaxed prose-pre:bg-muted prose-pre:text-foreground prose-code:text-foreground prose-code:bg-muted prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-code:before:content-none prose-code:after:content-none prose-a:text-inherit prose-a:no-underline hover:prose-a:underline prose-strong:text-foreground prose-ul:my-2 prose-ol:my-2 prose-li:my-1'>
                           {renderAssistantContent(message.content)}
                         </div>
                         {message.error &&
@@ -967,7 +968,7 @@ export default function AIChatPanel({
                             <button
                               type='button'
                               onClick={() => handleSendMessage(message.retryMessage)}
-                              className='mt-3 inline-flex items-center gap-1.5 rounded-lg border border-gray-300 px-3 py-1.5 text-sm text-gray-700 transition-colors hover:bg-gray-200 dark:border-gray-600 dark:text-gray-200 dark:hover:bg-gray-700'
+                              className='mt-3 inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-sm text-foreground transition-colors hover:bg-accent'
                             >
                               <RefreshCw size={14} />
                               重试
@@ -979,8 +980,8 @@ export default function AIChatPanel({
                           !message.content &&
                           toolChain.length === 0 && (
                             <div className='flex items-center gap-2'>
-                              <Loader2 size={16} className='animate-spin text-gray-500' />
-                              <span className='text-sm text-gray-500 dark:text-gray-400'>
+                              <Loader2 size={16} className='animate-spin text-muted-foreground' />
+                              <span className='text-sm text-muted-foreground'>
                                 AI正在思考...
                               </span>
                             </div>
@@ -997,11 +998,11 @@ export default function AIChatPanel({
         </div>
 
         {/* 输入区域 */}
-        <div className='border-t border-gray-200 p-4 dark:border-gray-700'>
+        <div className='border-t border-border p-4'>
           <div className='flex gap-2'>
             <button
               onClick={handleClearContext}
-              className='flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-gray-300 text-gray-500 transition-colors hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-600 dark:text-gray-400 dark:hover:bg-gray-800'
+              className='flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-border text-muted-foreground transition-colors hover:bg-accent disabled:cursor-not-allowed disabled:opacity-50'
               title='清空聊天记录'
               disabled={isStreaming}
             >
@@ -1015,7 +1016,7 @@ export default function AIChatPanel({
               placeholder={isMobile ? '输入你的问题...' : '输入你的问题... (Shift+Enter换行)'}
               disabled={isStreaming}
               rows={1}
-              className='flex-1 resize-none rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm text-gray-900 placeholder-gray-400 transition-colors focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500/20 disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:placeholder-gray-500 dark:focus:border-purple-400'
+              className='flex-1 resize-none rounded-xl border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground transition-colors focus:border-ring focus:outline-none focus:ring-2 focus:ring-ring/30 disabled:cursor-not-allowed disabled:opacity-50'
               style={{
                 minHeight: '48px',
                 maxHeight: '120px',
@@ -1029,7 +1030,7 @@ export default function AIChatPanel({
             <button
               onClick={() => handleSendMessage()}
               disabled={!input.trim() || isStreaming}
-              className='flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-purple-500 text-white transition-colors hover:bg-purple-600 disabled:cursor-not-allowed disabled:opacity-50'
+              className='flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-primary text-primary-foreground transition-colors hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-50'
             >
               {isStreaming ? (
                 <Loader2 size={20} className='animate-spin' />
@@ -1048,19 +1049,19 @@ export default function AIChatPanel({
                     onClick={() =>
                       setInput(`${context.title}讲的是什么故事？`)
                     }
-                    className='rounded-full bg-gray-100 px-3 py-1 text-xs text-gray-600 transition-colors hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700'
+                    className='rounded-full bg-muted px-3 py-1 text-xs text-muted-foreground transition-colors hover:bg-accent'
                   >
                     剧情介绍
                   </button>
                   <button
                     onClick={() => setInput(`${context.title}这部作品评价怎么样？`)}
-                    className='rounded-full bg-gray-100 px-3 py-1 text-xs text-gray-600 transition-colors hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700'
+                    className='rounded-full bg-muted px-3 py-1 text-xs text-muted-foreground transition-colors hover:bg-accent'
                   >
                     这部作品的评价
                   </button>
                   <button
                     onClick={() => setInput(`${context.title}有没有续集？`)}
-                    className='rounded-full bg-gray-100 px-3 py-1 text-xs text-gray-600 transition-colors hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700'
+                    className='rounded-full bg-muted px-3 py-1 text-xs text-muted-foreground transition-colors hover:bg-accent'
                   >
                     有没有续集
                   </button>
@@ -1069,13 +1070,13 @@ export default function AIChatPanel({
                 <>
                   <button
                     onClick={() => setInput('推荐一些高分电影')}
-                    className='rounded-full bg-gray-100 px-3 py-1 text-xs text-gray-600 transition-colors hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700'
+                    className='rounded-full bg-muted px-3 py-1 text-xs text-muted-foreground transition-colors hover:bg-accent'
                   >
                     推荐高分电影
                   </button>
                   <button
                     onClick={() => setInput('最近有什么新电影上映？')}
-                    className='rounded-full bg-gray-100 px-3 py-1 text-xs text-gray-600 transition-colors hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700'
+                    className='rounded-full bg-muted px-3 py-1 text-xs text-muted-foreground transition-colors hover:bg-accent'
                   >
                     最新上映
                   </button>
@@ -1089,7 +1090,7 @@ export default function AIChatPanel({
   ) : (
     // 原有的居中弹窗模式
     <div
-      className={`fixed inset-0 z-[1002] flex items-center justify-center bg-black/50 backdrop-blur-sm overflow-hidden transition-opacity duration-200 ${
+      className={`fixed inset-0 z-popover flex items-center justify-center bg-black/50 backdrop-blur-sm overflow-hidden transition-opacity duration-200 ${
         isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
       }`}
       onClick={(e) => {
@@ -1099,19 +1100,19 @@ export default function AIChatPanel({
         }
       }}
     >
-      <div className='relative mx-4 my-auto flex h-[85vh] sm:h-[80vh] max-h-[90vh] sm:max-h-[600px] w-full max-w-3xl flex-col rounded-2xl bg-white shadow-2xl dark:bg-gray-900'>
+      <div className='relative mx-4 my-auto flex h-[85vh] sm:h-[80vh] max-h-[90vh] sm:max-h-[600px] w-full max-w-3xl flex-col rounded-2xl bg-card shadow-2xl'>
         {/* 头部 */}
-        <div className='flex items-center justify-between border-b border-gray-200 p-4 dark:border-gray-700'>
+        <div className='flex items-center justify-between border-b border-border p-4'>
           <div className='flex items-center gap-3 min-w-0 flex-1'>
-            <div className='flex h-10 w-10 items-center justify-center rounded-full bg-purple-500 flex-shrink-0'>
-              <Sparkles size={20} className='text-white' />
+            <div className='flex h-10 w-10 items-center justify-center rounded-full bg-primary flex-shrink-0'>
+              <Sparkles size={20} className='text-primary-foreground' />
             </div>
             <div className='min-w-0 flex-1'>
-        <h2 className='text-lg font-semibold text-gray-900 dark:text-white'>
+        <h2 className='text-lg font-semibold text-foreground'>
                 AI影视助手
               </h2>
               {context?.title && (
-                <p className='text-xs text-gray-500 dark:text-gray-400 truncate'>
+                <p className='text-xs text-muted-foreground truncate'>
                   正在讨论: {context.title}
                   {context.year && ` (${context.year})`}
                 </p>
@@ -1120,7 +1121,7 @@ export default function AIChatPanel({
           </div>
           <button
             onClick={onClose}
-            className='rounded-lg p-2 text-gray-500 transition-colors hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800 flex-shrink-0'
+            className='rounded-lg p-2 text-muted-foreground transition-colors hover:bg-accent flex-shrink-0'
           >
          <X size={20} />
           </button>
@@ -1145,16 +1146,16 @@ export default function AIChatPanel({
                   <div
                     className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${
                       message.role === 'user'
-                        ? 'bg-blue-500'
-                        : 'bg-purple-500'
+                        ? 'bg-primary'
+                        : 'bg-muted'
                     }`}
                   >
                     {message.role === 'user' ? (
-                      <span className='text-xs font-semibold text-white'>
+                      <span className='text-xs font-semibold text-primary-foreground'>
                         {userAvatarText}
                       </span>
                     ) : (
-                      <Bot size={16} className='text-white' />
+                      <Bot size={16} className='text-foreground' />
                     )}
                   </div>
 
@@ -1162,8 +1163,8 @@ export default function AIChatPanel({
                   <div
                     className={`rounded-2xl px-4 py-2 ${
                       message.role === 'user'
-                        ? 'bg-blue-500 text-white'
-                        : 'flex-1 bg-gray-100 text-gray-900 dark:bg-gray-800 dark:text-white'
+                        ? 'bg-primary text-primary-foreground'
+                        : 'flex-1 bg-muted text-foreground'
                     }`}
                   >
                     {message.role === 'user' ? (
@@ -1185,7 +1186,7 @@ export default function AIChatPanel({
                         {isStreaming &&
                           index === messages.length - 1 &&
                           renderToolChain(toolChain, true)}
-                        <div className='prose prose-sm max-w-none dark:prose-invert prose-p:my-2 prose-p:leading-relaxed prose-pre:bg-gray-800 prose-pre:text-gray-100 dark:prose-pre:bg-gray-900 prose-code:text-purple-600 dark:prose-code:text-purple-400 prose-code:bg-purple-50 dark:prose-code:bg-purple-900/20 prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-code:before:content-none prose-code:after:content-none prose-a:text-inherit dark:prose-a:text-inherit prose-a:no-underline hover:prose-a:underline prose-strong:text-gray-900 dark:prose-strong:text-white prose-ul:my-2 prose-ol:my-2 prose-li:my-1'>
+                        <div className='prose prose-sm max-w-none prose-p:my-2 prose-p:leading-relaxed prose-pre:bg-muted prose-pre:text-foreground prose-code:text-foreground prose-code:bg-muted prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-code:before:content-none prose-code:after:content-none prose-a:text-inherit prose-a:no-underline hover:prose-a:underline prose-strong:text-foreground prose-ul:my-2 prose-ol:my-2 prose-li:my-1'>
                           {renderAssistantContent(message.content)}
                         </div>
                         {message.error &&
@@ -1195,7 +1196,7 @@ export default function AIChatPanel({
                             <button
                               type='button'
                               onClick={() => handleSendMessage(message.retryMessage)}
-                              className='mt-3 inline-flex items-center gap-1.5 rounded-lg border border-gray-300 px-3 py-1.5 text-sm text-gray-700 transition-colors hover:bg-gray-200 dark:border-gray-600 dark:text-gray-200 dark:hover:bg-gray-700'
+                              className='mt-3 inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-sm text-foreground transition-colors hover:bg-accent'
                             >
                               <RefreshCw size={14} />
                               重试
@@ -1207,8 +1208,8 @@ export default function AIChatPanel({
                           !message.content &&
                           toolChain.length === 0 && (
                             <div className='flex items-center gap-2'>
-                              <Loader2 size={16} className='animate-spin text-gray-500' />
-                              <span className='text-sm text-gray-500 dark:text-gray-400'>
+                              <Loader2 size={16} className='animate-spin text-muted-foreground' />
+                              <span className='text-sm text-muted-foreground'>
                                 AI正在思考...
                               </span>
                             </div>
@@ -1225,11 +1226,11 @@ export default function AIChatPanel({
         </div>
 
         {/* 输入区域 */}
-        <div className='border-t border-gray-200 p-4 dark:border-gray-700'>
+        <div className='border-t border-border p-4'>
           <div className='flex gap-2'>
             <button
               onClick={handleClearContext}
-              className='flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-gray-300 text-gray-500 transition-colors hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-600 dark:text-gray-400 dark:hover:bg-gray-800'
+              className='flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-border text-muted-foreground transition-colors hover:bg-accent disabled:cursor-not-allowed disabled:opacity-50'
               title='清空聊天记录'
               disabled={isStreaming}
             >
@@ -1243,7 +1244,7 @@ export default function AIChatPanel({
               placeholder={isMobile ? '输入你的问题...' : '输入你的问题... (Shift+Enter换行)'}
               disabled={isStreaming}
               rows={1}
-              className='flex-1 resize-none rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm text-gray-900 placeholder-gray-400 transition-colors focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500/20 disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:placeholder-gray-500 dark:focus:border-purple-400'
+              className='flex-1 resize-none rounded-xl border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground transition-colors focus:border-ring focus:outline-none focus:ring-2 focus:ring-ring/30 disabled:cursor-not-allowed disabled:opacity-50'
               style={{
                 minHeight: '48px',
                 maxHeight: '120px',
@@ -1257,7 +1258,7 @@ export default function AIChatPanel({
             <button
               onClick={() => handleSendMessage()}
               disabled={!input.trim() || isStreaming}
-              className='flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-purple-500 text-white transition-colors hover:bg-purple-600 disabled:cursor-not-allowed disabled:opacity-50'
+              className='flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-primary text-primary-foreground transition-colors hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-50'
             >
               {isStreaming ? (
                 <Loader2 size={20} className='animate-spin' />
@@ -1276,19 +1277,19 @@ export default function AIChatPanel({
                     onClick={() =>
                       setInput(`${context.title}讲的是什么故事？`)
                     }
-                    className='rounded-full bg-gray-100 px-3 py-1 text-xs text-gray-600 transition-colors hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700'
+                    className='rounded-full bg-muted px-3 py-1 text-xs text-muted-foreground transition-colors hover:bg-accent'
                   >
                     剧情介绍
                   </button>
                   <button
                     onClick={() => setInput(`${context.title}这部作品评价怎么样？`)}
-                    className='rounded-full bg-gray-100 px-3 py-1 text-xs text-gray-600 transition-colors hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700'
+                    className='rounded-full bg-muted px-3 py-1 text-xs text-muted-foreground transition-colors hover:bg-accent'
                   >
                     这部作品的评价
                   </button>
                   <button
                     onClick={() => setInput(`${context.title}有没有续集？`)}
-                    className='rounded-full bg-gray-100 px-3 py-1 text-xs text-gray-600 transition-colors hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700'
+                    className='rounded-full bg-muted px-3 py-1 text-xs text-muted-foreground transition-colors hover:bg-accent'
                   >
                     有没有续集
                   </button>
@@ -1297,13 +1298,13 @@ export default function AIChatPanel({
                 <>
                   <button
                     onClick={() => setInput('推荐一些高分电影')}
-                    className='rounded-full bg-gray-100 px-3 py-1 text-xs text-gray-600 transition-colors hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700'
+                    className='rounded-full bg-muted px-3 py-1 text-xs text-muted-foreground transition-colors hover:bg-accent'
                   >
                     推荐高分电影
                   </button>
                   <button
                     onClick={() => setInput('最近有什么新电影上映？')}
-                    className='rounded-full bg-gray-100 px-3 py-1 text-xs text-gray-600 transition-colors hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700'
+                    className='rounded-full bg-muted px-3 py-1 text-xs text-muted-foreground transition-colors hover:bg-accent'
                   >
                     最新上映
                   </button>

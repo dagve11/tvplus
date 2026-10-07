@@ -362,13 +362,13 @@ export default function AcgSearch({
   const healthBadgeClass = (level: MagnetHealthLevel) => {
     switch (level) {
       case 'good':
-        return 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300';
+        return 'bg-primary text-primary-foreground';
       case 'ok':
-        return 'bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-200';
+        return 'bg-accent text-accent-foreground';
       case 'risk':
-        return 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300';
+        return 'bg-destructive text-destructive-foreground';
       default:
-        return 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300';
+        return 'bg-muted text-muted-foreground';
     }
   };
 
@@ -501,8 +501,8 @@ export default function AcgSearch({
       return (
         <div className='flex items-center justify-center py-12'>
           <div className='text-center'>
-            <Loader2 className='mx-auto h-8 w-8 animate-spin text-green-600 dark:text-green-400' />
-            <p className='mt-4 text-sm text-gray-600 dark:text-gray-400'>
+            <Loader2 className='mx-auto h-8 w-8 animate-spin text-primary' />
+            <p className='mt-4 text-sm text-muted-foreground'>
               正在搜索动漫资源...
             </p>
           </div>
@@ -514,8 +514,8 @@ export default function AcgSearch({
       return (
         <div className='flex items-center justify-center py-12'>
           <div className='text-center'>
-            <AlertCircle className='mx-auto h-12 w-12 text-red-500 dark:text-red-400' />
-            <p className='mt-4 text-sm text-red-600 dark:text-red-400'>
+            <AlertCircle className='mx-auto h-12 w-12 text-destructive' />
+            <p className='mt-4 text-sm text-destructive'>
               {error}
             </p>
           </div>
@@ -527,8 +527,8 @@ export default function AcgSearch({
       return (
         <div className='flex items-center justify-center py-12'>
           <div className='text-center'>
-            <AlertCircle className='mx-auto h-12 w-12 text-gray-400 dark:text-gray-600' />
-            <p className='mt-4 text-sm text-gray-600 dark:text-gray-400'>
+            <AlertCircle className='mx-auto h-12 w-12 text-muted-foreground' />
+            <p className='mt-4 text-sm text-muted-foreground'>
               未找到相关资源
             </p>
           </div>
@@ -547,15 +547,15 @@ export default function AcgSearch({
             return (
             <div
               key={itemId}
-              className='p-4 rounded-lg bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:border-green-400 dark:hover:border-green-600 transition-colors'
+              className='p-4 rounded-lg bg-muted border border-border hover:border-primary transition-colors'
             >
               {/* 标题 */}
-              <div className='mb-2 font-medium text-gray-900 dark:text-gray-100'>
+              <div className='mb-2 font-medium text-foreground'>
                 {item.title}
               </div>
 
               {/* 发布时间 */}
-              <div className='mb-2 text-xs text-gray-500 dark:text-gray-400'>
+              <div className='mb-2 text-xs text-muted-foreground'>
                 {item.pubDate
                   ? new Date(item.pubDate).toLocaleString('zh-CN')
                   : ''}
@@ -586,7 +586,7 @@ export default function AcgSearch({
                   >
                     {healthLabel(health.health)}
                   </span>
-                  <span className='text-gray-600 dark:text-gray-300'>
+                  <span className='text-muted-foreground'>
                     Seeder {health.seeders}
                     {' · '}
                     Leecher {health.leechers}
@@ -594,7 +594,7 @@ export default function AcgSearch({
                     Peer {health.peers}
                   </span>
                   {typeof health.durationMs === 'number' && (
-                    <span className='text-gray-400 dark:text-gray-500'>
+                    <span className='text-muted-foreground'>
                       {health.source === 'cache'
                         ? '缓存'
                         : `${health.durationMs}ms`}
@@ -608,7 +608,7 @@ export default function AcgSearch({
                 <button
                   onClick={() => handleOpenDownloadDialog(item, index)}
                   disabled={downloadingId === itemId}
-                  className='flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-green-600 text-white text-sm hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors'
+                  className='flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-primary text-primary-foreground text-sm hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors'
                   title='存到私人影库'
                 >
                   {downloadingId === itemId ? (
@@ -626,7 +626,7 @@ export default function AcgSearch({
                 <button
                   onClick={() => handleCheckHealth(item, index)}
                   disabled={!item.torrentUrl || isHealthChecking}
-                  className='flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-sky-600 text-white text-sm hover:bg-sky-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors'
+                  className='flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-primary text-primary-foreground text-sm hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors'
                   title='Tracker 测活（全站并发上限可由 MAGNET_HEALTH_MAX_CONCURRENT 配置）'
                 >
                   {isHealthChecking ? (
@@ -644,7 +644,7 @@ export default function AcgSearch({
                 <button
                   onClick={() => handleCopyMagnet(item, index)}
                   disabled={(!item.torrentUrl && !item.link) || copyingId === itemId}
-                  className='flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-gray-200 text-gray-700 text-sm hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors'
+                  className='flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-muted text-foreground text-sm hover:bg-accent disabled:opacity-50 disabled:cursor-not-allowed transition-colors'
                   title='复制磁链'
                 >
                   {copyingId === itemId ? (
@@ -658,7 +658,7 @@ export default function AcgSearch({
                   href={item.link || item.torrentUrl || '#'}
                   target='_blank'
                   rel='noopener noreferrer'
-                  className='flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-gray-200 text-gray-700 text-sm hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 transition-colors'
+                  className='flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-muted text-foreground text-sm hover:bg-accent transition-colors'
                   title='查看详情'
                 >
                   <ExternalLink className='h-4 w-4' />
@@ -677,8 +677,8 @@ export default function AcgSearch({
           hasMore && (
           <div ref={loadMoreRef} className='flex items-center justify-center py-8'>
             <div className='text-center'>
-              <Loader2 className='mx-auto h-6 w-6 animate-spin text-green-600 dark:text-green-400' />
-              <p className='mt-2 text-sm text-gray-600 dark:text-gray-400'>
+              <Loader2 className='mx-auto h-6 w-6 animate-spin text-primary' />
+              <p className='mt-2 text-sm text-muted-foreground'>
                 加载更多...
               </p>
             </div>
@@ -687,9 +687,9 @@ export default function AcgSearch({
 
         {/* 命名弹窗 */}
         {showNameDialog && (
-          <div className='fixed inset-0 z-[1000] flex items-center justify-center bg-black/50'>
-            <div className='bg-white dark:bg-gray-800 rounded-lg p-6 max-w-md w-full mx-4 shadow-xl'>
-              <h3 className='text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4'>
+          <div className='fixed inset-0 z-modal flex items-center justify-center bg-black/50'>
+            <div className='bg-card rounded-lg p-6 max-w-md w-full mx-4 shadow-xl'>
+              <h3 className='text-lg font-semibold text-foreground mb-4'>
                 设置资源名称
               </h3>
               <input
@@ -697,16 +697,16 @@ export default function AcgSearch({
                 value={customName}
                 onChange={(e) => setCustomName(e.target.value)}
                 placeholder='请输入资源名称'
-                className='w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500'
+                className='w-full px-3 py-2 border border-border rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring'
                 autoFocus
               />
-              <label className='mt-4 block text-sm font-medium text-gray-700 dark:text-gray-300'>
+              <label className='mt-4 block text-sm font-medium text-foreground'>
                 下载方式
               </label>
               <select
                 value={downloadTool}
                 onChange={(e) => setDownloadTool(e.target.value as DownloadTool)}
-                className='mt-1 w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500'
+                className='mt-1 w-full px-3 py-2 border border-border rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring'
               >
                 {downloadToolOptions.map((option) => (
                   <option key={option.value} value={option.value}>
@@ -722,14 +722,14 @@ export default function AcgSearch({
                     setCustomName('');
                     setDownloadTool('aria2');
                   }}
-                  className='px-4 py-2 rounded-lg bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 transition-colors'
+                  className='px-4 py-2 rounded-lg bg-muted text-foreground hover:bg-accent transition-colors'
                 >
                   取消
                 </button>
                 <button
                   onClick={handleConfirmDownload}
                   disabled={!customName.trim()}
-                  className='px-4 py-2 rounded-lg bg-green-600 text-white hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors'
+                  className='px-4 py-2 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors'
                 >
                   确定
                 </button>

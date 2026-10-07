@@ -111,7 +111,7 @@ export default function ScrollableRow({
       </div>
       {showLeftScroll && (
         <div
-          className={`hidden sm:flex absolute left-0 top-0 bottom-0 w-16 items-center justify-center z-[600] transition-opacity duration-200 ${
+          className={`hidden sm:flex absolute left-0 top-0 bottom-0 w-16 items-center justify-center z-popover transition-opacity duration-200 ${
             isHovered ? 'opacity-100' : 'opacity-0'
           }`}
           style={{
@@ -130,9 +130,9 @@ export default function ScrollableRow({
           >
             <button
               onClick={handleScrollLeftClick}
-              className='w-12 h-12 bg-white/95 rounded-full shadow-lg flex items-center justify-center hover:bg-white border border-gray-200 transition-transform hover:scale-105 dark:bg-gray-800/90 dark:hover:bg-gray-700 dark:border-gray-600'
+              className='w-12 h-12 bg-card/95 rounded-full shadow-lg flex items-center justify-center hover:bg-accent border border-border transition-transform hover:scale-105'
             >
-              <ChevronLeft className='w-6 h-6 text-gray-600 dark:text-gray-300' />
+              <ChevronLeft className='w-6 h-6 text-muted-foreground' />
             </button>
           </div>
         </div>
@@ -140,7 +140,7 @@ export default function ScrollableRow({
 
       {showRightScroll && (
         <div
-          className={`hidden sm:flex absolute right-0 top-0 bottom-0 w-16 items-center justify-center z-[600] transition-opacity duration-200 ${
+          className={`hidden sm:flex absolute right-0 top-0 bottom-0 w-16 items-center justify-center z-popover transition-opacity duration-200 ${
             isHovered ? 'opacity-100' : 'opacity-0'
           }`}
           style={{
@@ -159,9 +159,9 @@ export default function ScrollableRow({
           >
             <button
               onClick={handleScrollRightClick}
-              className='w-12 h-12 bg-white/95 rounded-full shadow-lg flex items-center justify-center hover:bg-white border border-gray-200 transition-transform hover:scale-105 dark:bg-gray-800/90 dark:hover:bg-gray-700 dark:border-gray-600'
+              className='w-12 h-12 bg-card/95 rounded-full shadow-lg flex items-center justify-center hover:bg-accent border border-border transition-transform hover:scale-105'
             >
-              <ChevronRight className='w-6 h-6 text-gray-600 dark:text-gray-300' />
+              <ChevronRight className='w-6 h-6 text-muted-foreground' />
             </button>
           </div>
         </div>
