@@ -65,14 +65,14 @@ export default function TVLoginPage() {
 
   return (
     <TVLayout showNav={false}>
-      <section className='mx-auto grid max-w-6xl grid-cols-[1fr_430px] gap-10 rounded-[42px] border border-white/10 bg-slate-950/75 p-12 shadow-2xl shadow-black/60'>
+      <section className='mx-auto grid max-w-6xl grid-cols-[1fr_430px] gap-10 rounded-[42px] border border-border bg-card p-12 shadow-2xl shadow-black/60'>
         <div className='flex flex-col justify-center'>
-          <div className='inline-flex w-fit items-center gap-3 rounded-full bg-rose-600 px-5 py-2 text-xl font-bold text-white'><Smartphone className='h-6 w-6' /> 手机确认 · 电视自动登录</div>
+          <div className='inline-flex w-fit items-center gap-3 rounded-full bg-primary px-5 py-2 text-xl font-bold text-primary-foreground'><Smartphone className='h-6 w-6' /> 手机确认 · 电视自动登录</div>
           <h1 className='mt-7 text-7xl font-black tracking-tight'>扫码登录</h1>
-          <p className='mt-6 max-w-2xl text-3xl leading-relaxed text-slate-300'>用已登录的手机浏览器扫描右侧二维码，在手机上确认后，电视端会自动进入。</p>
-          <p className='mt-8 text-2xl font-bold text-rose-300'>{status}</p>
+          <p className='mt-6 max-w-2xl text-3xl leading-relaxed text-muted-foreground'>用已登录的手机浏览器扫描右侧二维码，在手机上确认后，电视端会自动进入。</p>
+          <p className='mt-8 text-2xl font-bold text-primary'>{status}</p>
         </div>
-        <div className='rounded-[36px] border border-white/10 bg-white p-7 text-center text-black shadow-2xl shadow-black/60'>
+        <div className='rounded-[36px] border border-border bg-primary p-7 text-center text-primary-foreground shadow-2xl shadow-black/60'>
           {qrImg ? <img src={qrImg} alt='扫码登录二维码' className='mx-auto h-[360px] w-[360px]' /> : <div className='flex h-[360px] items-center justify-center'><Loader2 className='h-12 w-12 animate-spin' /></div>}
           <div className='mt-5 text-2xl font-black'>剩余 {left} 秒</div>
         </div>

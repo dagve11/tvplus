@@ -61,28 +61,28 @@ export default function TVBrowsePage({
 
   return (
     <TVLayout>
-      <section className='relative overflow-hidden rounded-[42px] border border-white/10 bg-slate-950/70 p-10 shadow-2xl shadow-black/60'>
+      <section className='relative overflow-hidden rounded-[42px] border border-border bg-card p-10 shadow-2xl shadow-black/60'>
         <div className='absolute inset-0 opacity-35'>
           {hero?.poster ? (
             <img src={hero.poster} alt='' className='h-full w-full object-cover blur-sm' />
           ) : (
             <img src={fallbackPosters[0]} alt='' className='h-full w-full object-cover blur-sm' />
           )}
-          <div className='absolute inset-0 bg-gradient-to-r from-black via-black/80 to-transparent' />
+          <div className='absolute inset-0 bg-gradient-to-r from-background via-background/80 to-transparent' />
         </div>
         <div className='relative max-w-4xl py-12'>
-          <p className='mb-4 inline-flex rounded-full bg-rose-600 px-5 py-2 text-xl font-bold text-white'>TV 专用大屏模式</p>
-          <h1 className='text-7xl font-black tracking-tight text-white drop-shadow-2xl'>{heroTitle || title}</h1>
-          <p className='mt-5 max-w-3xl text-2xl leading-relaxed text-slate-200'>{heroSubtitle || subtitle}</p>
-          <div className='mt-9 inline-flex items-center gap-3 rounded-2xl bg-white px-7 py-4 text-2xl font-black text-black'>
-            <PlayCircle className='h-8 w-8 text-rose-600' />
+          <p className='mb-4 inline-flex rounded-full bg-primary px-5 py-2 text-xl font-bold text-primary-foreground'>TV 专用大屏模式</p>
+          <h1 className='text-7xl font-black tracking-tight text-foreground drop-shadow-2xl'>{heroTitle || title}</h1>
+          <p className='mt-5 max-w-3xl text-2xl leading-relaxed text-muted-foreground'>{heroSubtitle || subtitle}</p>
+          <div className='mt-9 inline-flex items-center gap-3 rounded-2xl bg-primary px-7 py-4 text-2xl font-black text-primary-foreground'>
+            <PlayCircle className='h-8 w-8 text-primary-foreground' />
             遥控器 OK 键开始浏览
           </div>
         </div>
       </section>
 
       {loading ? (
-        <div className='mt-16 flex items-center justify-center gap-4 text-2xl text-slate-300'>
+        <div className='mt-16 flex items-center justify-center gap-4 text-2xl text-muted-foreground'>
           <Loader2 className='h-8 w-8 animate-spin' /> 正在加载大屏内容...
         </div>
       ) : (

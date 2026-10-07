@@ -82,7 +82,7 @@ function RemoteButton({
       onPointerUp={clearRepeat}
       onPointerCancel={clearRepeat}
       onPointerLeave={clearRepeat}
-      className={`flex cursor-pointer items-center justify-center rounded-2xl border border-slate-200 bg-white text-slate-900 shadow-sm transition hover:border-rose-300 hover:bg-rose-50 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-500 dark:border-white/10 dark:bg-white/10 dark:text-white dark:hover:bg-white/16 ${className}`}
+      className={`flex cursor-pointer items-center justify-center rounded-2xl border border-border bg-card text-foreground shadow-sm transition hover:border-ring hover:bg-accent active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${className}`}
     >
       {children}
     </button>
@@ -198,13 +198,13 @@ export default function TVRemotePanel({
   return createPortal(
     <>
       <div
-        className='fixed inset-0 z-[1000] bg-black/60 backdrop-blur-sm'
+        className='fixed inset-0 z-modal bg-background/70 backdrop-blur-sm'
         onClick={onClose}
         onTouchMove={(e) => e.preventDefault()}
         onWheel={(e) => e.preventDefault()}
         style={{ touchAction: 'none' }}
       />
-      <div className='fixed inset-x-3 top-1/2 z-[1001] mx-auto max-h-[94vh] max-w-md -translate-y-1/2 overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-2xl shadow-black/30 dark:border-white/10 dark:bg-slate-950'>
+      <div className='fixed inset-x-3 top-1/2 z-popover mx-auto max-h-[94vh] max-w-md -translate-y-1/2 overflow-hidden rounded-3xl border border-border bg-card shadow-2xl shadow-black/30'>
         <div
           className='max-h-[94vh] overflow-y-auto p-5'
           data-panel-content
@@ -213,34 +213,34 @@ export default function TVRemotePanel({
         >
           <div className='mb-4 flex items-start justify-between gap-4'>
             <div>
-              <div className='inline-flex items-center gap-2 rounded-full bg-rose-500/10 px-3 py-1 text-xs font-black text-rose-600 dark:text-rose-300'>
+              <div className='inline-flex items-center gap-2 rounded-full bg-muted px-3 py-1 text-xs font-black text-foreground'>
                 <Power className='h-4 w-4' />
                 TV REMOTE
               </div>
-              <h3 className='mt-3 text-2xl font-black text-slate-950 dark:text-white'>
+              <h3 className='mt-3 text-2xl font-black text-foreground'>
                 电视遥控器
               </h3>
             </div>
             <button
               type='button'
               onClick={onClose}
-              className='flex h-10 w-10 cursor-pointer items-center justify-center rounded-full text-slate-500 transition hover:bg-slate-100 hover:text-slate-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-500 dark:hover:bg-white/10 dark:hover:text-white'
+              className='flex h-10 w-10 cursor-pointer items-center justify-center rounded-full text-muted-foreground transition hover:bg-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'
               aria-label='关闭遥控器'
             >
               <X className='h-5 w-5' />
             </button>
           </div>
 
-          <div className='mb-4 rounded-2xl border border-slate-200 bg-slate-50 p-3 dark:border-white/10 dark:bg-white/[0.04]'>
+          <div className='mb-4 rounded-2xl border border-border bg-muted p-3'>
             <div className='mb-2 flex items-center justify-between gap-2'>
-              <div className='flex items-center gap-2 text-sm font-black text-slate-700 dark:text-slate-200'>
+              <div className='flex items-center gap-2 text-sm font-black text-muted-foreground'>
                 <Monitor className='h-4 w-4' />
                 在线电视端
               </div>
               <button
                 type='button'
                 onClick={() => loadDevices()}
-                className='flex h-8 w-8 cursor-pointer items-center justify-center rounded-full text-slate-500 transition hover:bg-white hover:text-slate-950 dark:hover:bg-white/10 dark:hover:text-white'
+                className='flex h-8 w-8 cursor-pointer items-center justify-center rounded-full text-muted-foreground transition hover:bg-accent hover:text-foreground'
                 aria-label='刷新电视端列表'
               >
                 {loading ? (
@@ -260,8 +260,8 @@ export default function TVRemotePanel({
                     onClick={() => setSelectedDeviceId(device.deviceId)}
                     className={`cursor-pointer rounded-xl border px-3 py-2 text-left transition ${
                       selectedDeviceId === device.deviceId
-                        ? 'border-rose-400 bg-rose-50 text-rose-950 dark:border-rose-400 dark:bg-rose-500/15 dark:text-rose-100'
-                        : 'border-slate-200 bg-white text-slate-700 hover:border-slate-300 dark:border-white/10 dark:bg-slate-900/70 dark:text-slate-300'
+                        ? 'border-ring bg-accent text-foreground'
+                        : 'border-border bg-card text-muted-foreground hover:border-ring'
                     }`}
                   >
                     <div className='truncate text-sm font-black'>
@@ -274,7 +274,7 @@ export default function TVRemotePanel({
                 ))}
               </div>
             ) : (
-              <div className='rounded-xl border border-dashed border-slate-300 bg-white px-3 py-4 text-center text-sm font-semibold text-slate-500 dark:border-white/10 dark:bg-slate-900/70 dark:text-slate-400'>
+              <div className='rounded-xl border border-dashed border-border bg-card px-3 py-4 text-center text-sm font-semibold text-muted-foreground'>
                 {loading ? '正在查找在线电视端...' : '没有在线的 Web 电视端'}
               </div>
             )}
@@ -300,7 +300,7 @@ export default function TVRemotePanel({
             <RemoteButton label='左' onPress={(repeat) => sendKey('left', repeat)} repeatable className='h-16'>
               <ChevronLeft className='h-9 w-9' />
             </RemoteButton>
-            <RemoteButton label='确认' onPress={() => sendKey('ok')} className='h-16 rounded-full bg-slate-950 text-white hover:bg-slate-800 dark:bg-white dark:text-slate-950 dark:hover:bg-slate-200'>
+            <RemoteButton label='确认' onPress={() => sendKey('ok')} className='h-16 rounded-full bg-primary text-primary-foreground hover:bg-primary/90'>
               <CornerDownLeft className='h-8 w-8' />
             </RemoteButton>
             <RemoteButton label='右' onPress={(repeat) => sendKey('right', repeat)} repeatable className='h-16'>
@@ -320,15 +320,15 @@ export default function TVRemotePanel({
                 key={digit}
                 type='button'
                 onClick={() => sendKey('digit', false, digit)}
-                className='h-11 cursor-pointer rounded-xl border border-slate-200 bg-white text-lg font-black text-slate-900 transition hover:border-rose-300 hover:bg-rose-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-500 dark:border-white/10 dark:bg-white/10 dark:text-white dark:hover:bg-white/16'
+                className='h-11 cursor-pointer rounded-xl border border-border bg-card text-lg font-black text-foreground transition hover:border-ring hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'
               >
                 {digit}
               </button>
             ))}
           </div>
 
-          <div className='mt-4 rounded-2xl border border-slate-200 bg-slate-50 p-3 dark:border-white/10 dark:bg-white/[0.04]'>
-            <div className='mb-2 flex items-center gap-2 text-sm font-black text-slate-700 dark:text-slate-200'>
+          <div className='mt-4 rounded-2xl border border-border bg-muted p-3'>
+            <div className='mb-2 flex items-center gap-2 text-sm font-black text-muted-foreground'>
               <Keyboard className='h-4 w-4' />
               文本输入
             </div>
@@ -337,13 +337,13 @@ export default function TVRemotePanel({
               onChange={(event) => setText(event.target.value)}
               rows={3}
               placeholder='输入后发送到电视端当前输入框'
-              className='w-full resize-none rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition focus:border-rose-400 focus:ring-2 focus:ring-rose-400/20 dark:border-white/10 dark:bg-slate-900 dark:text-white'
+              className='w-full resize-none rounded-xl border border-border bg-background px-3 py-2 text-sm text-foreground outline-none transition focus:border-ring focus:ring-2 focus:ring-ring/20'
             />
             <div className='mt-2 grid grid-cols-4 gap-2'>
               <button
                 type='button'
                 onClick={() => sendText('replace')}
-                className='col-span-2 inline-flex cursor-pointer items-center justify-center gap-2 rounded-xl bg-rose-600 px-3 py-2 text-sm font-black text-white transition hover:bg-rose-700'
+                className='col-span-2 inline-flex cursor-pointer items-center justify-center gap-2 rounded-xl bg-primary px-3 py-2 text-sm font-black text-primary-foreground transition hover:bg-primary/90'
               >
                 <Send className='h-4 w-4' />
                 发送
@@ -351,7 +351,7 @@ export default function TVRemotePanel({
               <button
                 type='button'
                 onClick={() => sendText('backspace', '')}
-                className='cursor-pointer rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-bold text-slate-700 transition hover:border-slate-300 dark:border-white/10 dark:bg-slate-900 dark:text-slate-200'
+                className='cursor-pointer rounded-xl border border-border bg-card px-3 py-2 text-sm font-bold text-foreground transition hover:border-ring'
               >
                 退格
               </button>
@@ -361,7 +361,7 @@ export default function TVRemotePanel({
                   setText('');
                   sendText('clear', '');
                 }}
-                className='cursor-pointer rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-bold text-slate-700 transition hover:border-slate-300 dark:border-white/10 dark:bg-slate-900 dark:text-slate-200'
+                className='cursor-pointer rounded-xl border border-border bg-card px-3 py-2 text-sm font-bold text-foreground transition hover:border-ring'
               >
                 清空
               </button>
@@ -369,7 +369,7 @@ export default function TVRemotePanel({
           </div>
 
           {(status || selectedDevice) && (
-            <p className='mt-3 rounded-2xl bg-slate-100 px-3 py-2 text-center text-xs font-semibold text-slate-600 dark:bg-white/10 dark:text-slate-300'>
+            <p className='mt-3 rounded-2xl bg-muted px-3 py-2 text-center text-xs font-semibold text-muted-foreground'>
               {status || `正在控制：${selectedDevice?.deviceName}`}
             </p>
           )}

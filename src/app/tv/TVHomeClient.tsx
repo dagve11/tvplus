@@ -104,11 +104,11 @@ export default function TVHomeClient() {
   return (
     <TVLayout>
       {loading ? (
-        <div className='mt-16 flex items-center justify-center gap-4 text-2xl text-slate-300'>
+        <div className='mt-16 flex items-center justify-center gap-4 text-2xl text-muted-foreground'>
           <Loader2 className='h-8 w-8 animate-spin' /> 正在加载电视首页...
         </div>
       ) : empty ? (
-        <div className='rounded-[36px] border border-white/10 bg-white/[0.04] p-10 text-2xl text-slate-300'>暂无首页内容</div>
+        <div className='rounded-[36px] border border-border bg-card p-10 text-2xl text-muted-foreground'>暂无首页内容</div>
       ) : (
         sections.map((section) => <TVRow key={section.title} section={section} />)
       )}

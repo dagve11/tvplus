@@ -52,10 +52,10 @@ export default function TVLayout({
   }, [pathname, showNav]);
 
   return (
-    <main className='min-h-screen overflow-x-hidden bg-black text-slate-50'>
-      <div className='fixed inset-0 pointer-events-none bg-[radial-gradient(circle_at_20%_0%,rgba(225,29,72,0.22),transparent_34%),radial-gradient(circle_at_90%_10%,rgba(79,70,229,0.24),transparent_30%),linear-gradient(180deg,#05050b_0%,#000_55%)]' />
+    <main className='min-h-screen overflow-x-hidden bg-background text-foreground'>
+      <div className='pointer-events-none fixed inset-0 bg-[radial-gradient(circle_at_20%_0%,hsl(var(--foreground)/0.06),transparent_34%)]' />
       {showNav && (
-        <header className='fixed left-6 right-6 top-5 z-40 rounded-[28px] border border-white/10 bg-slate-950/78 px-5 py-3 shadow-2xl shadow-black/60 backdrop-blur-xl'>
+        <header className='fixed left-6 right-6 top-5 z-header rounded-[28px] border border-border bg-card/80 px-5 py-3 shadow-2xl shadow-black/60 backdrop-blur-xl'>
           <nav className='flex items-center justify-center gap-3 overflow-x-auto overscroll-x-contain px-4 py-3 [scrollbar-width:none]'>
             {navItems.map((item) => {
               const active =
@@ -70,8 +70,8 @@ export default function TVLayout({
                   data-tv-home-nav={item.href === '/tv' ? 'true' : undefined}
                   className={`group flex shrink-0 cursor-pointer items-center gap-2 rounded-2xl px-5 py-3 text-xl font-semibold outline-none transition duration-200 tv-focusable ${
                     active
-                      ? 'bg-rose-600 text-white shadow-lg shadow-rose-950/40'
-                      : 'bg-white/5 text-slate-300 hover:bg-white/10 hover:text-white focus:bg-white/12'
+                      ? 'bg-primary text-primary-foreground shadow-lg shadow-black/40'
+                      : 'bg-muted text-muted-foreground hover:bg-accent hover:text-foreground focus:bg-accent'
                   }`}
                 >
                   <Icon className='h-6 w-6' />

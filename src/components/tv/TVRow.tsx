@@ -11,11 +11,11 @@ export default function TVRow({ section }: { section: TVSection }) {
     <section className='mt-12'>
       <div className='mb-5 flex items-end justify-between gap-4'>
         <div>
-          <h2 className='text-4xl font-black tracking-tight text-white'>{section.title}</h2>
-          {section.subtitle && <p className='mt-2 text-xl text-slate-400'>{section.subtitle}</p>}
+          <h2 className='text-4xl font-black tracking-tight text-foreground'>{section.title}</h2>
+          {section.subtitle && <p className='mt-2 text-xl text-muted-foreground'>{section.subtitle}</p>}
         </div>
         {section.href && (
-          <Link href={section.href} className='flex cursor-pointer items-center gap-1 rounded-full px-4 py-2 text-xl font-semibold text-slate-300 outline-none transition hover:bg-white/10 hover:text-white tv-focusable'>
+          <Link href={section.href} className='flex cursor-pointer items-center gap-1 rounded-full px-4 py-2 text-xl font-semibold text-muted-foreground outline-none transition hover:bg-accent hover:text-foreground tv-focusable'>
             查看更多 <ChevronRight className='h-6 w-6' />
           </Link>
         )}

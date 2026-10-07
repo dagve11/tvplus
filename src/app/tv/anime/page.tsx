@@ -95,12 +95,12 @@ export default function TVAnimePage() {
 
   return (
     <TVLayout>
-      <section className='rounded-[42px] border border-white/10 bg-slate-950/70 p-8 shadow-2xl shadow-black/60'>
+      <section className='rounded-[42px] border border-border bg-card p-8 shadow-2xl shadow-black/60'>
         <div className='flex items-center gap-4'>
-          <CalendarDays className='h-14 w-14 text-rose-500' />
+          <CalendarDays className='h-14 w-14 text-primary' />
           <div>
             <h1 className='text-6xl font-black'>动漫更新时间表</h1>
-            <p className='mt-2 text-2xl text-slate-300'>按周查看新番放送，遥控器左右选择日期。</p>
+            <p className='mt-2 text-2xl text-muted-foreground'>按周查看新番放送，遥控器左右选择日期。</p>
           </div>
         </div>
 
@@ -112,19 +112,19 @@ export default function TVAnimePage() {
               onClick={() => setActiveDay(day.weekday.en)}
               className={`tv-focusable cursor-pointer rounded-2xl px-7 py-4 text-2xl font-black outline-none transition ${
                 activeDay === day.weekday.en
-                  ? 'bg-rose-600 text-white'
-                  : 'bg-white/8 text-slate-200 hover:bg-white/12'
+                  ? 'bg-primary text-primary-foreground'
+                  : 'bg-muted text-muted-foreground hover:bg-accent'
               }`}
             >
               {weekdayMap[day.weekday.en] || day.weekday.en}
-              <span className='ml-2 text-lg text-slate-300'>{day.items?.length || 0}</span>
+              <span className='ml-2 text-lg text-muted-foreground'>{day.items?.length || 0}</span>
             </button>
           ))}
         </div>
       </section>
 
       {loading ? (
-        <div className='mt-16 flex items-center justify-center gap-4 text-2xl text-slate-300'>
+        <div className='mt-16 flex items-center justify-center gap-4 text-2xl text-muted-foreground'>
           <Loader2 className='h-8 w-8 animate-spin' /> 正在加载动漫内容...
         </div>
       ) : (
@@ -132,10 +132,10 @@ export default function TVAnimePage() {
           <section className='mt-10'>
             <div className='mb-5 flex items-end justify-between'>
               <div>
-                <h2 className='text-4xl font-black tracking-tight text-white'>
+                <h2 className='text-4xl font-black tracking-tight text-foreground'>
                   {weekdayMap[activeDay] || activeDay} 更新
                 </h2>
-                <p className='mt-2 text-xl text-slate-400'>当天放送的新番列表</p>
+                <p className='mt-2 text-xl text-muted-foreground'>当天放送的新番列表</p>
               </div>
             </div>
             {activeItems.length > 0 ? (
@@ -143,7 +143,7 @@ export default function TVAnimePage() {
                 {activeItems.map((item) => <TVCard key={item.id} item={item} />)}
               </div>
             ) : (
-              <div className='rounded-3xl border border-white/10 bg-white/[0.04] p-8 text-2xl text-slate-300'>暂无更新时间表数据</div>
+              <div className='rounded-3xl border border-border bg-card p-8 text-2xl text-muted-foreground'>暂无更新时间表数据</div>
             )}
           </section>
           {rows.map((section) => <TVRow key={section.title} section={section} />)}

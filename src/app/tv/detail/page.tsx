@@ -377,8 +377,8 @@ function TVDetailClient() {
   if (loading) {
     return (
       <TVLayout>
-        <div className='mt-20 flex items-center justify-center gap-4 text-3xl text-slate-200'>
-          <Loader2 className='h-10 w-10 animate-spin text-rose-500' />
+        <div className='mt-20 flex items-center justify-center gap-4 text-3xl text-muted-foreground'>
+          <Loader2 className='h-10 w-10 animate-spin text-primary' />
           正在加载详情...
         </div>
       </TVLayout>
@@ -388,7 +388,7 @@ function TVDetailClient() {
   if (error || !detail) {
     return (
       <TVLayout>
-        <section className='rounded-[36px] border border-red-500/40 bg-red-950/40 p-10 text-3xl font-bold text-red-100'>
+        <section className='rounded-[36px] border border-destructive/40 bg-destructive/10 p-10 text-3xl font-bold text-destructive'>
           {error || '详情不存在'}
         </section>
       </TVLayout>
@@ -397,7 +397,7 @@ function TVDetailClient() {
 
   return (
     <TVLayout>
-      <section className='relative overflow-hidden rounded-[44px] border border-white/10 bg-slate-950/80 p-8 shadow-2xl shadow-black/70'>
+      <section className='relative overflow-hidden rounded-[44px] border border-border bg-card p-8 shadow-2xl shadow-black/70'>
         {poster && (
           <img
             src={poster}
@@ -406,7 +406,7 @@ function TVDetailClient() {
           />
         )}
         <div className='relative grid grid-cols-[300px_1fr] gap-10'>
-          <div className='overflow-hidden rounded-[32px] bg-slate-900 shadow-2xl shadow-black/70'>
+          <div className='overflow-hidden rounded-[32px] bg-muted shadow-2xl shadow-black/70'>
             {poster ? (
               <img
                 src={poster}
@@ -420,42 +420,42 @@ function TVDetailClient() {
           <div className='py-2'>
             <button
               onClick={() => router.back()}
-              className='tv-focusable mb-6 flex cursor-pointer items-center gap-2 rounded-2xl bg-white/10 px-5 py-3 text-xl font-bold outline-none'
+              className='tv-focusable mb-6 flex cursor-pointer items-center gap-2 rounded-2xl bg-muted px-5 py-3 text-xl font-bold outline-none'
             >
               <ArrowLeft className='h-6 w-6' />
               返回
             </button>
-            <h1 className='text-6xl font-black tracking-tight text-white'>
+            <h1 className='text-6xl font-black tracking-tight text-foreground'>
               {detail.title}
             </h1>
-            <div className='mt-4 flex flex-wrap gap-3 text-xl font-bold text-slate-200'>
-              <span className='rounded-full bg-rose-600 px-4 py-2'>
+            <div className='mt-4 flex flex-wrap gap-3 text-xl font-bold text-muted-foreground'>
+              <span className='rounded-full bg-primary px-4 py-2 text-primary-foreground'>
                 {detail.source_name || detail.source}
               </span>
               {detail.year && (
-                <span className='rounded-full bg-white/10 px-4 py-2'>
+                <span className='rounded-full bg-muted px-4 py-2'>
                   {detail.year}
                 </span>
               )}
               {detail.type_name && (
-                <span className='rounded-full bg-white/10 px-4 py-2'>
+                <span className='rounded-full bg-muted px-4 py-2'>
                   {detail.type_name}
                 </span>
               )}
               {detail.vod_remarks && (
-                <span className='rounded-full bg-white/10 px-4 py-2'>
+                <span className='rounded-full bg-muted px-4 py-2'>
                   {detail.vod_remarks}
                 </span>
               )}
             </div>
             {detail.desc && (
-              <p className='mt-6 line-clamp-5 max-w-5xl text-2xl leading-relaxed text-slate-300'>
+              <p className='mt-6 line-clamp-5 max-w-5xl text-2xl leading-relaxed text-muted-foreground'>
                 {detail.desc}
               </p>
             )}
             <button
               onClick={() => play(bestSource)}
-              className='tv-focusable mt-8 flex cursor-pointer items-center gap-3 rounded-3xl bg-rose-600 px-9 py-5 text-3xl font-black text-white outline-none'
+              className='tv-focusable mt-8 flex cursor-pointer items-center gap-3 rounded-3xl bg-primary px-9 py-5 text-3xl font-black text-primary-foreground outline-none'
             >
               <Play className='h-9 w-9 fill-current' /> 立即播放
             </button>
@@ -464,12 +464,12 @@ function TVDetailClient() {
       </section>
 
       {sources.length > 1 && (
-        <section className='mt-10 rounded-[36px] border border-white/10 bg-white/[0.04] p-6'>
+        <section className='mt-10 rounded-[36px] border border-border bg-card p-6'>
           <div className='mb-5 flex flex-wrap items-center justify-between gap-4'>
             <h2 className='text-4xl font-black'>播放源</h2>
-            <div className='flex items-center gap-3 rounded-2xl bg-white/10 px-5 py-3 text-xl font-black text-slate-100'>
+            <div className='flex items-center gap-3 rounded-2xl bg-muted px-5 py-3 text-xl font-black text-foreground'>
               {testingSources && (
-                <Loader2 className='h-6 w-6 animate-spin text-amber-300' />
+                <Loader2 className='h-6 w-6 animate-spin text-muted-foreground' />
               )}
               <span>
                 {testingSources
@@ -491,8 +491,8 @@ function TVDetailClient() {
                   onClick={() => play(item)}
                   className={`tv-focusable flex min-w-[210px] cursor-pointer flex-col items-start justify-center gap-1 whitespace-nowrap rounded-2xl px-6 py-4 text-left text-2xl font-bold outline-none ${
                     active
-                      ? 'bg-rose-600 text-white'
-                      : 'bg-white/10 text-slate-200'
+                      ? 'bg-primary text-primary-foreground'
+                      : 'bg-muted text-muted-foreground'
                   }`}
                 >
                   <span className='flex items-center gap-2'>
@@ -503,10 +503,8 @@ function TVDetailClient() {
                     <span
                       className={`text-base font-bold ${
                         info.status === 'ok'
-                          ? 'text-emerald-200'
-                          : info.status === 'testing'
-                          ? 'text-amber-200'
-                          : 'text-red-200'
+                          ? 'text-foreground'
+                          : 'text-muted-foreground'
                       }`}
                     >
                       {info.status === 'ok'
@@ -523,7 +521,7 @@ function TVDetailClient() {
         </section>
       )}
 
-      <section className='mt-10 rounded-[36px] border border-white/10 bg-white/[0.04] p-6'>
+      <section className='mt-10 rounded-[36px] border border-border bg-card p-6'>
         <h2 className='mb-5 text-4xl font-black'>选集</h2>
         <div className='grid grid-cols-3 gap-4 md:grid-cols-5 lg:grid-cols-8'>
           {(detail.episodes_titles?.length
@@ -533,7 +531,7 @@ function TVDetailClient() {
             <button
               key={`${ep}-${index}`}
               onClick={() => play(bestSource, index)}
-              className='tv-focusable min-h-20 cursor-pointer rounded-2xl bg-white/10 px-4 py-3 text-xl font-black text-white outline-none'
+              className='tv-focusable min-h-20 cursor-pointer rounded-2xl bg-muted px-4 py-3 text-xl font-black text-foreground outline-none'
             >
               {detail.episodes_titles?.[index] || `第 ${index + 1} 集`}
             </button>
