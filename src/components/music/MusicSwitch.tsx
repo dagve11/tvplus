@@ -84,7 +84,7 @@ export default function MusicSwitch<T extends string>({
             type='button'
             tabIndex={-1}
             aria-label='关闭菜单'
-            className='fixed inset-0 z-[55] cursor-default'
+            className='fixed inset-0 z-popover cursor-default'
             onClick={() => setOpen(false)}
           />
           <div className={MUSIC_MENU} role='listbox'>

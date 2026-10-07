@@ -130,7 +130,7 @@ function SingerGrid({
                 className={MUSIC_SINGER_PIC}
               />
             ) : (
-              <span className='flex h-full w-full items-center justify-center font-music-display text-[calc(22*var(--music-px))] text-music-muted/60 dark:text-music-night-muted/60'>
+              <span className='flex h-full w-full items-center justify-center font-music-display text-[calc(22*var(--music-px))] text-muted-foreground/60'>
                 {singer.name.slice(0, 1)}
               </span>
             )}
@@ -515,7 +515,7 @@ export default function MusicSearchPage() {
         className={cn(MUSIC_FIELD, 'mb-6')}
       >
         <Search
-          className='h-4 w-4 shrink-0 text-music-muted dark:text-music-night-muted'
+          className='h-4 w-4 shrink-0 text-muted-foreground'
           strokeWidth={2}
         />
         <input

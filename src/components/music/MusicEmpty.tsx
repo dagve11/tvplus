@@ -30,7 +30,7 @@ export default function MusicEmpty({
     <div className={cn(MUSIC_EMPTY, className)}>
       {Icon ? (
         <Icon
-          className='mb-1 h-8 w-8 text-music-muted/70 dark:text-music-night-muted/70'
+          className='mb-1 h-8 w-8 text-muted-foreground/70'
           strokeWidth={1.3}
         />
       ) : null}

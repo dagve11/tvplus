@@ -5,8 +5,8 @@ import { MUSIC_MUTED } from './tokens';
 /**
  * 三点音符的等待动画。
  *
- * 音符用方向自带的强调色（焦糖/炽橘）而不是主题色：它是状态提示，不是控件，
- * 跟目录号同一条规矩。字号走全模块的 --music-px，宽屏上跟着一起长。
+ * 音符走主题色（var(--theme-primary)），换主题跟着变——等待动画是"正在为你
+ * 干活"的信号，和选中态同一通道。字号走全模块的 --music-px，宽屏上跟着一起长。
  */
 export default function MusicLoadingIndicator({
   text,
@@ -29,7 +29,7 @@ export default function MusicLoadingIndicator({
             key={index}
             className={cn(
               iconSize,
-              'text-music-accent dark:text-music-night-accent'
+              'text-music-theme'
             )}
             fill='currentColor'
             viewBox='0 0 24 24'

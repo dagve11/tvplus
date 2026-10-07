@@ -292,12 +292,12 @@ export default function MusicSongListsPage() {
                 type='button'
                 tabIndex={-1}
                 aria-label='关闭分类'
-                className='fixed inset-0 z-[55] cursor-default'
+                className='fixed inset-0 z-popover cursor-default'
                 onClick={() => setShowTagMenu(false)}
               />
               {/* 右侧贴齐触发器、向左展开；宽度上限留出 3rem 而不是 2rem——
                   100vw 在有没有竖向滚动条时会差十几 px，窄屏上正好会把面板顶出左边。 */}
-              <div className='absolute right-0 top-[calc(100%+6px)] z-[60] max-h-[min(70vh,520px)] w-[min(760px,calc(100vw-3rem))] overflow-auto rounded-[4px] border border-music-edge bg-music-paper p-4 shadow-[0_18px_40px_-18px_rgba(0,0,0,0.55)] dark:border-music-night-edge dark:bg-music-night-card'>
+              <div className='absolute right-0 top-[calc(100%+6px)] z-popover max-h-[min(70vh,520px)] w-[min(760px,calc(100vw-3rem))] overflow-auto rounded-[4px] border border-border bg-popover p-4 shadow-[0_18px_40px_-18px_rgba(0,0,0,0.55)]'>
                 {tagId ? (
                   <button
                     type='button'
