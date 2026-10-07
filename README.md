@@ -47,6 +47,7 @@
 - ❤️ **收藏 + 继续观看**：支持 Kvrocks/Redis/Upstash 存储，多端同步进度。
 - 📱 **PWA**：离线缓存、安装到桌面/主屏，移动端原生体验。
 - 🌗 **响应式布局**：桌面侧边栏 + 移动底部导航，自适应各种屏幕尺寸。
+- 🎨 **全新 UI（v105 重构）**：基于 shadcn/ui 全量重构的黑白单色极简界面，dark-first，7 套运行时主题纯 CSS 变量驱动，admin 后台拆分为 23 个独立配置节，TV 模式全键盘/D-pad 可达。
 - 👿 **智能去广告**：自动跳过视频中的切片广告，更可以自定义你的去广告代码以增强去广告功能。
 
 ### 注意：部署后项目为空壳项目，无内置播放源和直播源，需要自行收集
@@ -84,7 +85,8 @@
 | 分类      | 主要依赖                                                     |
 | --------- | ------------------------------------------------------------ |
 | 前端框架  | [Next.js 14](https://nextjs.org/) · App Router               |
-| UI & 样式 | [Tailwind&nbsp;CSS 3](https://tailwindcss.com/)              |
+| UI & 样式 | [shadcn/ui](https://ui.shadcn.com/)（Radix + Tailwind）· [Tailwind&nbsp;CSS 3](https://tailwindcss.com/) |
+| 设计语言  | 黑白单色极简 · dark-first · CSS 变量运行时主题（7 套内置）    |
 | 语言      | TypeScript 4                                                 |
 | 播放器    | [ArtPlayer](https://github.com/zhw2590582/ArtPlayer) · [HLS.js](https://github.com/video-dev/hls.js/) |
 | 代码质量  | ESLint · Prettier · Jest                                     |
