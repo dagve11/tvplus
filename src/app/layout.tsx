@@ -106,7 +106,6 @@ export default async function RootLayout({
   let progressThumbType = 'default';
   let progressThumbPresetId = '';
   let progressThumbCustomUrl = '';
-  let loadingStyle = 'talisman';
   let rateBadgeStyle = 'flag';
   let enableRegistration = false;
   let requireRegistrationInviteCode = false;
@@ -196,13 +195,6 @@ export default async function RootLayout({
     progressThumbType = config.ThemeConfig?.progressThumbType || 'default';
     progressThumbPresetId = config.ThemeConfig?.progressThumbPresetId || '';
     progressThumbCustomUrl = config.ThemeConfig?.progressThumbCustomUrl || '';
-    // 白名单兜底：值异常时回落到魔法阵（现行默认），避免三种款式都不显示
-    loadingStyle =
-      config.ThemeConfig?.loadingStyle === 'classic' ||
-      config.ThemeConfig?.loadingStyle === 'grid' ||
-      config.ThemeConfig?.loadingStyle === 'talisman'
-        ? config.ThemeConfig.loadingStyle
-        : 'talisman';
     // 白名单兜底：值异常时回落到默认锦旗徽章
     rateBadgeStyle =
       config.ThemeConfig?.rateBadgeStyle === 'default' ||
@@ -381,7 +373,6 @@ export default async function RootLayout({
     <html
       lang='zh-CN'
       data-moontvplus='1'
-      data-loading-style={loadingStyle}
       suppressHydrationWarning
     >
       <head>

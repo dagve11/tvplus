@@ -25,7 +25,6 @@ export const ThemeConfigComponent = ({
     progressThumbType: 'default' as 'default' | 'preset' | 'custom',
     progressThumbPresetId: '',
     progressThumbCustomUrl: '',
-    loadingStyle: 'talisman' as 'classic' | 'grid' | 'talisman',
     rateBadgeStyle: 'flag' as 'default' | 'flag' | 'medal',
   });
   const [loginBackgroundImages, setLoginBackgroundImages] = useState<string[]>([
@@ -49,7 +48,6 @@ export const ThemeConfigComponent = ({
         progressThumbType: config.ThemeConfig.progressThumbType || 'default',
         progressThumbPresetId: config.ThemeConfig.progressThumbPresetId || '',
         progressThumbCustomUrl: config.ThemeConfig.progressThumbCustomUrl || '',
-        loadingStyle: config.ThemeConfig.loadingStyle || 'talisman',
         rateBadgeStyle: config.ThemeConfig.rateBadgeStyle || 'flag',
       });
 
@@ -716,103 +714,6 @@ export const ThemeConfigComponent = ({
           </div>
         )}
       </div>
-
-      {/* 初始化加载样式配置 */}
-      <div className='bg-card rounded-lg p-6 border border-border'>
-        <h3 className='text-lg font-semibold text-foreground mb-4 flex items-center gap-2'>
-          <Video className='w-5 h-5' />
-          初始化加载样式
-        </h3>
-        <p className='text-sm text-foreground mb-4'>
-          播放页、直播页首屏加载动画的款式。颜色跟随站点主题色，保存后刷新页面生效
-        </p>
-
-        <div className='grid grid-cols-1 sm:grid-cols-3 gap-3'>
-          {(
-            [
-              {
-                id: 'talisman',
-                name: '魔法阵',
-                desc: '默认',
-                preview: (
-                  <svg
-                    viewBox='0 0 100 100'
-                    className='w-12 h-12 text-muted-foreground'
-                    fill='none'
-                    stroke='currentColor'
-                  >
-                    <circle cx='50' cy='50' r='46' strokeWidth='2' />
-                    <circle
-                      cx='50'
-                      cy='50'
-                      r='34'
-                      strokeWidth='1.5'
-                      strokeDasharray='4 4'
-                    />
-                    <polygon points='50,10 85,70 15,70' strokeWidth='2' />
-                    <polygon points='50,90 15,30 85,30' strokeWidth='2' />
-                    <circle cx='50' cy='50' r='6' fill='currentColor' />
-                  </svg>
-                ),
-              },
-              {
-                id: 'grid',
-                name: '方格',
-                desc: '',
-                preview: (
-                  <div className='grid grid-cols-2 gap-1 w-12 h-12'>
-                    {Array.from({ length: 4 }).map((_, i) => (
-                      <div
-                        key={i}
-                        className={`rounded-sm ${
-                          i < 2
-                            ? 'bg-primary'
-                            : 'bg-muted '
-                        }`}
-                      />
-                    ))}
-                  </div>
-                ),
-              },
-              {
-                id: 'classic',
-                name: '旧版',
-                desc: '',
-                preview: <span className='text-4xl leading-none'>📺</span>,
-              },
-            ] as const
-          ).map((opt) => (
-            <button
-              key={opt.id}
-              type='button'
-              onClick={() =>
-                setThemeSettings((prev) => ({ ...prev, loadingStyle: opt.id }))
-              }
-              className={`relative p-4 border-2 rounded-lg transition-all ${
-                themeSettings.loadingStyle === opt.id
-                  ? 'border-border bg-muted '
-                  : 'border-border hover:border-border'
-              }`}
-            >
-              <div className='flex flex-col items-center gap-2'>
-                <div className='w-12 h-12 flex items-center justify-center'>
-                  {opt.preview}
-                </div>
-                <span className='text-sm font-medium text-foreground text-center'>
-                  {opt.name}
-                  {opt.desc ? `（${opt.desc}）` : ''}
-                </span>
-              </div>
-              {themeSettings.loadingStyle === opt.id && (
-                <div className='absolute top-2 right-2'>
-                  <Check className='w-5 h-5 text-primary ' />
-                </div>
-              )}
-            </button>
-          ))}
-        </div>
-      </div>
-
       {/* 评分星标样式配置 */}
       <div className='bg-card rounded-lg p-6 border border-border'>
         <h3 className='text-lg font-semibold text-foreground mb-4 flex items-center gap-2'>

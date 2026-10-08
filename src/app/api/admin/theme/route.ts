@@ -40,7 +40,6 @@ export async function POST(request: NextRequest) {
       progressThumbType,
       progressThumbPresetId,
       progressThumbCustomUrl,
-      loadingStyle,
       rateBadgeStyle,
     } = body as {
       enableBuiltInTheme: boolean;
@@ -54,7 +53,6 @@ export async function POST(request: NextRequest) {
       progressThumbType?: 'default' | 'preset' | 'custom';
       progressThumbPresetId?: string;
       progressThumbCustomUrl?: string;
-      loadingStyle?: 'classic' | 'grid' | 'talisman';
       rateBadgeStyle?: 'default' | 'flag' | 'medal';
     };
 
@@ -150,12 +148,6 @@ export async function POST(request: NextRequest) {
       progressThumbType: progressThumbType || 'default',
       progressThumbPresetId: progressThumbPresetId?.trim() || undefined,
       progressThumbCustomUrl: progressThumbCustomUrl?.trim() || undefined,
-      loadingStyle:
-        loadingStyle === 'classic' ||
-        loadingStyle === 'grid' ||
-        loadingStyle === 'talisman'
-          ? loadingStyle
-          : 'talisman',
       rateBadgeStyle:
         rateBadgeStyle === 'default' ||
         rateBadgeStyle === 'flag' ||

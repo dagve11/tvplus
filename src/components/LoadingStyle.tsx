@@ -1,47 +1,37 @@
 'use client';
 
-import { AlertCircle, X } from 'lucide-react';
-import { type CSSProperties, type ReactNode } from 'react';
+import { AlertCircle } from 'lucide-react';
+import { type ReactNode } from 'react';
 
-/* 初始化加载动画的三种款式（后台「个性化配置 → 初始化加载样式」可切换）。
+import { cn } from '@/lib/cn';
+
+/* 初始化加载动画：轨道环（Orbit Ring）。
  *
- * 三套标记都由这里产出，只是靠 globals.css 里的 html[data-loading-style]
- * 决定显示哪一套 —— 首帧就是正确款式，不会「先闪一下旧版再换成二次元」，
- * 也没有 hydration 不匹配。
+ * 一套标记服务三种场合——整页加载、播放器蒙层（onDark）、失败态：
+ *   · 细环：底圈用 border 色，进度弧用 currentColor，弧长 = 真实阶段进度，
+ *     靠 SVG stroke-dashoffset 过渡，阶段推进时是「长出来」而不是跳变；
+ *   · 扫描弧：一圈匀速自转的短虚线，负责「还在动」的体感，不干扰进度读数；
+ *   · 环心：当前阶段的图标，轻微呼吸；失败态换成警告图标、整环转 destructive；
+ *   · 环下：阶段点阵（已完成/进行中/未到）+ 一行文案（整页另有细进度条）。
  *
- * 旧版那一套各页长得不一样（📺/🎬、😵/⚠️），而且要求跟改动前逐字一致，
- * 所以不由这里生成，各页把原标记通过 legacy 塞进来，这里只负责套上
- * .mtv-load-classic 这层开关。
+ * 全部数值由 props 推出，不含随机数与 Date——服务端渲染与客户端水合逐字一致。
+ * 动效在 globals.css 里集中定义，并已被 prefers-reduced-motion 统一关掉。
  */
-
-/* 符阵用的卦位字 */
-const LOADING_RUNES = '光影银幕片源剧集播放流媒综艺动漫'.split('');
-
-/* 符阵上升光点。位置/时长必须确定：服务端渲染与客户端水合的标记要一致，
- * 所以用取模哈希代替 Math.random。 */
-const LOADING_MOTES = Array.from({ length: 14 }, (_, i) => {
-  const r = (n: number) =>
-    Math.abs((Math.sin(i * 12.9898 + n * 78.233) * 43758.5453) % 1);
-  return {
-    left: `${(12 + r(1) * 76).toFixed(2)}%`,
-    duration: `${(2.6 + r(2) * 2.4).toFixed(2)}s`,
-    delay: `${(r(3) * 3).toFixed(2)}s`,
-    size: `${(5 + r(4) * 5).toFixed(1)}px`,
-  };
-});
 
 export interface LoadingStep {
   label: string;
   icon: ReactNode;
 }
 
+/** 环半径与周长：viewBox 100×100、r=44，2πr ≈ 276.46 */
+const R = 44;
+const CIRCUMFERENCE = 2 * Math.PI * R;
+
 interface CommonProps {
   /** 阶段条，按顺序排开；activeStepIdx 那一格为「进行中」，之前的算「已完成」 */
   steps: LoadingStep[];
   activeStepIdx: number;
-  /** 旧版那一套标记，各页自备 */
-  legacy: ReactNode;
-  /** 播放器蒙层是深色底：这两款在里面固定走暗色，不跟站点明暗 */
+  /** 播放器蒙层是深色底：这一款在里面固定走亮色，不跟站点明暗 */
   onDark?: boolean;
 }
 
@@ -54,176 +44,131 @@ interface LoadingStyleProps extends CommonProps {
 const clampIdx = (idx: number, len: number) =>
   Math.min(Math.max(idx, 0), Math.max(len - 1, 0));
 
-const runeCountAt = (idx: number, len: number) =>
-  len > 0 ? Math.round(((idx + 1) / len) * LOADING_RUNES.length) : 0;
+/** 进度：按当前所在格在序列里的序号等分（两格时首格正好 50%）。 */
+const progressAt = (idx: number, len: number) =>
+  len < 1 ? 1 : (idx + 1) / len;
 
-/* 阵底细进度条的填充比例：按当前所在格在序列里的序号等分。旧版进度条就是
- * 搜索/详情 33% → 优选 66% → 就绪 100% 这种等分逻辑，这里推广到两三格：
- * 两格（如「获取详情 → 就绪」）时首格正好落在 50%（正中），不再像老曲线那样
- * 把首格卡在 10% 空着像坏了。 */
-const barPctAt = (idx: number, len: number) =>
-  len < 1 ? 100 : Math.round(((idx + 1) / len) * 100);
-
-const RuneRing = ({ lit, ember }: { lit: number; ember: boolean }) => (
-  <div className='mtv-tal-runes'>
-    {LOADING_RUNES.map((char, i) => (
-      <span
-        key={i}
-        className={`mtv-rune${i < lit ? (ember ? ' ember' : ' lit') : ''}`}
-        style={
-          { '--a': `${(i / LOADING_RUNES.length) * 360}deg` } as CSSProperties
-        }
-      >
-        {char}
-      </span>
-    ))}
-  </div>
+const Ring = ({
+  progress,
+  error = false,
+}: {
+  progress: number;
+  error?: boolean;
+}) => (
+  <svg className='mtv-ring' viewBox='0 0 100 100' aria-hidden='true'>
+    <circle className='mtv-ring-track' cx='50' cy='50' r={R} />
+    <circle
+      className='mtv-ring-arc'
+      cx='50'
+      cy='50'
+      r={R}
+      strokeDasharray={CIRCUMFERENCE}
+      strokeDashoffset={CIRCUMFERENCE * (1 - progress)}
+    />
+    {/* 失败态停掉扫描：环还在动会读成「还在试」，与「到此为止」矛盾 */}
+    {!error && (
+      <circle
+        className='mtv-ring-scan'
+        cx='50'
+        cy='50'
+        r={R}
+        strokeDasharray='3 26'
+      />
+    )}
+  </svg>
 );
 
-const TalismanFrame = ({ children }: { children: ReactNode }) => (
-  <>
-    <div className='mtv-tal-ring mtv-tal-ticks' />
-    <div className='mtv-tal-ring mtv-tal-glow' />
-    <svg className='mtv-tal-star' viewBox='0 0 100 100'>
-      <polygon points='50,7 88,72 12,72' />
-      <polygon points='50,93 12,28 88,28' />
-    </svg>
-    <div className='mtv-tal-ring mtv-tal-dash' />
-    <div className='mtv-tal-ring mtv-tal-line' />
-    {children}
-  </>
-);
-
-/** 加载中：方块逐格点亮 + 旋转的符阵 */
+/** 加载中：轨道环 + 阶段点阵 + 文案 */
 export default function LoadingStyle({
   steps,
   activeStepIdx,
   message,
-  legacy,
   onDark = false,
 }: LoadingStyleProps) {
   const idx = clampIdx(activeStepIdx, steps.length);
-  const dark = onDark ? ' mtv-on-dark' : '';
+  const progress = progressAt(idx, steps.length);
 
   return (
-    <>
-      <div className='mtv-load mtv-load-classic'>{legacy}</div>
-
-      {/* 方格 */}
-      <div className={`mtv-load mtv-load-grid${dark}`}>
-        <div className='mtv-grid'>
-          <div className='mtv-grid-panels'>
-            {steps.map((step, i) => (
-              <div
-                key={step.label}
-                className={`mtv-panel${i <= idx ? ' on' : ''}${i === idx ? ' cur' : ''}`}
-              >
-                {step.icon}
-                <span>{step.label}</span>
-              </div>
-            ))}
-          </div>
-          <p className='mtv-bubble'>{message}</p>
+    <div
+      className={cn('mtv-load', onDark && 'mtv-on-dark')}
+      role='status'
+      aria-live='polite'
+    >
+      <div className='mtv-load-ring'>
+        <Ring progress={progress} />
+        {/* key 换阶段时重挂载，图标与文案的入场动画才会重播 */}
+        <div key={idx} className='mtv-ring-core'>
+          {steps[idx]?.icon}
         </div>
       </div>
 
-      {/* 魔法阵 */}
-      <div className={`mtv-load mtv-load-talisman${dark}`}>
-        <div className='mtv-tal'>
-          <div className='mtv-tal-circle'>
-            <TalismanFrame>
-              <RuneRing lit={runeCountAt(idx, steps.length)} ember={false} />
-              {LOADING_MOTES.map((mote, i) => (
-                <span
-                  key={i}
-                  className='mtv-mote'
-                  style={
-                    {
-                      left: mote.left,
-                      width: mote.size,
-                      height: mote.size,
-                      animationDuration: mote.duration,
-                      animationDelay: mote.delay,
-                    } as CSSProperties
-                  }
-                />
-              ))}
-            </TalismanFrame>
-            {/* key 换阶段时重挂载，动画才会重播 */}
-            <div key={idx} className='mtv-tal-flash go' />
-            <div className='mtv-tal-core'>
-              <div key={idx} className='mtv-tal-icon pop'>
-                {steps[idx]?.icon}
-              </div>
-            </div>
-          </div>
-          <div className='mtv-tal-body'>
-            <p className='mtv-tal-phrase'>{message}</p>
-            {/* 只有整页加载才有进度条。播放器蒙层是换源/换集的短暂过渡，
-                「初始化 → 播放」两步之间跨了 90%，摆个进度条是个假指标。 */}
-            {!onDark && (
-              <div className='mtv-tal-bar'>
-                <i style={{ width: `${barPctAt(idx, steps.length)}%` }} />
-              </div>
-            )}
-          </div>
+      <p className='mtv-load-msg'>{message}</p>
+
+      {steps.length > 1 && (
+        <div className='mtv-load-steps' aria-hidden='true'>
+          {steps.map((step, i) => (
+            <i
+              key={step.label}
+              className={cn(
+                i < idx && 'done',
+                i === idx && 'cur',
+                i > idx && 'todo'
+              )}
+            />
+          ))}
         </div>
-      </div>
-    </>
+      )}
+
+      {/* 只有整页加载才有进度条。播放器蒙层是换源/换集的短暂过渡，
+          「初始化 → 播放」两步之间跨了 90%，摆个进度条是个假指标。 */}
+      {!onDark && (
+        <div className='mtv-load-bar'>
+          <i style={{ width: `${Math.round(progress * 100)}%` }} />
+        </div>
+      )}
+    </div>
   );
 }
 
 interface LoadingErrorStyleProps extends CommonProps {
-  /** 失败原因，交给对话框；红框里那句同样的话由页面自己按款式开关 */
+  /** 失败原因，交给对话框；这里只负责环与文案的失败态 */
   message: string;
 }
 
-/** 失败态：坏死的魔法阵 / 本话到此为止，停在失败那一格 */
+/** 失败态：环停在当前阶段、转 destructive，环心换成警告图标 */
 export function LoadingErrorStyle({
   steps,
   activeStepIdx,
   message,
-  legacy,
   onDark = false,
 }: LoadingErrorStyleProps) {
   const idx = clampIdx(activeStepIdx, steps.length);
-  const dark = onDark ? ' mtv-on-dark' : '';
+  const progress = progressAt(idx, steps.length);
 
   return (
-    <>
-      <div className='mtv-err-legacy'>{legacy}</div>
-
-      {/* 魔法阵：坏死的阵 */}
-      <div className={`mtv-load mtv-load-talisman${dark}`}>
-        <div className='mtv-tal mtv-tal-dead'>
-          <div className='mtv-tal-circle'>
-            <TalismanFrame>
-              <RuneRing lit={runeCountAt(idx, steps.length)} ember />
-            </TalismanFrame>
-            <div className='mtv-tal-core'>
-              <div className='mtv-tal-icon'>
-                <AlertCircle />
-              </div>
-            </div>
-          </div>
+    <div
+      className={cn('mtv-load mtv-load-err', onDark && 'mtv-on-dark')}
+      role='alert'
+    >
+      <div className='mtv-load-ring'>
+        <Ring progress={progress} error />
+        <div className='mtv-ring-core'>
+          <AlertCircle />
         </div>
       </div>
 
-      {/* 方格：本话到此为止，停在失败那一格 */}
-      <div className={`mtv-load mtv-load-grid${dark}`}>
-        <div className='mtv-grid mtv-grid-dead'>
-          <div className='mtv-grid-panels'>
-            {steps.map((step, i) => (
-              <div key={step.label} className='mtv-panel'>
-                {i === idx ? <X /> : step.icon}
-                <span>{step.label}</span>
-              </div>
-            ))}
-          </div>
-          {/* 文案搬进对话框后，红框里那句同样的话就不必再来一遍 */}
-          <p className='mtv-bubble'>{message}</p>
+      <p className='mtv-load-msg'>{message}</p>
+
+      {steps.length > 1 && (
+        <div className='mtv-load-steps' aria-hidden='true'>
+          {steps.map((step, i) => (
+            <i
+              key={step.label}
+              className={cn(i < idx && 'done', i === idx && 'cur-err')}
+            />
+          ))}
         </div>
-      </div>
-    </>
+      )}
+    </div>
   );
 }

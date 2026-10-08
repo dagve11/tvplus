@@ -100,9 +100,8 @@ type LiveLineTestResult = {
 };
 
 /* -----------------------------------------------------------------------------
- * 初始化加载动画（后台「个性化配置 → 初始化加载样式」可切换旧版/方格/魔法阵）
+ * 初始化加载动画（轨道环，见 components/LoadingStyle）。
  * 直播是真正的三步线性流程：加载直播源 → 获取直播源 → 就绪。
- * 款式本身见 components/LoadingStyle。
  * -------------------------------------------------------------------------- */
 type LiveLoadingStepKey = 'loading' | 'fetching' | 'ready';
 
@@ -2238,7 +2237,7 @@ function LivePageClient() {
     0,
     LIVE_LOADING_STEPS.indexOf(loadingStage as LiveLoadingStepKey)
   );
-  // 方格/符阵不出现 emoji：阶段语义由描边图标承担，文案只留纯中文
+  // 阶段语义由描边图标承担，文案只留纯中文
   const plainLoadingMessage = loadingMessage
     .replace(/^[^一-龥]+/, '')
     .replace(/[\s.．。]+$/, '');
@@ -2252,72 +2251,10 @@ function LivePageClient() {
             用 min-h-screen 会把内容整体压到视口中心偏下 */}
         <div className='mtv-load-overlay fixed inset-0 flex items-center justify-center pointer-events-none'>
           <div className='text-center max-w-md mx-auto px-6'>
-            {/* 三种加载款式（旧版那一套各页自备） */}
             <LoadingStyle
               steps={LIVE_LOADING_STEPS.map((k) => LIVE_LOADING_STEP_META[k])}
               activeStepIdx={activeLiveStepIdx}
               message={plainLoadingMessage}
-              legacy={
-                <>
-                  {/* 动画直播图标 */}
-                  <div className='relative mb-8'>
-                    <div className='relative mx-auto w-24 h-24 bg-primary rounded-2xl shadow-2xl flex items-center justify-center transform hover:scale-105 transition-transform duration-300'>
-                      <div className='text-primary-foreground text-4xl'>📺</div>
-                      {/* 旋转光环 */}
-                      <div className='absolute -inset-2 bg-primary rounded-2xl opacity-20 animate-spin'></div>
-                    </div>
-
-                    {/* 浮动粒子效果 */}
-                    <div className='absolute top-0 left-0 w-full h-full pointer-events-none'>
-                      <div className='absolute top-2 left-2 w-2 h-2 bg-primary rounded-full animate-bounce'></div>
-                      <div
-                        className='absolute top-4 right-4 w-1.5 h-1.5 bg-muted-foreground rounded-full animate-bounce'
-                        style={{ animationDelay: '0.5s' }}
-                      ></div>
-                      <div
-                        className='absolute bottom-3 left-6 w-1 h-1 bg-primary rounded-full animate-bounce'
-                        style={{ animationDelay: '1s' }}
-                      ></div>
-                    </div>
-                  </div>
-
-                  {/* 进度指示器 */}
-                  <div className='mb-6 w-80 mx-auto'>
-                    <div className='flex justify-center space-x-2 mb-4'>
-                      <div
-                        className={`w-3 h-3 rounded-full transition-all duration-500 ${loadingStage === 'loading' ? 'bg-primary scale-125' : 'bg-primary'
-                          }`}
-                      ></div>
-                      <div
-                        className={`w-3 h-3 rounded-full transition-all duration-500 ${loadingStage === 'fetching' ? 'bg-primary scale-125' : 'bg-primary'
-                          }`}
-                      ></div>
-                      <div
-                        className={`w-3 h-3 rounded-full transition-all duration-500 ${loadingStage === 'ready' ? 'bg-primary scale-125' : 'bg-muted'
-                          }`}
-                      ></div>
-                    </div>
-
-                    {/* 进度条 */}
-                    <div className='w-full bg-muted rounded-full h-2 overflow-hidden'>
-                      <div
-                        className='h-full bg-primary rounded-full transition-all duration-1000 ease-out'
-                        style={{
-                          width:
-                            loadingStage === 'loading' ? '33%' : loadingStage === 'fetching' ? '66%' : '100%',
-                        }}
-                      ></div>
-                    </div>
-                  </div>
-
-                  {/* 加载消息 */}
-                  <div className='space-y-2'>
-                    <p className='text-xl font-semibold text-foreground animate-pulse'>
-                      {loadingMessage}
-                    </p>
-                  </div>
-                </>
-              }
             />
           </div>
         </div>
@@ -2337,15 +2274,6 @@ function LivePageClient() {
                 steps={LIVE_LOADING_STEPS.map((k) => LIVE_LOADING_STEP_META[k])}
                 activeStepIdx={activeLiveStepIdx}
                 message={error}
-                legacy={
-                  <>
-                    <div className='relative mx-auto w-24 h-24 bg-muted rounded-2xl shadow-2xl flex items-center justify-center transform hover:scale-105 transition-transform duration-300'>
-                      <div className='text-foreground text-4xl'>😵</div>
-                      {/* 脉冲效果 */}
-                      <div className='absolute -inset-2 bg-muted rounded-2xl opacity-20 animate-pulse'></div>
-                    </div>
-                  </>
-                }
               />
             </div>
 
@@ -2354,7 +2282,7 @@ function LivePageClient() {
               <h2 className='text-2xl font-bold text-foreground'>
                 哎呀，出现了一些问题
               </h2>
-              <div className='mtv-err-box border border-destructive/40 bg-destructive/10 rounded-lg p-4'>
+              <div className='border border-destructive/40 bg-destructive/10 rounded-lg p-4'>
                 <p className='text-destructive font-medium'>
                   {error}
                 </p>
@@ -2482,27 +2410,11 @@ function LivePageClient() {
                 {isVideoLoading && (
                   <div className='absolute inset-0 bg-black/85 backdrop-blur-sm rounded-xl overflow-hidden shadow-lg border border-white/0 dark:border-white/30 flex items-center justify-center z-modal transition-all duration-300'>
                     <div className='text-center max-w-md mx-auto px-6'>
-                      {/* 三种加载款式（旧版那一套各页自备） */}
-                      <LoadingStyle
+                                <LoadingStyle
                         steps={LIVE_PLAYER_STEPS}
                         activeStepIdx={playerStepIdx}
                         message='加载中'
                         onDark
-                        legacy={
-                          <>
-                            <div className='relative mb-8'>
-                              <div className='relative mx-auto w-24 h-24 bg-primary rounded-2xl shadow-2xl flex items-center justify-center transform hover:scale-105 transition-transform duration-300'>
-                                <div className='text-primary-foreground text-4xl'>📺</div>
-                                <div className='absolute -inset-2 bg-primary rounded-2xl opacity-20 animate-spin'></div>
-                              </div>
-                            </div>
-                            <div className='space-y-2'>
-                              <p className='text-xl font-semibold text-white animate-pulse'>
-                                🔄 IPTV 加载中...
-                              </p>
-                            </div>
-                          </>
-                        }
                       />
                     </div>
                   </div>
