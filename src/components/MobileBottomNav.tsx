@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 
 import { cn } from '@/lib/cn';
 
+import { BOTTOM_NAV_H } from '@/components/layout/shell';
 import { type NavItem, buildMobileNavItems } from '@/components/nav/nav-items';
 
 import { useWatchRoomContextSafe } from './WatchRoomProvider';
@@ -65,23 +66,20 @@ const MobileBottomNav = ({ activePath }: MobileBottomNavProps) => {
         /* 紧贴视口底部，同时在内部留出安全区高度 */
         bottom: 0,
         paddingBottom: 'env(safe-area-inset-bottom)',
-        minHeight: 'calc(3.5rem + env(safe-area-inset-bottom))',
       }}
     >
-      <ul className='flex items-center overflow-x-auto scrollbar-hide'>
+      <ul className='no-scrollbar flex items-center overflow-x-auto'>
         {navItems.map((item) => {
           const active = isActive(item);
           const Icon = item.icon;
+          // min-w-[20vw] 保证项数多时横向滚动（旧行为），flex-1 保证项数少时
+          // 铺满整行（此前固定 20vw 会让右侧留空）。
           return (
-            <li
-              key={item.key}
-              className='flex-shrink-0'
-              style={{ width: '20vw', minWidth: '20vw' }}
-            >
+            <li key={item.key} className='min-w-[20vw] flex-1'>
               <Link
                 href={item.href}
                 prefetch={false}
-                className='flex flex-col items-center justify-center w-full h-14 gap-1 text-xs'
+                className={`flex ${BOTTOM_NAV_H} w-full flex-col items-center justify-center gap-1 text-micro`}
               >
                 <Icon
                   className={cn(

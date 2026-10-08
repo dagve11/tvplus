@@ -10,13 +10,59 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      // ===== 排版尺度（全站单一来源） =====
+      // 背景：全站 2440 处字号工具类里 text-sm(1148) + text-xs(817) 占 80.5%，
+      // text-base 只有 74 处——正文默认档被跳过，层级是断的；卡片标题用 13-14px
+      // 反而比 body 的 16px 小。这里沿用 Tailwind 原名、只调整配对行高（全站
+      // 约 2371 处吃默认行高，改这里一次性生效），并新增两个语义档：
+      //   micro = 角标/评分/时长/表头的下限（替代此前 7-10px 的硬编码字号）
+      //   title = 卡片/列表项标题（把"标题大于正文"这条层级补回来）
+      // 行高按中文调过：中文没有上下伸部余量，12px 配 16px 行高会显挤。
+      fontSize: {
+        micro: ['11px', { lineHeight: '16px' }],
+        xs: ['12px', { lineHeight: '18px' }],
+        sm: ['14px', { lineHeight: '22px' }],
+        base: ['16px', { lineHeight: '26px' }],
+        title: ['15px', { lineHeight: '22px' }],
+        lg: ['18px', { lineHeight: '28px' }],
+        xl: ['20px', { lineHeight: '28px' }],
+        '2xl': ['24px', { lineHeight: '32px' }],
+        '3xl': ['30px', { lineHeight: '38px' }],
+      },
+      lineHeight: {
+        // 段落正文用（替代 leading-relaxed 的 1.625）
+        cjk: '1.7',
+        // 中文标题用（替代 leading-none —— 那个值会把中文的上下伸部压掉）
+        'cjk-tight': '1.35',
+      },
+      // 让 src/app/private-library/page.tsx 与 movie-request/page.tsx 里已有的
+      // `container` 真正居中并带内边距（此前未配置，行为依赖 Tailwind 默认值）。
+      container: {
+        center: true,
+        padding: { DEFAULT: '1rem', sm: '1.5rem', lg: '2rem' },
+      },
       screens: {
         'mobile-landscape': {
           raw: '(orientation: landscape) and (max-height: 700px)',
         },
       },
       fontFamily: {
-        primary: ['Inter', ...defaultTheme.fontFamily.sans],
+        // 全站默认字：拉丁走 Inter（next/font 自托管，变量由 src/app/layout.tsx
+        // 注入），中文依次落到系统黑体。此前只加载 Inter 的 latin 子集、中文完全
+        // 靠浏览器默认，各平台字形/字重/行高都不一样；这里把中文栈显式声明出来，
+        // 零额外下载。globals.css 的 body 上有一份同样的栈（供 next/font 变量生效
+        // 前的首屏兜底），两处必须保持一致。
+        sans: [
+          'var(--font-inter)',
+          'PingFang SC',
+          'HarmonyOS Sans SC',
+          'Microsoft YaHei',
+          'Noto Sans CJK SC',
+          'Source Han Sans SC',
+          'Hiragino Sans GB',
+          'WenQuanYi Micro Hei',
+          ...defaultTheme.fontFamily.sans,
+        ],
         // 书名/小节标题用的"书卷"衬线：拉丁走 Georgia，中文依次落到宋体系。
         book: [
           'Georgia',

@@ -15,6 +15,7 @@ import {
 
 import { cn } from '@/lib/cn';
 
+import { SIDEBAR_W } from '@/components/layout/shell';
 import {
   type NavItem,
   buildDesktopNavItems,
@@ -80,7 +81,9 @@ function NavLink({
       onClick={onNavigate}
       data-active={isActive}
       className={cn(
-        'group flex items-center gap-3 justify-start rounded-lg px-2 py-2 pl-4 min-h-[40px] font-medium transition-colors duration-200',
+        // text-sm 是补上的：此前这一项没有任何字号类，继承 body 的 16px，
+        // 与移动底栏的 12px 差 4px，同一套导航在两个断点跳档。
+        'group flex items-center gap-3 justify-start rounded-lg px-2 py-2 pl-4 min-h-[40px] text-sm font-medium transition-colors duration-200',
         'text-muted-foreground hover:bg-muted/50 hover:text-foreground',
         'data-[active=true]:bg-accent data-[active=true]:text-foreground'
       )}
@@ -207,8 +210,10 @@ const Sidebar = ({ onToggle, activePath = '/' }: SidebarProps) => {
         <aside
           data-sidebar
           className={cn(
+            // 宽度读 --sidebar-w（globals.css 里由 data-sidebar-collapsed 切换），
+            // 加载遮罩的 left 偏移读同一个变量，避免两处字面量各改各的。
             'fixed top-0 left-0 z-nav h-screen border-r border-border/50 bg-background/40 shadow-lg backdrop-blur-xl transition-all duration-300 dark:bg-card/60',
-            isCollapsed ? 'w-16' : 'w-64'
+            SIDEBAR_W
           )}
         >
           <div className='flex h-full flex-col'>
@@ -269,7 +274,7 @@ const Sidebar = ({ onToggle, activePath = '/' }: SidebarProps) => {
         <div
           className={cn(
             'sidebar-offset transition-all duration-300',
-            isCollapsed ? 'w-16' : 'w-64'
+            SIDEBAR_W
           )}
         ></div>
       </div>

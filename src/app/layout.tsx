@@ -25,7 +25,11 @@ import ChatFloatingWindow from '../components/watch-room/ChatFloatingWindow';
 import { WatchRoomProvider } from '../components/WatchRoomProvider';
 import { DownloadProvider } from '../contexts/DownloadContext';
 
-const inter = Inter({ subsets: ['latin'] });
+// 只加载 latin 子集（中文交给系统字体栈，见 globals.css 的 body 与
+// tailwind.config.ts 的 fontFamily.sans）。这里用 variable 而不是 className：
+// className 生成的 font-family 会盖掉 globals.css 里 body 的中文栈，
+// variable 只注入 --font-inter 供那套栈引用。
+const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 export const dynamic = 'force-dynamic';
 
 // 动态生成 metadata，支持配置更新后的标题变化
@@ -373,6 +377,7 @@ export default async function RootLayout({
     <html
       lang='zh-CN'
       data-moontvplus='1'
+      className={inter.variable}
       suppressHydrationWarning
     >
       <head>
@@ -439,9 +444,7 @@ export default async function RootLayout({
             />
           )}
       </head>
-      <body
-        className={`${inter.className} min-h-screen bg-background text-foreground`}
-      >
+      <body className='min-h-screen bg-background text-foreground'>
         <ThemeProvider
           attribute='class'
           defaultTheme='dark'

@@ -7,6 +7,12 @@ import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/cn';
 
 import {
+  BOTTOM_NAV_H,
+  CONTENT_BOTTOM,
+  CONTENT_TOP,
+  PAGE_READ,
+} from '@/components/layout/shell';
+import {
   LIBRARY_FOCUS,
   LIBRARY_ICON_BUTTON_GHOST,
   LIBRARY_MUTED,
@@ -64,7 +70,7 @@ export default function MediaShell({
         className='fixed inset-x-0 top-0 z-40 border-b border-border bg-background/95 backdrop-blur-none'
         style={{ paddingTop: 'env(safe-area-inset-top)' }}
       >
-        <div className='mx-auto flex h-14 max-w-7xl items-center gap-3 px-3 sm:h-16 sm:px-6'>
+        <div className={cn('flex h-14 items-center gap-3 sm:h-16', PAGE_READ)}>
           <div className='flex min-w-0 flex-1 items-center gap-2'>
             {backHref ? (
               <Link
@@ -141,12 +147,15 @@ export default function MediaShell({
         </div>
       </header>
 
+      {/* 阅读页分支保持改造前的原值：两个 READER_MAIN_CLASS 自带 padding，
+          且 books 的 max-w-6xl 依赖 cn() 覆盖外壳的 max-w-7xl。给它加 PAGE_READ
+          的横向 padding 会让 /manga/read（px-0）与 /books/read 的布局回归。 */}
       <main
         className={cn(
-          'mx-auto max-w-7xl',
+          'mx-auto w-full max-w-7xl',
           reader
             ? reader.mainClassName
-            : 'px-3 pb-[calc(5rem+env(safe-area-inset-bottom))] pt-[calc(5rem+env(safe-area-inset-top))] sm:px-6 sm:pt-[calc(6rem+env(safe-area-inset-top))] lg:pb-10'
+            : `${PAGE_READ} ${CONTENT_TOP} ${CONTENT_BOTTOM}`
         )}
       >
         {children}
@@ -166,7 +175,7 @@ export default function MediaShell({
                   key={tab.href}
                   href={tab.href}
                   aria-current={active ? 'page' : undefined}
-                  className='flex min-h-16 flex-col items-center justify-center gap-1 py-2 text-xs transition-colors duration-200 hover:bg-accent/60'
+                  className={`flex ${BOTTOM_NAV_H} flex-col items-center justify-center gap-1 py-2 text-micro transition-colors duration-200 hover:bg-accent/60`}
                 >
                   <Icon
                     className={cn(

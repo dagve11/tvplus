@@ -75,7 +75,38 @@
 
   body {
     @apply bg-background text-foreground;
+    /* 字体栈与 tailwind.config.ts 的 fontFamily.sans 保持一致：拉丁走 Inter
+       （next/font 自托管，layout.tsx 注入 --font-inter），中文依次落到系统黑体。
+       此前只加载 Inter 的 latin 子集、中文完全靠浏览器默认，各平台字形/字重/
+       行高都不一致。这里显式声明，零额外下载。 */
+    font-family:
+      var(--font-inter),
+      'PingFang SC',
+      'HarmonyOS Sans SC',
+      'Microsoft YaHei',
+      'Noto Sans CJK SC',
+      'Source Han Sans SC',
+      'Hiragino Sans GB',
+      'WenQuanYi Micro Hei',
+      system-ui,
+      -apple-system,
+      sans-serif;
+    /* 此前全站都没设这两条：暗色背景下的浅色中文会显粗发虚。 */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
   }
+}
+
+/* 侧栏宽度的单一来源：Sidebar 的 w-[var(--sidebar-w)] 与加载遮罩的 left
+   都读它，避免此前 globals.css 里 16rem/4rem 与 Sidebar.tsx 的 w-64/w-16
+   两份字面量各改各的。 */
+:root {
+  --sidebar-w: 16rem; /* = w-64 */
+}
+
+html[data-sidebar-collapsed] {
+  --sidebar-w: 4rem; /* = w-16 */
 }
 
 /* NProgress 进度条样式 */
@@ -119,23 +150,23 @@
 /* 旧的 --foreground-rgb / 浅色渐变 body 背景已删除：
    底色统一由 @layer base 的 bg-background / text-foreground 提供（单色 token）。 */
 
-/* 自定义滚动条样式 */
+/* 自定义滚动条样式（跟随主题 token，此前写死的一组灰值只在亮色下勉强能用） */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: rgba(31, 41, 55, 0.1);
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(75, 85, 99, 0.3);
+  background: hsl(var(--muted-foreground) / 0.28);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(107, 114, 128, 0.5);
+  background: hsl(var(--muted-foreground) / 0.5);
 }
 
 /* 视频卡片悬停效果 */
@@ -170,13 +201,16 @@
   }
 }
 
-/* 隐藏所有滚动条（兼容 WebKit、Firefox、IE/Edge） */
-* {
+/* 需要完全无滚动条的横向轨道（移动端底栏、卡片横排）单独加 .no-scrollbar。
+   此前这里对 * 通配隐藏滚动条，把上面那套自定义滚动条样式一并废掉了，
+   侧栏的独立滚动因此没有任何可视提示。 */
+
+.no-scrollbar {
   -ms-overflow-style: none; /* IE & Edge */
   scrollbar-width: none; /* Firefox */
 }
 
-*::-webkit-scrollbar {
+.no-scrollbar::-webkit-scrollbar {
   display: none; /* Chrome, Safari, Opera */
 }
 
@@ -601,10 +635,7 @@ div[data-media-provider] video {
    Sidebar 收起时会在 <html> 上写 data-sidebar-collapsed。移动端无侧边栏，不偏移。 */
 @media (min-width: 768px) {
   .mtv-load-overlay {
-    left: 16rem; /* 侧边栏展开 = w-64 */
-  }
-  html[data-sidebar-collapsed] .mtv-load-overlay {
-    left: 4rem; /* 侧边栏收起 = w-16 */
+    left: var(--sidebar-w);
   }
 }
 

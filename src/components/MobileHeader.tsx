@@ -3,6 +3,8 @@
 import { Search } from 'lucide-react';
 import Link from 'next/link';
 
+import { MOBILE_HEADER_H } from '@/components/layout/shell';
+
 import { BackButton } from './BackButton';
 import { useSite } from './SiteProvider';
 import { ThemeToggle } from './ThemeToggle';
@@ -19,7 +21,9 @@ const MobileHeader = ({ showBackButton = false }: MobileHeaderProps) => {
       className='md:hidden fixed top-0 left-0 right-0 z-header w-full border-b border-border/50 bg-background/70 shadow-sm backdrop-blur-xl'
       style={{ paddingTop: 'env(safe-area-inset-top)' }}
     >
-      <div className='relative h-12 flex items-center justify-between px-4'>
+      <div
+        className={`relative ${MOBILE_HEADER_H} flex items-center justify-between px-4`}
+      >
         {/* 左侧：搜索按钮、返回按钮和设置按钮 */}
         <div className='flex items-center gap-2'>
           <Link

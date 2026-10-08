@@ -3,6 +3,12 @@
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
+import {
+  CONTENT_BOTTOM,
+  CONTENT_TOP,
+  DESKTOP_TOPBAR_RESERVE,
+} from '@/components/layout/shell';
+
 import { BackButton } from './BackButton';
 import MobileBottomNav from './MobileBottomNav';
 import MobileHeader from './MobileHeader';
@@ -102,12 +108,13 @@ const PageLayout = ({
               </div>
             )}
 
-            {/* 主内容 */}
+            {/* 主内容。
+                顶/底让位与两档内容宽度统一由 shell.ts 提供；横向 padding 交给
+                各页自己的 PAGE_WIDE / PAGE_READ 容器（此处不能加，否则双层叠加）。
+                此前这里是 mb-14 + 内联 paddingBottom 叠加成 112px 而底栏只有
+                56px，且那条内联值没有 md: 前缀，桌面端无底栏也照样留白。 */}
             <main
-              className='flex-1 md:min-h-0 mb-14 md:mb-0 md:mt-0 mt-[calc(3rem+env(safe-area-inset-top))]'
-              style={{
-                paddingBottom: 'calc(3.5rem + env(safe-area-inset-bottom))',
-              }}
+              className={`flex-1 md:min-h-0 ${CONTENT_TOP} ${CONTENT_BOTTOM} ${DESKTOP_TOPBAR_RESERVE}`}
             >
               {children}
             </main>
