@@ -88,7 +88,8 @@ const DialogTitle = React.forwardRef<
   <DialogPrimitive.Title
     ref={ref}
     className={cn(
-      'text-lg font-semibold leading-none tracking-tight',
+      // leading-none 会把中文的上下伸部压掉，换 1.35。
+      'text-lg font-semibold leading-cjk-tight tracking-tight',
       className
     )}
     {...props}

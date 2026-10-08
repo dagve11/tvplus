@@ -35,7 +35,8 @@ const CardTitle = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn('font-semibold leading-none tracking-tight', className)}
+    // leading-none 会把中文的上下伸部压掉（卡片标题基本都是中文），换 1.35。
+    className={cn('font-semibold leading-cjk-tight tracking-tight', className)}
     {...props}
   />
 ));
