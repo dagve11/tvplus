@@ -79,7 +79,7 @@ const MobileBottomNav = ({ activePath }: MobileBottomNavProps) => {
               <Link
                 href={item.href}
                 prefetch={false}
-                className={`flex ${BOTTOM_NAV_H} w-full flex-col items-center justify-center gap-1 text-micro`}
+                className={`flex ${BOTTOM_NAV_H} w-full flex-col items-center justify-center gap-1 text-xs`}
               >
                 <Icon
                   className={cn(

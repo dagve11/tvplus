@@ -175,7 +175,7 @@ export default function MediaShell({
                   key={tab.href}
                   href={tab.href}
                   aria-current={active ? 'page' : undefined}
-                  className={`flex ${BOTTOM_NAV_H} flex-col items-center justify-center gap-1 py-2 text-micro transition-colors duration-200 hover:bg-accent/60`}
+                  className={`flex ${BOTTOM_NAV_H} flex-col items-center justify-center gap-1 py-2 text-xs transition-colors duration-200 hover:bg-accent/60`}
                 >
                   <Icon
                     className={cn(
