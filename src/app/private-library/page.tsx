@@ -8,14 +8,15 @@ import { useEffect, useMemo,useRef, useState } from 'react';
 
 import { base58Encode } from '@/lib/utils';
 
+import { PAGE_READ } from '@/components/layout/shell';
 import PageLayout from '@/components/PageLayout';
-import VideoCard from '@/components/VideoCard';
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
+import VideoCard from '@/components/VideoCard';
 
 type LibrarySourceType = 'openlist' | 'emby' | 'xiaoya' | `emby:${string}` | `emby_${string}`;
 
@@ -531,7 +532,7 @@ export default function PrivateLibraryPage() {
 
   return (
     <PageLayout activePath='/private-library'>
-      <div className='container mx-auto px-4 py-6'>
+      <div className={`${PAGE_READ} py-6`}>
         <div className='mb-6 flex justify-between items-start'>
           <div>
             <h1 className='text-2xl font-bold text-foreground '>

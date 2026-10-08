@@ -25,6 +25,7 @@ import React, {
 
 import { isAnimeCategoryText } from '@/lib/anime-keyword-expr';
 import { getAuthInfoFromBrowserCookie } from '@/lib/auth';
+import { loadTraditionalToSimplifiedConverter } from '@/lib/danmaku/traditional-to-simplified';
 import {
   addSearchHistory,
   clearSearchHistory,
@@ -32,17 +33,22 @@ import {
   getSearchHistory,
   subscribeToDataUpdates,
 } from '@/lib/db.client';
-import { SearchResult } from '@/lib/types';
 import {
   appendSpecialSourceParam,
   isSpecialSourceContext,
   SPECIAL_SOURCE_PATH,
 } from '@/lib/special-source.client';
+import { SearchResult } from '@/lib/types';
 import { processImageUrl } from '@/lib/utils';
 
 import AcgSearch from '@/components/AcgSearch';
 import ContinueWatching from '@/components/ContinueWatching';
 import ImageViewer from '@/components/ImageViewer';
+import {
+  PAGE_WIDE,
+  SECTION_GAP,
+  SECTION_TOP_GAP,
+} from '@/components/layout/shell';
 import PageLayout from '@/components/PageLayout';
 import PansouSearch, { CLOUD_TYPE_NAMES } from '@/components/PansouSearch';
 import ProxyImage from '@/components/ProxyImage';
@@ -50,8 +56,6 @@ import SearchResultFilter, {
   SearchFilterCategory,
 } from '@/components/SearchResultFilter';
 import SearchSuggestions from '@/components/SearchSuggestions';
-import VideoCard, { VideoCardHandle } from '@/components/VideoCard';
-import VirtualScrollableGrid from '@/components/VirtualScrollableGrid';
 import {
   Popover,
   PopoverContent,
@@ -59,7 +63,8 @@ import {
 } from '@/components/ui/popover';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { videoGridClass } from '@/components/video-grid';
-import { loadTraditionalToSimplifiedConverter } from '@/lib/danmaku/traditional-to-simplified';
+import VideoCard, { VideoCardHandle } from '@/components/VideoCard';
+import VirtualScrollableGrid from '@/components/VirtualScrollableGrid';
 
 const PANSOU_CLOUD_TYPE_OPTIONS = Object.entries(CLOUD_TYPE_NAMES).map(
   ([value, label]) => ({ value, label })
@@ -898,7 +903,7 @@ export function SearchPageClient({ searchBase = '/search' }: { searchBase?: stri
 
   const renderTag = (label: string, className: string) => (
     <span
-      className={`inline-flex items-center rounded-full px-2 py-1 text-[11px] font-medium ${className}`}
+      className={`inline-flex items-center rounded-full px-2 py-1 text-micro font-medium ${className}`}
     >
       {label}
     </span>
@@ -1787,7 +1792,7 @@ export function SearchPageClient({ searchBase = '/search' }: { searchBase?: stri
 
   return (
     <PageLayout activePath={searchBase}>
-      <div className='px-4 sm:px-10 py-4 sm:py-8 overflow-visible mb-10'>
+      <div className={`${PAGE_WIDE} py-4 sm:py-8 overflow-visible mb-10`}>
         {/* 搜索框 */}
         <div className='mb-0'>
           <form onSubmit={handleSearch} className='max-w-2xl mx-auto'>
@@ -2025,16 +2030,16 @@ export function SearchPageClient({ searchBase = '/search' }: { searchBase?: stri
 
         {/* 搜索结果或搜索历史 */}
         <div
-          className={`max-w-[95%] mx-auto overflow-visible ${
+          className={`overflow-visible ${
             activeTab === 'video' && !showResults
               ? 'mt-2'
               : activeTab === 'pansou'
               ? 'mt-4'
-              : 'mt-12'
+              : SECTION_TOP_GAP
           }`}
         >
           {showResults ? (
-            <section className='mb-12'>
+            <section className={SECTION_GAP}>
               {activeTab === 'video' ? (
                 <>
                   {/* 影视搜索结果 */}
@@ -2442,7 +2447,7 @@ export function SearchPageClient({ searchBase = '/search' }: { searchBase?: stri
               )}
               {searchHistory.length > 0 && (
             // 搜索历史
-            <section className='mb-12'>
+            <section className={SECTION_GAP}>
               <h2 className='mb-4 text-xl font-bold text-foreground text-left'>
                 搜索历史
                 {searchHistory.length > 0 && (
@@ -2504,7 +2509,7 @@ export function SearchPageClient({ searchBase = '/search' }: { searchBase?: stri
                         e.preventDefault();
                         deleteSearchHistory(item); // 事件监听会自动更新界面
                       }}
-                      className='absolute -top-1 -right-1 w-4 h-4 opacity-0 group-hover:opacity-100 bg-muted-foreground hover:bg-destructive text-background rounded-full flex items-center justify-center text-[10px] transition-colors'
+                      className='absolute -top-1 -right-1 w-4 h-4 opacity-0 group-hover:opacity-100 bg-muted-foreground hover:bg-destructive text-background rounded-full flex items-center justify-center text-micro transition-colors'
                     >
                       <X className='w-3 h-3' />
                     </button>

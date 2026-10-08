@@ -28,7 +28,7 @@ import React, {
 
 import { isAnimeCategoryText } from '@/lib/anime-keyword-expr';
 import { getAuthInfoFromBrowserCookie } from '@/lib/auth';
-import { showSuccess } from '@/lib/toast';
+import { getBangumiSubjectUrl } from '@/lib/bangumi.client';
 import {
   deleteFavorite,
   deletePlayRecord,
@@ -37,9 +37,10 @@ import {
   saveFavorite,
   subscribeToDataUpdates,
 } from '@/lib/db.client';
-import { getBangumiSubjectUrl } from '@/lib/bangumi.client';
 import { isNetdiskSource } from '@/lib/netdisk/source';
 import { appendSpecialSourceParam } from '@/lib/special-source.client';
+import type { TMDBVideoItem } from '@/lib/tmdb.client';
+import { showSuccess } from '@/lib/toast';
 import {
   base58Decode,
   clearBangumiImageFallbackCacheIfFailed,
@@ -57,10 +58,9 @@ import AnimeSubscribeModal from '@/components/AnimeSubscribeModal';
 import DetailPanel from '@/components/DetailPanel';
 import { ImagePlaceholder } from '@/components/ImagePlaceholder';
 import ImageViewer from '@/components/ImageViewer';
+import TrailerPickerDialog from '@/components/TrailerPickerDialog';
 import { ActionSheet } from '@/components/ui/action-sheet';
 import { Badge } from '@/components/ui/badge';
-import TrailerPickerDialog from '@/components/TrailerPickerDialog';
-import type { TMDBVideoItem } from '@/lib/tmdb.client';
 
 export interface VideoCardProps {
   id?: string;
@@ -1414,7 +1414,7 @@ const VideoCard = forwardRef<VideoCardHandle, VideoCardProps>(
                   }}
                 >
                   <div
-                    className='text-[9px] sm:text-[10px] text-white/80 line-clamp-2 break-all'
+                    className='text-micro text-white/80 line-clamp-2 break-all'
                     style={
                       {
                         WebkitUserSelect: 'none',
@@ -1452,7 +1452,7 @@ const VideoCard = forwardRef<VideoCardHandle, VideoCardProps>(
                 >
                   {/* 集数显示 */}
                   <div
-                    className='bg-black/60 text-white text-[9px] sm:text-xs font-medium px-2 sm:px-3 py-0.5 sm:py-1 rounded-full shadow-md transition-all duration-300 ease-out group-hover:scale-110 backdrop-blur-sm flex items-center justify-center'
+                    className='bg-black/60 text-white text-micro sm:text-xs font-medium px-2 sm:px-3 py-0.5 sm:py-1 rounded-full shadow-md transition-all duration-300 ease-out group-hover:scale-110 backdrop-blur-sm flex items-center justify-center'
                     style={
                       {
                         WebkitUserSelect: 'none',
@@ -1473,7 +1473,7 @@ const VideoCard = forwardRef<VideoCardHandle, VideoCardProps>(
                   {/* 年份显示 */}
                   {displayYear && (
                     <div
-                      className='bg-black/60 text-white text-[9px] sm:text-xs font-medium px-2 sm:px-3 py-0.5 sm:py-1 rounded-full shadow-md transition-all duration-300 ease-out group-hover:scale-110 backdrop-blur-sm flex items-center justify-center'
+                      className='bg-black/60 text-white text-micro sm:text-xs font-medium px-2 sm:px-3 py-0.5 sm:py-1 rounded-full shadow-md transition-all duration-300 ease-out group-hover:scale-110 backdrop-blur-sm flex items-center justify-center'
                       style={
                         {
                           WebkitUserSelect: 'none',
@@ -1512,7 +1512,7 @@ const VideoCard = forwardRef<VideoCardHandle, VideoCardProps>(
                   }}
                 >
                   <span
-                    className='inline-block border rounded px-1 py-0.5 text-[8px] text-white/90 bg-black/60 border-white/60'
+                    className='inline-block border rounded px-1 py-0.5 text-micro text-white/90 bg-black/60 border-white/60'
                     style={
                       {
                         WebkitUserSelect: 'none',
@@ -1736,7 +1736,7 @@ const VideoCard = forwardRef<VideoCardHandle, VideoCardProps>(
                                   >
                                     <div className='h-0.5 w-0.5 flex-shrink-0 rounded-full bg-muted-foreground sm:h-1 sm:w-1'></div>
                                     <span
-                                      className='truncate text-[10px] leading-tight sm:text-xs'
+                                      className='truncate text-micro leading-tight sm:text-xs'
                                       title={sourceName}
                                     >
                                       {sourceName}
@@ -1749,7 +1749,7 @@ const VideoCard = forwardRef<VideoCardHandle, VideoCardProps>(
                               {hasMore && (
                                 <div className='mt-1 border-t border-border/60 pt-1 sm:mt-2 sm:pt-1.5'>
                                   <div className='flex items-center justify-center text-muted-foreground'>
-                                    <span className='text-[10px] font-medium sm:text-xs'>
+                                    <span className='text-micro font-medium sm:text-xs'>
                                       +{remainingCount} 播放源
                                     </span>
                                   </div>
@@ -1797,7 +1797,7 @@ const VideoCard = forwardRef<VideoCardHandle, VideoCardProps>(
                     }
                   >
                     <span
-                      className='block text-sm font-bold truncate text-white'
+                      className='block text-sm font-semibold truncate text-white'
                       style={
                         {
                           WebkitUserSelect: 'none',
@@ -1838,7 +1838,7 @@ const VideoCard = forwardRef<VideoCardHandle, VideoCardProps>(
                   {/* 直链地址 */}
                   {isDirectPlaySource && directLinkUrl && (
                     <div
-                      className='text-[10px] text-white/75 truncate'
+                      className='text-micro text-white/75 truncate'
                       style={
                         {
                           WebkitUserSelect: 'none',
@@ -1892,7 +1892,7 @@ const VideoCard = forwardRef<VideoCardHandle, VideoCardProps>(
                             playTime !== undefined &&
                             totalTime !== undefined && (
                               <div
-                                className='text-[10px] text-white/80'
+                                className='text-micro text-white/80'
                                 style={
                                   {
                                     WebkitUserSelect: 'none',
@@ -1923,7 +1923,7 @@ const VideoCard = forwardRef<VideoCardHandle, VideoCardProps>(
                           {/* 来源 - 右侧 */}
                           {config.showSourceName && source_name && !cmsData && (
                             <span
-                              className='inline-block border rounded px-1 py-0.5 text-[8px] text-white/90 bg-black/30 backdrop-blur-sm border-white/60'
+                              className='inline-block border rounded px-1 py-0.5 text-micro text-white/90 bg-black/30 backdrop-blur-sm border-white/60'
                               style={
                                 {
                                   WebkitUserSelect: 'none',
@@ -1980,7 +1980,7 @@ const VideoCard = forwardRef<VideoCardHandle, VideoCardProps>(
                     !cmsData && (
                       <div className='flex items-center justify-end'>
                         <span
-                          className='inline-block border rounded px-1 py-0.5 text-[8px] text-white/90 bg-black/30 backdrop-blur-sm border-white/60'
+                          className='inline-block border rounded px-1 py-0.5 text-micro text-white/90 bg-black/30 backdrop-blur-sm border-white/60'
                           style={
                             {
                               WebkitUserSelect: 'none',
@@ -2069,7 +2069,7 @@ const VideoCard = forwardRef<VideoCardHandle, VideoCardProps>(
                   }
                 >
                   <span
-                    className='block text-sm font-semibold truncate text-foreground transition-colors duration-300 ease-in-out group-hover:text-foreground/70 peer'
+                    className='block text-title font-semibold truncate text-foreground transition-colors duration-300 ease-in-out group-hover:text-foreground/70 peer'
                     style={
                       {
                         WebkitUserSelect: 'none',

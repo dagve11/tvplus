@@ -243,7 +243,7 @@ export default function EpgScrollableRow({
     return (
       <div className="pt-4">
         <div className="mb-3 flex items-center justify-between">
-          <h4 className="text-xs sm:text-sm font-medium text-foreground flex items-center gap-2">
+          <h4 className="text-sm font-medium text-foreground flex items-center gap-2">
             <Clock className="w-3 h-3 sm:w-4 sm:h-4" />
             今日节目单
           </h4>
@@ -264,7 +264,7 @@ export default function EpgScrollableRow({
     return (
       <div className="pt-4">
         <div className="mb-3 flex items-center justify-between">
-          <h4 className="text-xs sm:text-sm font-medium text-foreground flex items-center gap-2">
+          <h4 className="text-sm font-medium text-foreground flex items-center gap-2">
             <Clock className="w-3 h-3 sm:w-4 sm:h-4" />
             今日节目单
           </h4>
@@ -283,7 +283,7 @@ export default function EpgScrollableRow({
   return (
     <div className="pt-4 mt-2">
       <div className="mb-3 flex items-center justify-between">
-        <h4 className="text-xs sm:text-sm font-medium text-foreground flex items-center gap-2">
+        <h4 className="text-sm font-medium text-foreground flex items-center gap-2">
           <Clock className="w-3 h-3 sm:w-4 sm:h-4" />
           今日节目单
         </h4>

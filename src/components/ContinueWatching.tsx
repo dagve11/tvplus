@@ -13,6 +13,7 @@ import {
   subscribeToDataUpdates,
 } from '@/lib/db.client';
 
+import { RAIL_GUTTER } from '@/components/layout/shell';
 import PlayRecordsPanel from '@/components/PlayRecordsPanel';
 import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -110,7 +111,9 @@ export default function ContinueWatching({ className }: ContinueWatchingProps) {
   return (
     <>
       <section className={`mb-8 ${className || ''}`}>
-        <div className='mb-4 flex items-center justify-between'>
+        <div
+          className={`${RAIL_GUTTER} mb-4 flex items-center justify-between`}
+        >
           <h2 className='text-xl font-bold text-foreground'>
             继续观看
           </h2>
@@ -133,7 +136,9 @@ export default function ContinueWatching({ className }: ContinueWatchingProps) {
           )}
         </div>
         {loading ? (
-          <div className='flex gap-2 overflow-x-auto scrollbar-hide pb-2 pt-2'>
+          <div
+            className={`flex gap-2 overflow-x-auto scrollbar-hide pb-2 pt-2 ${RAIL_GUTTER}`}
+          >
             {Array.from({ length: 8 }).map((_, index) => (
               <div
                 key={index}

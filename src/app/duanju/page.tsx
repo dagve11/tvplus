@@ -21,6 +21,7 @@ import {
 } from '@/lib/category-tree';
 import { SearchResult } from '@/lib/types';
 
+import { PAGE_WIDE } from '@/components/layout/shell';
 import PageLayout from '@/components/PageLayout';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { videoGridClass } from '@/components/video-grid';
@@ -423,7 +424,7 @@ function DuanjuPageClient() {
 
   return (
     <PageLayout activePath='/duanju'>
-      <div className='px-4 sm:px-10 py-4 sm:py-8 overflow-visible mb-10'>
+      <div className={`${PAGE_WIDE} py-4 sm:py-8 overflow-visible mb-10`}>
         <div className='mb-6 flex items-start justify-between gap-4'>
           <div>
             <h1 className='text-2xl font-bold text-foreground'>
@@ -607,7 +608,7 @@ function DuanjuPageClient() {
         )}
 
         {selectedSource && selectedCategory && (
-          <div className='max-w-[95%] mx-auto mt-8'>
+          <div className='mt-8'>
             <div className='mb-4'>
               <h2 className='text-xl font-bold text-foreground'>
                 短剧列表

@@ -79,6 +79,7 @@ import {
 } from '@/lib/feature-permissions';
 
 import { AdminShell } from '@/components/admin/AdminShell';
+import { PAGE_READ } from '@/components/layout/shell';
 import { AlertModal } from '@/components/admin/sections/AlertModal';
 import { UserConfig } from '@/components/admin/sections/UserConfig';
 import { VideoSourceConfig } from '@/components/admin/sections/VideoSourceConfig';
@@ -496,8 +497,8 @@ function AdminPageClient() {
   if (loading) {
     return (
       <PageLayout activePath='/admin'>
-        <div className='px-2 sm:px-10 py-4 sm:py-8'>
-          <div className='max-w-[95%] mx-auto'>
+        <div className='py-4 sm:py-8'>
+          <div className={PAGE_READ}>
             <h1 className='text-2xl font-bold text-foreground mb-8'>
               管理员设置
             </h1>
@@ -843,8 +844,8 @@ function AdminPageClient() {
 
   return (
     <PageLayout activePath='/admin'>
-      <div className='px-2 py-4 sm:px-10 sm:py-8'>
-        <div className='mx-auto max-w-[95%]'>
+      <div className='py-4 sm:py-8'>
+        <div className={PAGE_READ}>
           {/* 标题 + 重置/重载配置按钮（仅站长） */}
           <div className='mb-8 flex items-center gap-2'>
             <h1 className='text-2xl font-bold text-foreground'>管理员设置</h1>

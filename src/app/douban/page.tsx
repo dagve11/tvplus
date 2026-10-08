@@ -18,6 +18,7 @@ import BangumiScheduleTimeline from '@/components/BangumiScheduleTimeline';
 import DoubanCardSkeleton from '@/components/DoubanCardSkeleton';
 import DoubanCustomSelector from '@/components/DoubanCustomSelector';
 import DoubanSelector from '@/components/DoubanSelector';
+import { PAGE_WIDE } from '@/components/layout/shell';
 import PageLayout from '@/components/PageLayout';
 import { videoGridClass } from '@/components/video-grid';
 import VideoCard from '@/components/VideoCard';
@@ -781,7 +782,7 @@ function DoubanPageClient() {
 
   return (
     <PageLayout activePath={getActivePath()}>
-      <div className='px-4 sm:px-10 py-4 sm:py-8 overflow-visible'>
+      <div className={`${PAGE_WIDE} py-4 sm:py-8 overflow-visible`}>
         {/* 页面标题和选择器 */}
         <div className='mb-6 sm:mb-8 space-y-4 sm:space-y-6'>
           {/* 页面标题 */}
@@ -823,7 +824,7 @@ function DoubanPageClient() {
         </div>
 
         {/* 内容展示区域 */}
-        <div ref={contentRef} className='max-w-[95%] mx-auto mt-8 overflow-visible'>
+        <div ref={contentRef} className='mt-8 overflow-visible'>
           {/* 时刻表视图（每日放送） */}
           {isScheduleView ? (
             <BangumiScheduleTimeline weekday={selectedWeekday} />

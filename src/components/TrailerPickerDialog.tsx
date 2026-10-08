@@ -1,6 +1,6 @@
 'use client';
 
-import { ExternalLink, Film, Loader2, PlayCircle, Youtube, X } from 'lucide-react';
+import { ExternalLink, Film, Loader2, PlayCircle, X, Youtube } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
 
@@ -138,12 +138,12 @@ export default function TrailerPickerDialog({
                           {video.name}
                         </h4>
                         {video.official && (
-                          <span className='rounded-full bg-muted px-2 py-0.5 text-[11px] font-medium text-muted-foreground'>
+                          <span className='rounded-full bg-muted px-2 py-0.5 text-micro font-medium text-muted-foreground'>
                             官方
                           </span>
                         )}
                         {video.type && (
-                          <span className='rounded-full bg-muted px-2 py-0.5 text-[11px] font-medium text-muted-foreground'>
+                          <span className='rounded-full bg-muted px-2 py-0.5 text-micro font-medium text-muted-foreground'>
                             {video.type}
                           </span>
                         )}

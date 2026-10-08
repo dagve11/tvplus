@@ -14,9 +14,10 @@ import { useEffect, useRef, useState } from 'react';
 
 import { useWebLiveSync } from '@/hooks/useWebLiveSync';
 
+import { PAGE_WIDE } from '@/components/layout/shell';
 import LoadingStyle, {
-  LoadingErrorStyle,
   type LoadingStep,
+  LoadingErrorStyle,
 } from '@/components/LoadingStyle';
 import PageLayout from '@/components/PageLayout';
 import { useWatchRoomContextSafe } from '@/components/WatchRoomProvider';
@@ -430,7 +431,7 @@ export default function WebLivePage() {
 
   return (
     <PageLayout activePath='/web-live'>
-      <div className='flex flex-col gap-3 py-4 px-5 lg:px-[3rem] 2xl:px-20'>
+      <div className={`${PAGE_WIDE} flex flex-col gap-3 py-4`}>
         <div className='py-1'>
           <h1 className='text-xl font-semibold text-foreground flex items-center gap-2 max-w-[80%]'>
             <Radio className='w-5 h-5 text-primary flex-shrink-0' />

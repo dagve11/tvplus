@@ -735,7 +735,7 @@ export const UserMenu: React.FC = () => {
                 <span>{avatarText}</span>
                 {shouldShowRoleBadge && (
                   <span
-                    className={`absolute left-1/2 top-[calc(100%-6px)] z-10 -translate-x-1/2 inline-flex min-w-[26px] items-center justify-center whitespace-nowrap rounded-full px-1.5 py-[2px] text-[8px] leading-none font-medium shadow-sm ${roleBadgeClassName}`}
+                    className={`absolute left-1/2 top-[calc(100%-6px)] z-10 -translate-x-1/2 inline-flex min-w-[26px] items-center justify-center whitespace-nowrap rounded-full px-1.5 py-[2px] text-micro leading-none font-medium shadow-sm ${roleBadgeClassName}`}
                   >
                     {currentRoleText}
                   </span>
@@ -749,7 +749,7 @@ export const UserMenu: React.FC = () => {
             </button>
 
             <div className='pt-1 text-right'>
-              <div className='text-[10px] text-muted-foreground'>
+              <div className='text-micro text-muted-foreground'>
                 <div>数据存储</div>
                 <div className='mt-0.5'>
                   {displayStorageType === 'localstorage'

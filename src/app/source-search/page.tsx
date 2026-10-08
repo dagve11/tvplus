@@ -24,6 +24,7 @@ import { ApiSite } from '@/lib/config';
 import { appendSpecialSourceParam } from '@/lib/special-source.client';
 import { SearchResult } from '@/lib/types';
 
+import { PAGE_WIDE } from '@/components/layout/shell';
 import PageLayout from '@/components/PageLayout';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { videoGridClass } from '@/components/video-grid';
@@ -456,7 +457,7 @@ function SourceSearchPageClient() {
 
   return (
     <PageLayout activePath='/source-search'>
-      <div className='px-4 sm:px-10 py-4 sm:py-8 overflow-visible mb-10'>
+      <div className={`${PAGE_WIDE} py-4 sm:py-8 overflow-visible mb-10`}>
         {/* 页面标题 */}
         <div className='mb-6'>
           <h1 className='flex items-center gap-2 text-2xl font-bold text-foreground'>
@@ -706,7 +707,7 @@ function SourceSearchPageClient() {
 
         {/* 视频列表 */}
         {selectedSource && (viewMode === 'search' ? searchKeyword : selectedCategory) && (
-          <div className='max-w-[95%] mx-auto mt-8'>
+          <div className='mt-8'>
             <div className='mb-4'>
               <h2 className='text-xl font-bold text-foreground'>
                 视频列表

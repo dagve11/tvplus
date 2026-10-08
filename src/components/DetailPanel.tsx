@@ -1412,18 +1412,18 @@ const DetailPanel: React.FC<DetailPanelProps> = ({
                   </p>
                   <Badge
                     variant='secondary'
-                    className='flex-shrink-0 px-1.5 py-0.5 text-[10px]'
+                    className='flex-shrink-0 px-1.5 py-0.5 text-micro'
                   >
                     {result.media_type === 'tv' ? '剧集' : '电影'}
                   </Badge>
                 </div>
                 {resultYear && (
-                  <p className='text-xs text-muted-foreground mt-0.5'>
+                  <p className='text-sm leading-cjk text-muted-foreground mt-0.5'>
                     {resultYear}
                   </p>
                 )}
                 {result.overview && (
-                  <p className='text-xs text-muted-foreground mt-1 line-clamp-2'>
+                  <p className='text-sm leading-cjk text-muted-foreground mt-1 line-clamp-2'>
                     {result.overview}
                   </p>
                 )}
@@ -1647,7 +1647,7 @@ const DetailPanel: React.FC<DetailPanelProps> = ({
           {/* 导演和演员 */}
           {detailData.directors && detailData.directors.length > 0 && (
             <div className='mb-4'>
-              <h4 className='text-sm font-semibold text-foreground mb-2 flex items-center gap-2'>
+              <h4 className='text-title font-semibold text-foreground mb-2 flex items-center gap-2'>
                 <Users size={16} />
                 导演
               </h4>
@@ -1659,7 +1659,7 @@ const DetailPanel: React.FC<DetailPanelProps> = ({
 
           {detailData.actors && detailData.actors.length > 0 && (
             <div className='mb-4'>
-              <h4 className='text-sm font-semibold text-foreground mb-2 flex items-center gap-2'>
+              <h4 className='text-title font-semibold text-foreground mb-2 flex items-center gap-2'>
                 <Users size={16} />
                 演员
               </h4>
@@ -1718,7 +1718,7 @@ const DetailPanel: React.FC<DetailPanelProps> = ({
                           )}`}
                           target='_blank'
                           rel='noopener noreferrer'
-                          className='text-xs font-medium text-foreground text-center w-20 line-clamp-2 hover:text-foreground/70 transition-colors cursor-pointer'
+                          className='text-sm font-medium text-foreground text-center w-20 line-clamp-2 hover:text-foreground/70 transition-colors cursor-pointer'
                           onClick={(e) => e.stopPropagation()}
                         >
                           {actor.name}

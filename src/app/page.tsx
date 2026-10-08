@@ -29,6 +29,12 @@ import BannerCarousel from '@/components/BannerCarousel';
 import ContinueWatching from '@/components/ContinueWatching';
 import FireworksCanvas from '@/components/FireworksCanvas';
 import HttpWarningDialog from '@/components/HttpWarningDialog';
+import {
+  PAGE_WIDE,
+  RAIL_GUTTER,
+  SECTION_GAP,
+  SUBSECTION_GAP,
+} from '@/components/layout/shell';
 import PageLayout from '@/components/PageLayout';
 import ScrollableRow from '@/components/ScrollableRow';
 import { useSite } from '@/components/SiteProvider';
@@ -565,8 +571,10 @@ function HomeClient() {
     switch (moduleId) {
       case 'hotMovies':
         return (
-          <section key='hotMovies' className='mb-8'>
-            <div className='mb-4 flex items-center justify-between'>
+          <section key='hotMovies' className={SECTION_GAP}>
+            <div
+              className={`${RAIL_GUTTER} ${SUBSECTION_GAP} flex items-center justify-between`}
+            >
               <h2 className='text-xl font-bold text-foreground'>
                 热门电影
               </h2>
@@ -613,8 +621,10 @@ function HomeClient() {
       case 'hotDuanju':
         if (hotDuanju.length === 0) return null;
         return (
-          <section key='hotDuanju' className='mb-8'>
-            <div className='mb-4 flex items-center justify-between'>
+          <section key='hotDuanju' className={SECTION_GAP}>
+            <div
+              className={`${RAIL_GUTTER} ${SUBSECTION_GAP} flex items-center justify-between`}
+            >
               <h2 className='text-xl font-bold text-foreground'>
                 热播短剧
               </h2>
@@ -667,8 +677,10 @@ function HomeClient() {
 
       case 'bangumiCalendar':
         return (
-          <section key='bangumiCalendar' className='mb-8'>
-            <div className='mb-4 flex items-center justify-between'>
+          <section key='bangumiCalendar' className={SECTION_GAP}>
+            <div
+              className={`${RAIL_GUTTER} ${SUBSECTION_GAP} flex items-center justify-between`}
+            >
               <h2 className='text-xl font-bold text-foreground'>
                 新番放送
               </h2>
@@ -738,8 +750,10 @@ function HomeClient() {
 
       case 'hotTvShows':
         return (
-          <section key='hotTvShows' className='mb-8'>
-            <div className='mb-4 flex items-center justify-between'>
+          <section key='hotTvShows' className={SECTION_GAP}>
+            <div
+              className={`${RAIL_GUTTER} ${SUBSECTION_GAP} flex items-center justify-between`}
+            >
               <h2 className='text-xl font-bold text-foreground'>
                 热门剧集
               </h2>
@@ -785,8 +799,10 @@ function HomeClient() {
 
       case 'hotVarietyShows':
         return (
-          <section key='hotVarietyShows' className='mb-8'>
-            <div className='mb-4 flex items-center justify-between'>
+          <section key='hotVarietyShows' className={SECTION_GAP}>
+            <div
+              className={`${RAIL_GUTTER} ${SUBSECTION_GAP} flex items-center justify-between`}
+            >
               <h2 className='text-xl font-bold text-foreground'>
                 热门综艺
               </h2>
@@ -835,8 +851,10 @@ function HomeClient() {
       case 'upcomingContent':
         if (upcomingContent.length === 0) return null;
         return (
-          <section key='upcomingContent' className='mb-8'>
-            <div className='mb-4 flex items-center justify-between'>
+          <section key='upcomingContent' className={SECTION_GAP}>
+            <div
+              className={`${RAIL_GUTTER} ${SUBSECTION_GAP} flex items-center justify-between`}
+            >
               <h2 className='text-xl font-bold text-foreground'>
                 即将上映
               </h2>
@@ -878,18 +896,18 @@ function HomeClient() {
       <FireworksCanvas />
       {/* TMDB 热门轮播图 */}
       {homeBannerEnabled && (
-        <div className='w-full mb-4'>
+        <div className={`w-full ${SUBSECTION_GAP}`}>
           <BannerCarousel delayLoad={true} />
         </div>
       )}
 
-      <div className='px-2 sm:px-10 pb-4 sm:pb-8 overflow-visible'>
-        <div className='max-w-[95%] mx-auto'>
+      <div className='pb-4 sm:pb-8 overflow-visible'>
+        <div className={PAGE_WIDE}>
           {/* 首页内容 */}
           <>
             {/* 源站寻片和AI问片入口 */}
             <div
-              className={`flex items-center justify-end gap-2 mb-4 ${
+              className={`${RAIL_GUTTER} flex items-center justify-end gap-2 ${SUBSECTION_GAP} ${
                 homeBannerEnabled ? '' : 'mt-[30px]'
               }`}
             >

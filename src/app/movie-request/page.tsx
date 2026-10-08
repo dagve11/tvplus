@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 import { getTMDBImageUrl } from '@/lib/tmdb.client';
 import { processImageUrl } from '@/lib/utils';
 
+import { PAGE_READ } from '@/components/layout/shell';
 import PageLayout from '@/components/PageLayout';
 import {
   AlertDialog,
@@ -221,7 +222,7 @@ export default function MovieRequestPage() {
 
   return (
     <PageLayout activePath='/movie-request'>
-      <div className='container mx-auto px-4 py-6'>
+      <div className={`${PAGE_READ} py-6`}>
         <div className='mb-6'>
           <h1 className='text-2xl font-bold text-foreground'>
             求片

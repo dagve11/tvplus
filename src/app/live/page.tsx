@@ -32,6 +32,7 @@ import { parseCustomTimeFormat } from '@/lib/time';
 import { useLiveSync } from '@/hooks/useLiveSync';
 
 import EpgScrollableRow from '@/components/EpgScrollableRow';
+import { PAGE_WIDE } from '@/components/layout/shell';
 import LoadingStyle, {
   type LoadingStep,
   LoadingErrorStyle,
@@ -2310,7 +2311,7 @@ function LivePageClient() {
 
   return (
     <PageLayout activePath='/live'>
-      <div className='flex flex-col gap-3 py-4 px-5 lg:px-[3rem] 2xl:px-20'>
+      <div className={`${PAGE_WIDE} flex flex-col gap-3 py-4`}>
         {/* 第一行：页面标题 */}
         <div className='py-1'>
           <h1 className='text-xl font-semibold text-foreground flex items-center gap-2 max-w-[80%]'>

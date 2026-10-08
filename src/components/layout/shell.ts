@@ -23,6 +23,12 @@ export const SECTION_GAP = 'mb-8 sm:mb-10';
 /** 区块内小节之间的垂直节奏。 */
 export const SUBSECTION_GAP = 'mb-4 sm:mb-6';
 
+/**
+ * 区块之间靠上边距分隔时的节奏（SECTION_GAP 是下边距版本）。
+ * 搜索页结果区用上边距，不能拿 SECTION_GAP 顶替——那是 mb-*，会把间距挪到下方。
+ */
+export const SECTION_TOP_GAP = 'mt-8 sm:mt-10';
+
 /** 移动端顶栏内容行高度。主站此前是 h-12(48)，媒体区是 h-14(56)，统一取大者。 */
 export const MOBILE_HEADER_H = 'h-14';
 

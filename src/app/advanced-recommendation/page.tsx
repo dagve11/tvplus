@@ -6,9 +6,10 @@ import { useEffect, useRef, useState } from 'react';
 
 import { SearchResult } from '@/lib/types';
 
+import { PAGE_READ } from '@/components/layout/shell';
 import PageLayout from '@/components/PageLayout';
-import VideoCard from '@/components/VideoCard';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
+import VideoCard from '@/components/VideoCard';
 
 interface ScriptSourceOption {
   key: string;
@@ -137,7 +138,7 @@ export default function AdvancedRecommendationPage() {
 
   return (
     <PageLayout activePath='/advanced-recommendation'>
-      <div className='px-4 sm:px-10 py-4 sm:py-8 mb-10'>
+      <div className={`${PAGE_READ} py-4 sm:py-8 mb-10`}>
         <div className='mb-6'>
           <h1 className='text-2xl font-bold text-foreground flex items-center gap-2'>
             <Blend className='w-6 h-6 text-foreground' />
@@ -148,7 +149,7 @@ export default function AdvancedRecommendationPage() {
           </p>
         </div>
 
-        <div className='max-w-6xl mx-auto space-y-6'>
+        <div className='space-y-6'>
           <div>
             <label className='block text-sm font-medium text-foreground mb-3'>
               选择脚本源
