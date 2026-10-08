@@ -744,7 +744,7 @@ export default function AnimeSubscriptionComponent({
               {recognition ? (
                 <div className='mt-2 rounded-lg border border-border p-2.5 space-y-2.5'>
                   <div className='flex items-center justify-between'>
-                    <p className='text-[11px] text-muted-foreground'>
+                    <p className='text-micro text-muted-foreground'>
                       识别到 {recognition.total} 条种子，点击填入过滤关键词
                     </p>
                     <button
@@ -764,7 +764,7 @@ export default function AnimeSubscriptionComponent({
                           <span className='text-xs font-medium text-foreground'>
                             {fansub.fansub}
                           </span>
-                          <span className='text-[10px] text-muted-foreground'>
+                          <span className='text-micro text-muted-foreground'>
                             {fansub.count} 条
                           </span>
                         </div>
@@ -793,7 +793,7 @@ export default function AnimeSubscriptionComponent({
                 </div>
               ) : null}
               <div className='mt-2'>
-                <p className='text-[11px] text-muted-foreground mb-1'>
+                <p className='text-micro text-muted-foreground mb-1'>
                   字幕组
                 </p>
                 <div className='flex flex-wrap gap-1.5'>
@@ -877,7 +877,7 @@ export default function AnimeSubscriptionComponent({
               {testResult ? (
                 <div className='mt-2 rounded-lg border border-border p-2.5 space-y-2.5'>
                   <div className='flex items-center justify-between'>
-                    <p className='text-[11px] text-muted-foreground'>
+                    <p className='text-micro text-muted-foreground'>
                       搜索到 {testResult.total} 条 · 关键词命中 {testResult.matched} 条
                     </p>
                     <button
@@ -919,12 +919,12 @@ export default function AnimeSubscriptionComponent({
                         ) : null}
                       </div>
                       {testResult.newEpisodes.length > 0 ? (
-                        <p className='text-[11px] text-muted-foreground'>
+                        <p className='text-micro text-muted-foreground'>
                           当前集数 {testResult.lastEpisode}，会下载新集数：
                           {testResult.newEpisodes.join('、')}
                         </p>
                       ) : (
-                        <p className='text-[11px] text-muted-foreground'>
+                        <p className='text-micro text-muted-foreground'>
                           当前集数 {testResult.lastEpisode}，没有需要下载的新集数
                         </p>
                       )}
@@ -932,7 +932,7 @@ export default function AnimeSubscriptionComponent({
                         {testResult.items.map((item, idx) => (
                           <div
                             key={`${idx}-${item.title}`}
-                            className='flex items-start gap-1.5 text-[11px] leading-relaxed'
+                            className='flex items-start gap-1.5 text-micro leading-relaxed'
                           >
                             <span
                               className={`flex-shrink-0 mt-px px-1.5 rounded ${

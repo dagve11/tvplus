@@ -713,34 +713,34 @@ export const LiveSourceConfig = ({
           <thead className='bg-muted/50  sticky top-0 z-10'>
             <tr>
               <th
-                className='px-2 py-3 text-left text-xs font-medium text-muted-foreground  uppercase tracking-wider'
+                className='px-2 py-3 text-left text-micro font-medium text-muted-foreground uppercase tracking-wide'
                 aria-label='排序'
               />
-              <th className='px-6 py-3 text-left text-xs font-medium text-muted-foreground  uppercase tracking-wider'>
+              <th className='px-6 py-3 text-left text-micro font-medium text-muted-foreground uppercase tracking-wide'>
                 名称
               </th>
-              <th className='px-6 py-3 text-left text-xs font-medium text-muted-foreground  uppercase tracking-wider'>
+              <th className='px-6 py-3 text-left text-micro font-medium text-muted-foreground uppercase tracking-wide'>
                 Key
               </th>
-              <th className='px-6 py-3 text-left text-xs font-medium text-muted-foreground  uppercase tracking-wider'>
+              <th className='px-6 py-3 text-left text-micro font-medium text-muted-foreground uppercase tracking-wide'>
                 M3U 地址
               </th>
-              <th className='px-6 py-3 text-left text-xs font-medium text-muted-foreground  uppercase tracking-wider'>
+              <th className='px-6 py-3 text-left text-micro font-medium text-muted-foreground uppercase tracking-wide'>
                 节目单地址
               </th>
-              <th className='px-6 py-3 text-left text-xs font-medium text-muted-foreground  uppercase tracking-wider'>
+              <th className='px-6 py-3 text-left text-micro font-medium text-muted-foreground uppercase tracking-wide'>
                 自定义 UA
               </th>
-              <th className='px-6 py-3 text-left text-xs font-medium text-muted-foreground  uppercase tracking-wider'>
+              <th className='px-6 py-3 text-left text-micro font-medium text-muted-foreground uppercase tracking-wide'>
                 频道数
               </th>
-              <th className='px-6 py-3 text-left text-xs font-medium text-muted-foreground  uppercase tracking-wider'>
+              <th className='px-6 py-3 text-left text-micro font-medium text-muted-foreground uppercase tracking-wide'>
                 状态
               </th>
-              <th className='px-6 py-3 text-left text-xs font-medium text-muted-foreground  uppercase tracking-wider'>
+              <th className='px-6 py-3 text-left text-micro font-medium text-muted-foreground uppercase tracking-wide'>
                 代理模式
               </th>
-              <th className='px-6 py-3 text-right text-xs font-medium text-muted-foreground  uppercase tracking-wider'>
+              <th className='px-6 py-3 text-right text-micro font-medium text-muted-foreground uppercase tracking-wide'>
                 操作
               </th>
             </tr>

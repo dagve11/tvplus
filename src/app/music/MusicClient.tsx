@@ -2471,7 +2471,7 @@ export default function MusicClient({ children: _children }: { children?: React.
             <div className="absolute inset-0 rounded-full border-4 border-border" />
             <div className="absolute inset-0 rounded-full border-4 border-transparent border-t-music-theme border-r-music-theme animate-spin" />
             <div className="absolute inset-1 rounded-full bg-background/90 backdrop-blur-md border border-border flex flex-col items-center justify-center">
-              <div className="text-[10px] md:text-xs text-muted-foreground leading-none mb-1">解析中</div>
+              <div className="text-micro md:text-xs text-muted-foreground leading-none mb-1">解析中</div>
               <div className="text-lg md:text-xl font-bold text-foreground leading-none">{resolvingCount}</div>
             </div>
           </div>
@@ -2569,7 +2569,7 @@ export default function MusicClient({ children: _children }: { children?: React.
                     <div className="min-w-0 truncate text-sm font-bold text-foreground">{currentSong.name}</div>
                     <SourcePill source={currentSong.platform} variant="accent" className="hidden sm:inline-flex" />
                   </div>
-                  <div className="text-xs text-muted-foreground truncate">{currentSong.artist}</div>
+                  <div className="text-sm text-muted-foreground truncate">{currentSong.artist}</div>
                 </div>
               </div>
 
@@ -2650,7 +2650,7 @@ export default function MusicClient({ children: _children }: { children?: React.
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                       </svg>
-                      <span className="absolute inset-0 flex items-center justify-center text-[8px] font-bold">1</span>
+                      <span className="absolute inset-0 flex items-center justify-center text-micro font-bold">1</span>
                     </div>
                   )}
                   {playMode === 'random' && (
@@ -2824,7 +2824,7 @@ export default function MusicClient({ children: _children }: { children?: React.
                   </svg>
                 </button>
                 {showStreamBuffering && (
-                  <span className="absolute left-[calc(50%+4rem)] top-1/2 inline-flex -translate-y-1/2 items-center gap-1 whitespace-nowrap rounded-full bg-white/10 px-2 py-0.5 text-[10px] font-medium text-music-theme md:left-[calc(50%+5rem)]">
+                  <span className="absolute left-[calc(50%+4rem)] top-1/2 inline-flex -translate-y-1/2 items-center gap-1 whitespace-nowrap rounded-full bg-white/10 px-2 py-0.5 text-micro font-medium text-music-theme md:left-[calc(50%+5rem)]">
                     <span className="h-2 w-2 rounded-full bg-music-theme animate-pulse" />
                     缓冲中
                   </span>
@@ -2842,7 +2842,7 @@ export default function MusicClient({ children: _children }: { children?: React.
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
                   </svg>
                   {playlist.length > 0 && (
-                    <span className="absolute -top-1 -right-1 w-3 h-3 bg-music-theme rounded-full text-[8px] text-music-chip flex items-center justify-center font-bold">
+                    <span className="absolute -top-1 -right-1 w-3 h-3 bg-music-theme rounded-full text-micro text-music-chip flex items-center justify-center font-bold">
                       {playlist.length > 9 ? '9+' : playlist.length}
                     </span>
                   )}
@@ -2858,7 +2858,7 @@ export default function MusicClient({ children: _children }: { children?: React.
                 </button>
                 <button
                   onClick={() => setShowQualityMenu(true)}
-                  className="px-2 py-0.5 rounded border text-music-theme border-music-theme bg-white/5 text-[9px] md:text-[10px] font-mono min-w-[32px] text-center hover:bg-white/10 transition-colors"
+                  className="px-2 py-0.5 rounded border text-music-theme border-music-theme bg-white/5 text-micro font-mono min-w-[32px] text-center hover:bg-white/10 transition-colors"
                   title="音质选择"
                 >
                   {getQualityLabel()}
@@ -2877,7 +2877,7 @@ export default function MusicClient({ children: _children }: { children?: React.
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6l4 2m6-2a10 10 0 11-20 0 10 10 0 0120 0z" />
                   </svg>
                   {sleepTimerEndAt && (
-                    <span className="absolute -bottom-2 left-1/2 -translate-x-1/2 text-[8px] font-semibold leading-none text-music-theme">
+                    <span className="absolute -bottom-2 left-1/2 -translate-x-1/2 text-micro font-semibold leading-none text-music-theme">
                       {Math.max(1, Math.ceil(sleepTimerRemaining / 60))}
                     </span>
                   )}
@@ -2897,7 +2897,7 @@ export default function MusicClient({ children: _children }: { children?: React.
                       <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                       </svg>
-                      <span className="absolute inset-0 flex items-center justify-center text-[7px] md:text-[8px] font-bold">1</span>
+                      <span className="absolute inset-0 flex items-center justify-center text-micro font-bold">1</span>
                     </div>
                   )}
                   {playMode === 'random' && (
@@ -3268,7 +3268,7 @@ export default function MusicClient({ children: _children }: { children?: React.
             <div className="p-5 border-b border-border flex items-center justify-between"><div><h3 className="text-lg font-bold text-foreground">均衡器与音效调节</h3></div><button onClick={() => setShowAudioEffectsMenu(false)} className="w-8 h-8 rounded-lg text-muted-foreground hover:text-foreground hover:bg-white/10">✕</button></div>
             <div className="p-5 overflow-y-auto max-h-[calc(90vh-80px)]"><div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-8">
               <section><div className="flex items-center justify-between mb-4"><div><h4 className="text-sm font-bold text-foreground">10 段均衡器</h4></div><label className="flex items-center gap-2 text-xs text-muted-foreground"><input type="checkbox" checked={equalizerEnabled} onChange={(e) => setEqualizerEnabled(e.target.checked)} className="h-4 w-4 accent-music-theme" />启用 EQ</label></div>
-                <div className="rounded-xl border border-white/5 p-4 overflow-x-auto overscroll-x-contain"><div className="min-w-[760px] grid grid-cols-10 gap-3 items-end h-56 sm:h-64">{EQ_BANDS.map((band, index) => (<div key={band.frequency} className="h-full min-w-0 flex flex-col items-center gap-2"><span className="text-[10px] font-mono text-muted-foreground">{(eqGains[index] || 0) > 0 ? '+' : ''}{(eqGains[index] || 0).toFixed(1)}</span><div className="flex-1 w-full min-h-0 flex items-center justify-center"><input type="range" min="-12" max="12" step="0.5" value={eqGains[index] || 0} onChange={(e) => { setEqPreset('自定义'); const value = Number(e.target.value); setEqGains(current => current.map((gain, i) => i === index ? value : gain)); }} disabled={!equalizerEnabled} className="w-40 sm:w-52 h-5 -rotate-90 accent-music-theme [direction:rtl] disabled:opacity-40" /></div><span className="text-[10px] font-mono text-muted-foreground">{band.label}</span></div>))}</div></div>
+                <div className="rounded-xl border border-white/5 p-4 overflow-x-auto overscroll-x-contain"><div className="min-w-[760px] grid grid-cols-10 gap-3 items-end h-56 sm:h-64">{EQ_BANDS.map((band, index) => (<div key={band.frequency} className="h-full min-w-0 flex flex-col items-center gap-2"><span className="text-micro font-mono text-muted-foreground">{(eqGains[index] || 0) > 0 ? '+' : ''}{(eqGains[index] || 0).toFixed(1)}</span><div className="flex-1 w-full min-h-0 flex items-center justify-center"><input type="range" min="-12" max="12" step="0.5" value={eqGains[index] || 0} onChange={(e) => { setEqPreset('自定义'); const value = Number(e.target.value); setEqGains(current => current.map((gain, i) => i === index ? value : gain)); }} disabled={!equalizerEnabled} className="w-40 sm:w-52 h-5 -rotate-90 accent-music-theme [direction:rtl] disabled:opacity-40" /></div><span className="text-micro font-mono text-muted-foreground">{band.label}</span></div>))}</div></div>
                 <div className="mt-5"><div className="flex items-center justify-between mb-3"><h4 className="text-sm font-bold text-foreground">预设</h4><button onClick={() => applyEqPreset('Flat')} className="text-xs text-music-theme hover:text-music-theme-hover">Flat 重置</button></div><div className="flex flex-wrap gap-2">{Object.keys(EQ_PRESETS).map(name => (<button key={name} onClick={() => applyEqPreset(name)} className={`px-3 py-1.5 rounded-lg text-xs transition-colors ${eqPreset === name ? 'bg-white/10 text-music-theme border border-music-theme' : 'bg-white/5 text-muted-foreground border border-border hover:bg-white/10'}`}>{name}</button>))}</div></div>
               </section>
               <aside className="space-y-5"><section className="rounded-xl border border-border bg-white/[0.03] p-4"><div className="flex items-center justify-between"><div><h4 className="text-sm font-bold text-foreground">响度增强</h4><p className="text-xs text-muted-foreground mt-1">轻微压缩，增强人声和细节</p></div><input type="checkbox" checked={loudnessEnabled} onChange={(e) => setLoudnessEnabled(e.target.checked)} className="h-4 w-4 accent-music-theme" /></div></section>

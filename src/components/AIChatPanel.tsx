@@ -8,8 +8,8 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import ReactMarkdown from 'react-markdown';
 
-import { getAuthInfoFromBrowserCookie } from '@/lib/auth';
 import { VideoContext } from '@/lib/ai-orchestrator';
+import { getAuthInfoFromBrowserCookie } from '@/lib/auth';
 
 interface ChatMessage {
   role: 'user' | 'assistant';
@@ -884,7 +884,7 @@ export default function AIChatPanel({
                 AI影视助手
               </h2>
               {context?.title && (
-                <p className='text-xs text-muted-foreground truncate'>
+                <p className='text-sm text-muted-foreground truncate'>
                   正在讨论: {context.title}
                   {context.year && ` (${context.year})`}
                 </p>
@@ -1112,7 +1112,7 @@ export default function AIChatPanel({
                 AI影视助手
               </h2>
               {context?.title && (
-                <p className='text-xs text-muted-foreground truncate'>
+                <p className='text-sm text-muted-foreground truncate'>
                   正在讨论: {context.title}
                   {context.year && ` (${context.year})`}
                 </p>

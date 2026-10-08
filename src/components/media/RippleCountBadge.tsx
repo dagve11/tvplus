@@ -21,7 +21,7 @@ export default function RippleCountBadge({ count }: { count: number }) {
         }}
       />
       <span
-        className='absolute inset-0 flex items-center justify-center rounded-full bg-foreground text-[11px] font-bold text-background shadow-sm'
+        className='absolute inset-0 flex items-center justify-center rounded-full bg-foreground text-micro font-bold text-background shadow-sm'
         style={{ animation: 'badge-scale 2s ease-in-out infinite' }}
       >
         +{count}

@@ -1068,25 +1068,25 @@ export const OpenListConfigComponent = ({
                 <table className='min-w-full divide-y divide-border '>
                   <thead className='bg-muted/50 '>
                     <tr>
-                      <th className='px-6 py-3 text-left text-xs font-medium text-muted-foreground  uppercase tracking-wider'>
+                      <th className='px-6 py-3 text-left text-micro font-medium text-muted-foreground uppercase tracking-wide'>
                         标题
                       </th>
-                      <th className='px-6 py-3 text-left text-xs font-medium text-muted-foreground  uppercase tracking-wider'>
+                      <th className='px-6 py-3 text-left text-micro font-medium text-muted-foreground uppercase tracking-wide'>
                         状态
                       </th>
-                      <th className='px-6 py-3 text-left text-xs font-medium text-muted-foreground  uppercase tracking-wider'>
+                      <th className='px-6 py-3 text-left text-micro font-medium text-muted-foreground uppercase tracking-wide'>
                         类型
                       </th>
-                      <th className='px-6 py-3 text-left text-xs font-medium text-muted-foreground  uppercase tracking-wider'>
+                      <th className='px-6 py-3 text-left text-micro font-medium text-muted-foreground uppercase tracking-wide'>
                         季度
                       </th>
-                      <th className='px-6 py-3 text-left text-xs font-medium text-muted-foreground  uppercase tracking-wider'>
+                      <th className='px-6 py-3 text-left text-micro font-medium text-muted-foreground uppercase tracking-wide'>
                         年份
                       </th>
-                      <th className='px-6 py-3 text-left text-xs font-medium text-muted-foreground  uppercase tracking-wider'>
+                      <th className='px-6 py-3 text-left text-micro font-medium text-muted-foreground uppercase tracking-wide'>
                         评分
                       </th>
-                      <th className='px-6 py-3 text-right text-xs font-medium text-muted-foreground  uppercase tracking-wider'>
+                      <th className='px-6 py-3 text-right text-micro font-medium text-muted-foreground uppercase tracking-wide'>
                         操作
                       </th>
                     </tr>

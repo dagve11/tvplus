@@ -420,7 +420,7 @@ export default function MangaDetailPage() {
                     {chapter.name}
                   </div>
                   {isNewChapter && (
-                    <span className='shrink-0 rounded-sm bg-foreground px-1.5 py-0.5 text-[11px] font-medium text-background'>
+                    <span className='shrink-0 rounded-sm bg-foreground px-1.5 py-0.5 text-micro font-medium text-background'>
                       更新
                     </span>
                   )}

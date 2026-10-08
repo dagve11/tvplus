@@ -346,19 +346,19 @@ export const CategoryConfig = ({
         <table className='min-w-full divide-y divide-border '>
           <thead className='bg-muted/50 sticky top-0 z-sticky'>
             <tr>
-              <th className='px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider'>
+              <th className='px-6 py-3 text-left text-micro font-medium text-muted-foreground uppercase tracking-wide'>
                 分类名称
               </th>
-              <th className='px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider'>
+              <th className='px-6 py-3 text-left text-micro font-medium text-muted-foreground uppercase tracking-wide'>
                 类型
               </th>
-              <th className='px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider'>
+              <th className='px-6 py-3 text-left text-micro font-medium text-muted-foreground uppercase tracking-wide'>
                 搜索关键词
               </th>
-              <th className='px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider'>
+              <th className='px-6 py-3 text-left text-micro font-medium text-muted-foreground uppercase tracking-wide'>
                 状态
               </th>
-              <th className='px-6 py-3 text-right text-xs font-medium text-muted-foreground uppercase tracking-wider'>
+              <th className='px-6 py-3 text-right text-micro font-medium text-muted-foreground uppercase tracking-wide'>
                 操作
               </th>
             </tr>

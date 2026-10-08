@@ -69,7 +69,7 @@ export default function MediaCard({
         )}
         <span className={BOOK_SPINE_OVERLAY} aria-hidden />
         {item.badge && (
-          <span className='absolute left-2 top-2 rounded-sm bg-foreground/75 px-1.5 py-0.5 text-[11px] font-medium text-background backdrop-blur-sm'>
+          <span className='absolute left-2 top-2 rounded-sm bg-foreground/75 px-1.5 py-0.5 text-micro font-medium text-background backdrop-blur-sm'>
             {item.badge}
           </span>
         )}
@@ -84,7 +84,7 @@ export default function MediaCard({
             // 2.7em = 13px × 1.35 × 2，正好两行：撑高到两行是为了名字短的卡片
             // 也和对面的长名字一样高，但绝不能超过两行——min-height 比两行多出来的
             // 那几像素会让被 -webkit-line-clamp 截掉的第三行从底下露出字头。
-            'line-clamp-2 min-h-[2.7em] text-[13px] font-medium leading-[1.35] text-foreground',
+            'line-clamp-2 min-h-[2.7em] text-title font-medium leading-cjk-tight text-foreground',
             LIBRARY_SERIF
           )}
         >
@@ -92,14 +92,14 @@ export default function MediaCard({
         </div>
         {item.meta && (
           <div
-            className={cn('truncate text-[11px]', LIBRARY_MUTED)}
+            className={cn('truncate text-micro', LIBRARY_MUTED)}
             title={item.meta}
           >
             {item.meta}
           </div>
         )}
         {item.subtitle && (
-          <div className={cn('line-clamp-2 text-[11px]', LIBRARY_MUTED)}>
+          <div className={cn('line-clamp-2 text-micro', LIBRARY_MUTED)}>
             {item.subtitle}
           </div>
         )}

@@ -790,7 +790,7 @@ export const ThemeConfigComponent = ({
                       />
                     </div>
                     <div
-                      className='relative z-sticky w-8 h-8 rounded-full flex flex-col items-center justify-center text-[#4a2600] font-extrabold text-[11px] leading-none border-2 border-white/70'
+                      className='relative z-sticky w-8 h-8 rounded-full flex flex-col items-center justify-center text-[#4a2600] font-extrabold text-micro leading-none border-2 border-white/70'
                       style={{
                         background:
                           'linear-gradient(135deg,#ffd54a,#ff8a3d)',

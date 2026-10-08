@@ -436,7 +436,7 @@ export default function BookDetailPage() {
                   <div className={cn('truncate font-medium', LIBRARY_TEXT)}>
                     {item.title || item.type}
                   </div>
-                  <div className={cn('mt-1 truncate text-xs', LIBRARY_MUTED)}>
+                  <div className={cn('mt-1 truncate text-sm', LIBRARY_MUTED)}>
                     {item.rel}
                   </div>
                 </div>

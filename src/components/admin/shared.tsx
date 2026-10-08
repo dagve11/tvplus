@@ -214,9 +214,9 @@ export const useLoadingState = () => {
 export const adminTableStyles = {
   table: 'min-w-full divide-y divide-border',
   thead: 'bg-muted/50 sticky top-0 z-10',
-  th: 'px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider',
+  th: 'px-6 py-3 text-left text-micro font-medium text-muted-foreground uppercase tracking-wide',
   thRight:
-    'px-6 py-3 text-right text-xs font-medium text-muted-foreground uppercase tracking-wider',
+    'px-6 py-3 text-right text-micro font-medium text-muted-foreground uppercase tracking-wide',
   td: 'px-6 py-4 whitespace-nowrap text-sm text-foreground',
   tdMuted: 'px-6 py-4 whitespace-nowrap text-sm text-muted-foreground',
   row: 'hover:bg-accent/50 transition-colors',

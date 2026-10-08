@@ -1214,7 +1214,7 @@ export const VideoSourceConfig = ({
                   <Settings size={14} />
                   <span>特殊源设置</span>
                   {(config?.SpecialSourceApis?.length || 0) > 0 && (
-                    <span className='rounded-full bg-destructive/10 px-1.5 py-0.5 text-[10px] font-semibold text-destructive'>
+                    <span className='rounded-full bg-destructive/10 px-1.5 py-0.5 text-micro font-semibold text-destructive'>
                       {config?.SpecialSourceApis?.length}
                     </span>
                   )}
@@ -1235,7 +1235,7 @@ export const VideoSourceConfig = ({
                   <Settings size={14} />
                   <span>客户端广告配置</span>
                   {(config?.ClientAdSourceApis?.length || 0) > 0 && (
-                    <span className='rounded-full bg-muted/50 px-1.5 py-0.5 text-[10px] font-semibold text-muted-foreground'>
+                    <span className='rounded-full bg-muted/50 px-1.5 py-0.5 text-micro font-semibold text-muted-foreground'>
                       {config?.ClientAdSourceApis?.length}
                     </span>
                   )}
@@ -1283,7 +1283,7 @@ export const VideoSourceConfig = ({
                       : '启用全部源'}
                   </span>
                   {disabledSourceKeys.length > 0 && (
-                    <span className='rounded-full bg-card/20 px-1.5 py-0.5 text-[10px] font-semibold'>
+                    <span className='rounded-full bg-card/20 px-1.5 py-0.5 text-micro font-semibold'>
                       {disabledSourceKeys.length}
                     </span>
                   )}
@@ -1309,7 +1309,7 @@ export const VideoSourceConfig = ({
                 >
                   <span>禁用无效源</span>
                   {invalidSourceKeys.length > 0 && (
-                    <span className='rounded-full bg-card/20 px-1.5 py-0.5 text-[10px] font-semibold'>
+                    <span className='rounded-full bg-card/20 px-1.5 py-0.5 text-micro font-semibold'>
                       {invalidSourceKeys.length}
                     </span>
                   )}
@@ -1335,7 +1335,7 @@ export const VideoSourceConfig = ({
                 >
                   <span>禁用无法搜索源</span>
                   {noResultSourceKeys.length > 0 && (
-                    <span className='rounded-full bg-card/20 px-1.5 py-0.5 text-[10px] font-semibold'>
+                    <span className='rounded-full bg-card/20 px-1.5 py-0.5 text-micro font-semibold'>
                       {noResultSourceKeys.length}
                     </span>
                   )}
@@ -1434,28 +1434,28 @@ export const VideoSourceConfig = ({
                   className='w-4 h-4 text-primary bg-muted border-border rounded focus:ring-ring dark:ring-offset-gray-800 focus:ring-2'
                 />
               </th>
-              <th className='px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider'>
+              <th className='px-6 py-3 text-left text-micro font-medium text-muted-foreground uppercase tracking-wide'>
                 名称
               </th>
-              <th className='px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider'>
+              <th className='px-6 py-3 text-left text-micro font-medium text-muted-foreground uppercase tracking-wide'>
                 Key
               </th>
-              <th className='px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider'>
+              <th className='px-6 py-3 text-left text-micro font-medium text-muted-foreground uppercase tracking-wide'>
                 API 地址
               </th>
-              <th className='px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider'>
+              <th className='px-6 py-3 text-left text-micro font-medium text-muted-foreground uppercase tracking-wide'>
                 Detail 地址
               </th>
-              <th className='px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider'>
+              <th className='px-6 py-3 text-left text-micro font-medium text-muted-foreground uppercase tracking-wide'>
                 状态
               </th>
-              <th className='px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider'>
+              <th className='px-6 py-3 text-left text-micro font-medium text-muted-foreground uppercase tracking-wide'>
                 代理模式
               </th>
-              <th className='px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider'>
+              <th className='px-6 py-3 text-left text-micro font-medium text-muted-foreground uppercase tracking-wide'>
                 有效性
               </th>
-              <th className='px-6 py-3 text-right text-xs font-medium text-muted-foreground uppercase tracking-wider'>
+              <th className='px-6 py-3 text-right text-micro font-medium text-muted-foreground uppercase tracking-wide'>
                 操作
               </th>
             </tr>

@@ -91,7 +91,7 @@ export default function ContinueReadingCard({
 
       <div className='flex min-w-0 flex-1 flex-col justify-between gap-3'>
         <div className='min-w-0'>
-          <div className='text-[11px] font-medium text-foreground'>
+          <div className='text-micro font-medium text-foreground'>
             {eyebrow}
           </div>
           <div

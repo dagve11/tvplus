@@ -1446,7 +1446,7 @@ function ChapterReader({ manifest }: { manifest: BookReadManifest }) {
                     <div className='truncate text-sm font-medium text-foreground'>
                       {currentChapterTitle || '语音朗读'}
                     </div>
-                    <div className='mt-0.5 flex items-center gap-2 text-[11px] text-muted-foreground'>
+                    <div className='mt-0.5 flex items-center gap-2 text-micro text-muted-foreground'>
                       <span>
                         {!ttsAvailable
                           ? '服务异常'
@@ -1477,7 +1477,7 @@ function ChapterReader({ manifest }: { manifest: BookReadManifest }) {
                     />
                   </button>
                 </div>
-                <div className='mt-2 flex items-center justify-between text-[11px] text-muted-foreground'>
+                <div className='mt-2 flex items-center justify-between text-micro text-muted-foreground'>
                   <span>{selectedVoice?.displayName || '默认音色'}</span>
                   <span>
                     {formatDurationTime(displayedTtsTime)} /{' '}
@@ -3406,7 +3406,7 @@ export default function BookReadPage() {
                         currentChapter ||
                         '语音朗读'}
                     </div>
-                    <div className='mt-0.5 flex items-center gap-2 text-[11px] text-muted-foreground'>
+                    <div className='mt-0.5 flex items-center gap-2 text-micro text-muted-foreground'>
                       <span className='truncate'>
                         {!ttsAvailable
                           ? '服务异常'
@@ -3437,7 +3437,7 @@ export default function BookReadPage() {
                     />
                   </button>
                 </div>
-                <div className='mt-2 flex items-center justify-between text-[11px] text-muted-foreground'>
+                <div className='mt-2 flex items-center justify-between text-micro text-muted-foreground'>
                   <span>{selectedVoice?.displayName || '默认音色'}</span>
                   <span>
                     {formatDurationTime(displayedTtsTime)} /{' '}

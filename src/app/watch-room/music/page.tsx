@@ -553,7 +553,7 @@ export default function WatchRoomMusicPage() {
                       </div>
                       <div className="min-w-0">
                         <div className="truncate text-sm font-semibold">{song.name}</div>
-                        <div className="truncate text-xs text-muted-foreground">{song.artist}</div>
+                        <div className="truncate text-sm text-muted-foreground">{song.artist}</div>
                       </div>
                     </button>
                     <button

@@ -159,7 +159,7 @@ export function DownloadPanel() {
                       <h3 className='mb-1 truncate text-sm font-semibold text-foreground'>
                         {task.title}
                       </h3>
-                      <p className='truncate text-xs text-muted-foreground'>{task.url}</p>
+                      <p className='truncate text-sm text-muted-foreground'>{task.url}</p>
                     </div>
                     <div className='flex shrink-0 items-center gap-2'>
                       <span className={`text-xs font-medium ${getStatusColor(task.status)}`}>
@@ -225,7 +225,7 @@ export function DownloadPanel() {
                       <ScrollText className='h-4 w-4' />
                       查看日志
                       {task.segmentLogs.length > 0 && (
-                        <span className='rounded-full bg-muted px-1.5 py-0.5 text-[10px] text-foreground'>
+                        <span className='rounded-full bg-muted px-1.5 py-0.5 text-micro text-foreground'>
                           {task.segmentLogs.length}
                         </span>
                       )}
@@ -285,7 +285,7 @@ export function DownloadPanel() {
               <div className='flex items-start justify-between gap-4'>
                 <div className='min-w-0'>
                   <h3 className='truncate text-lg font-bold text-foreground'>分片下载日志</h3>
-                  <p className='mt-1 truncate text-xs text-muted-foreground'>{logTask.title}</p>
+                  <p className='mt-1 truncate text-sm text-muted-foreground'>{logTask.title}</p>
                 </div>
                 <button
                   onClick={() => setLogTaskId(null)}
