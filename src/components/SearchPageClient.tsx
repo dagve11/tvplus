@@ -58,6 +58,7 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
+import { videoGridClass } from '@/components/video-grid';
 import { loadTraditionalToSimplifiedConverter } from '@/lib/danmaku/traditional-to-simplified';
 
 const PANSOU_CLOUD_TYPE_OPTIONS = Object.entries(CLOUD_TYPE_NAMES).map(
@@ -2222,8 +2223,7 @@ export function SearchPageClient({ searchBase = '/search' }: { searchBase?: stri
                     )
                   ) : (
                     (() => {
-                      const gridClassName =
-                        'justify-start grid grid-cols-3 gap-x-2 gap-y-14 px-0 sm:grid-cols-[repeat(auto-fill,_minmax(11rem,_1fr))] sm:gap-x-8 sm:gap-y-20 sm:px-2';
+                      const gridClassName = videoGridClass;
 
                       const listClassName = 'space-y-4';
 

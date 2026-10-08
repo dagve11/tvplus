@@ -22,8 +22,9 @@ import {
 import { SearchResult } from '@/lib/types';
 
 import PageLayout from '@/components/PageLayout';
-import VideoCard from '@/components/VideoCard';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
+import { videoGridClass } from '@/components/video-grid';
+import VideoCard from '@/components/VideoCard';
 
 interface DuanjuSource {
   key: string;
@@ -623,7 +624,7 @@ function DuanjuPageClient() {
               </div>
             ) : (
               <>
-                <div className='grid grid-cols-3 gap-x-2 gap-y-14 sm:gap-y-20 px-0 sm:px-2 sm:grid-cols-[repeat(auto-fill,_minmax(11rem,_1fr))] sm:gap-x-8'>
+                <div className={videoGridClass}>
                   {videos.map((item) => (
                     <div key={`${item.source}-${item.id}`} className='w-full'>
                       <VideoCard

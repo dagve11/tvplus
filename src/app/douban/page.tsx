@@ -19,6 +19,7 @@ import DoubanCardSkeleton from '@/components/DoubanCardSkeleton';
 import DoubanCustomSelector from '@/components/DoubanCustomSelector';
 import DoubanSelector from '@/components/DoubanSelector';
 import PageLayout from '@/components/PageLayout';
+import { videoGridClass } from '@/components/video-grid';
 import VideoCard from '@/components/VideoCard';
 
 function DoubanPageClient() {
@@ -828,7 +829,7 @@ function DoubanPageClient() {
             <BangumiScheduleTimeline weekday={selectedWeekday} />
           ) : (
             /* 内容网格 */
-            <div className='justify-start grid grid-cols-3 gap-x-2 gap-y-12 px-0 sm:px-2 sm:grid-cols-[repeat(auto-fill,minmax(160px,1fr))] sm:gap-x-8 sm:gap-y-20'>
+            <div className={videoGridClass}>
               {loading || !selectorsReady
                 ? // 显示骨架屏
                   skeletonData.map((index) => (
