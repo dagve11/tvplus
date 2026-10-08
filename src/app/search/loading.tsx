@@ -1,8 +1,9 @@
+import { PAGE_WIDE } from '@/components/layout/shell';
 import { Skeleton } from '@/components/ui/skeleton';
 
 export default function SearchLoading() {
   return (
-    <div className='mx-auto max-w-7xl space-y-4 p-4'>
+    <div className={`${PAGE_WIDE} space-y-4 py-4`}>
       {/* 筛选/搜索行 */}
       <div className='flex flex-wrap items-center gap-2'>
         <Skeleton className='h-10 w-full max-w-md' />

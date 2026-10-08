@@ -68,7 +68,7 @@ const MobileBottomNav = ({ activePath }: MobileBottomNavProps) => {
         paddingBottom: 'env(safe-area-inset-bottom)',
       }}
     >
-      <ul className='no-scrollbar flex items-center overflow-x-auto'>
+      <ul className='flex items-center overflow-x-auto scrollbar-hide'>
         {navItems.map((item) => {
           const active = isActive(item);
           const Icon = item.icon;

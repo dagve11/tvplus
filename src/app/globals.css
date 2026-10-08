@@ -201,18 +201,9 @@ html[data-sidebar-collapsed] {
   }
 }
 
-/* 需要完全无滚动条的横向轨道（移动端底栏、卡片横排）单独加 .no-scrollbar。
-   此前这里对 * 通配隐藏滚动条，把上面那套自定义滚动条样式一并废掉了，
-   侧栏的独立滚动因此没有任何可视提示。 */
-
-.no-scrollbar {
-  -ms-overflow-style: none; /* IE & Edge */
-  scrollbar-width: none; /* Firefox */
-}
-
-.no-scrollbar::-webkit-scrollbar {
-  display: none; /* Chrome, Safari, Opera */
-}
+/* 需要完全无滚动条的横向轨道（移动端底栏、卡片横排）用上面 @layer utilities 里的
+   .scrollbar-hide。此前这里有一组对 * 的通配隐藏规则，把自定义滚动条样式一并
+   废掉了，侧栏的独立滚动因此没有任何可视提示——已删除。 */
 
 /* View Transitions API 动画 */
 @keyframes slide-from-top {

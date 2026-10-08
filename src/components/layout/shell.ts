@@ -58,6 +58,15 @@ export const DESKTOP_TOPBAR_RESERVE = 'md:pt-12';
 export const SIDEBAR_W = 'w-[var(--sidebar-w)]';
 
 /**
+ * 横向卡片轨道（ScrollableRow）的内侧留白。
+ *
+ * 单独抽出来的原因：轨道自带这段 padding，而区块标题行此前不带，导致首页
+ * 每个区块的标题与下方卡片左右错位 16px（移动）/ 24px（桌面）——这是"布局
+ * 看着不舒服"最直接的一处。标题行必须用同一个值，两边才对齐。
+ */
+export const RAIL_GUTTER = 'px-4 sm:px-6';
+
+/**
  * 有意保留的差异（不要"顺手统一"）：
  *
  * 1. ui/input.tsx 与 ui/textarea.tsx 用 `text-base md:text-sm`——移动端 16px 是
