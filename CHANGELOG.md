@@ -28,6 +28,7 @@
 - **play**：12,416 行单文件 → 页面注册表 + `src/components/play/`（`use-art-player.ts` 纯配置函数 64KB 管 ArtPlayer 生命周期、`VideoHeader`/`PlayToolbar`（6 外部播放器数据驱动）/`MediaInfoSection`/`DanmakuSourceSelector`/`ShortcutDialog`），面板/引擎/chrome 分四子步抽离
 - **UserMenu**：6,338 行 → DropdownMenu 宿主 + `src/components/user-panels/` 12 个面板懒加载
 - **导航**：navItems 构建器单一消费 RUNTIME_CONFIG 特性开关，重建 Sidebar/MobileBottomNav/MobileHeader/PageLayout
+- **加载动画**：旧的"魔法阵/方格/旧版 emoji"三款式系统（含后台切换项、`data-loading-style` 属性、约 660 行 CSS）整体下线，重做为**轨道环（Orbit Ring）**——细环底圈 + 进度弧（弧长即真实阶段进度，平滑生长）+ 匀速扫描虚线弧 + 环心阶段图标呼吸 + 阶段点阵 + 整页细进度条；单色 token 驱动，失败态转 destructive，尊重 `prefers-reduced-motion`，SSR 安全（无随机数）
 
 ### 清理
 
