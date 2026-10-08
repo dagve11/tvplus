@@ -185,16 +185,15 @@ function getD1Adapter(): any {
   const DatabaseModule = require('better-sqlite3');
   const Database = DatabaseModule?.default ?? DatabaseModule;
   const path = require('path');
-  const fs = require('fs');
 
   const dbPath =
     process.env.SQLITE_DB_PATH ||
     path.join(process.cwd(), '.data', 'moontv.db');
 
-  // better-sqlite3 不会自动建目录，缺了会报「unable to open database file」。
-  // 容器镜像里由 Dockerfile 建好 /app/.data，裸机/本地跑则靠这一行兜底。
-  fs.mkdirSync(path.dirname(dbPath), { recursive: true });
-
+  // 注：这里刻意不建目录——db.ts 会被客户端 bundle 一起拉进去
+  // （refresh-token.ts → TokenRefreshManager.tsx），引入 fs 会让客户端构建
+  // 报 Module not found: Can't resolve 'fs'。数据目录由部署侧准备：
+  // 容器里是 Dockerfile 的 mkdir /app/.data，裸机/本地跑手动 mkdir .data。
   const db = new Database(dbPath);
   db.pragma('journal_mode = WAL'); // 启用 WAL 模式提升性能
   db.pragma('foreign_keys = ON'); // 与 D1 保持一致，启用外键约束
