@@ -8,9 +8,7 @@ import MobileBottomNav from './MobileBottomNav';
 import MobileHeader from './MobileHeader';
 import Sidebar from './Sidebar';
 import { ThemeToggle } from './ThemeToggle';
-import { UpdateNotification } from './UpdateNotification';
 import { UserMenu } from './UserMenu';
-import { VersionCheckProvider } from './VersionCheckProvider';
 
 interface PageLayoutProps {
   children: React.ReactNode;
@@ -59,7 +57,7 @@ const PageLayout = ({
   }, [shouldShowSharedBackground]);
 
   return (
-    <VersionCheckProvider>
+    <>
       <div className='relative w-full min-h-screen overflow-hidden'>
         {shouldShowSharedBackground && backgroundImage && (
           <>
@@ -101,7 +99,6 @@ const PageLayout = ({
               <div className='absolute top-2 right-4 z-20 hidden md:flex items-center gap-2'>
                 <ThemeToggle />
                 <UserMenu />
-                <UpdateNotification />
               </div>
             )}
 
@@ -124,7 +121,7 @@ const PageLayout = ({
           </div>
         )}
       </div>
-    </VersionCheckProvider>
+    </>
   );
 };
 

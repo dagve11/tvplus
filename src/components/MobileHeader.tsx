@@ -6,7 +6,6 @@ import Link from 'next/link';
 import { BackButton } from './BackButton';
 import { useSite } from './SiteProvider';
 import { ThemeToggle } from './ThemeToggle';
-import { UpdateNotification } from './UpdateNotification';
 import { UserMenu } from './UserMenu';
 
 interface MobileHeaderProps {
@@ -36,7 +35,6 @@ const MobileHeader = ({ showBackButton = false }: MobileHeaderProps) => {
         <div className='flex items-center gap-2'>
           <ThemeToggle />
           <UserMenu />
-          <UpdateNotification />
         </div>
 
         {/* 中间：Logo（相对内容行居中，避免被 safe-area 顶偏） */}

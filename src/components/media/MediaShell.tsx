@@ -17,7 +17,6 @@ import {
   SPINE_TAB_IDLE,
 } from '@/components/media/library';
 import { ThemeToggle } from '@/components/ThemeToggle';
-import { UpdateNotification } from '@/components/UpdateNotification';
 import { UserMenu } from '@/components/UserMenu';
 
 export interface MediaShellTab {
@@ -136,7 +135,6 @@ export default function MediaShell({
               <div className='ml-auto hidden shrink-0 items-center gap-2 md:flex lg:ml-0'>
                 <ThemeToggle />
                 <UserMenu />
-                <UpdateNotification />
               </div>
             </>
           )}
