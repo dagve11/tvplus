@@ -318,6 +318,33 @@ services:
       - ./data:/app/.data
 ```
 
+> **首次启动前必须初始化表结构**，否则访问任何页面都会报
+> `no such table: admin_config`：
+>
+> ```bash
+> # 容器内（compose 起来之后）
+> docker exec -it moontv-core pnpm init:sqlite
+>
+> # 或裸机 / 本地运行（在项目根目录）
+> pnpm init:sqlite
+> ```
+>
+> 该脚本会建表（跑 `migrations/*.sql`）、并按 `USERNAME` / `PASSWORD`
+> 创建站长账号（角色 owner，密码按 sha256 存）。
+> 它会读取当前进程的环境变量，**不会自动加载 `.env`**——所以本地运行时请先把
+> 变量导进 shell，或确认 `.env` 已被你的启动方式加载。
+>
+> ⚠️ **Windows 特别注意**：`USERNAME` 是 Windows 的系统内置环境变量（当前登录
+> 用户名）。若不显式覆盖，站长账号会变成系统用户名（例如 `72366`），且 `.env`
+> 里的 `USERNAME` 不会覆盖它（Next 的 env 加载器不覆盖已存在的变量）。请显式设置：
+>
+> ```powershell
+> $env:USERNAME="admin"; $env:PASSWORD="你的密码"; pnpm init:sqlite
+> $env:USERNAME="admin"; $env:PASSWORD="你的密码"; pnpm dev
+> ```
+>
+> 想推倒重来：`pnpm db:reset`（删库 + 重新初始化）。
+
 
 ### Redis 存储（有一定的丢数据风险）
 
