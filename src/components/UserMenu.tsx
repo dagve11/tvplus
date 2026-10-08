@@ -31,7 +31,6 @@ import { OfflineDownloadPanel } from './OfflineDownloadPanel';
 import { PersonalCenterPanel } from './PersonalCenterPanel';
 import TVRemotePanel from './tv/TVRemotePanel';
 import { ChangePasswordDialog } from './user-panels/ChangePasswordDialog';
-import { ReportDialog } from './user-panels/ReportDialog';
 import { SubscribePanel } from './user-panels/SubscribePanel';
 import { UserSettingsSheet } from './user-panels/UserSettingsSheet';
 import { useVersionCheck } from './VersionCheckProvider';
@@ -57,7 +56,6 @@ export const UserMenu: React.FC = () => {
   const [isFavoritesPanelOpen, setIsFavoritesPanelOpen] = useState(false);
   const [isEmailSettingsOpen, setIsEmailSettingsOpen] = useState(false);
   const [isDeviceManagementOpen, setIsDeviceManagementOpen] = useState(false);
-  const [isReportOpen, setIsReportOpen] = useState(false);
   const [isDownloadManagementOpen, setIsDownloadManagementOpen] =
     useState(false);
   const [isTVRemoteOpen, setIsTVRemoteOpen] = useState(false);
@@ -116,7 +114,6 @@ export const UserMenu: React.FC = () => {
       isOfflineDownloadPanelOpen ||
       isEmailSettingsOpen ||
       isDeviceManagementOpen ||
-      isReportOpen ||
       isDownloadManagementOpen ||
       isTVRemoteOpen
     ) {
@@ -145,7 +142,6 @@ export const UserMenu: React.FC = () => {
     isOfflineDownloadPanelOpen,
     isEmailSettingsOpen,
     isDeviceManagementOpen,
-    isReportOpen,
     isDownloadManagementOpen,
     isTVRemoteOpen,
   ]);
@@ -1045,12 +1041,6 @@ export const UserMenu: React.FC = () => {
         isOpen={isTVRemoteOpen}
         mounted={mounted}
         onClose={() => setIsTVRemoteOpen(false)}
-      />
-
-      {/* 举报信息面板 */}
-      <ReportDialog
-        open={isReportOpen}
-        onOpenChange={setIsReportOpen}
       />
 
       {/* 确认对话框 */}
