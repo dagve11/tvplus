@@ -7,7 +7,6 @@ import {
   Download,
   LogOut,
   Monitor,
-  Package,
   Settings,
   Shield,
   Smartphone,
@@ -32,7 +31,6 @@ import { OfflineDownloadPanel } from './OfflineDownloadPanel';
 import { PersonalCenterPanel } from './PersonalCenterPanel';
 import TVRemotePanel from './tv/TVRemotePanel';
 import { ChangePasswordDialog } from './user-panels/ChangePasswordDialog';
-import { EcoAppsPanel } from './user-panels/EcoAppsPanel';
 import { ReportDialog } from './user-panels/ReportDialog';
 import { SubscribePanel } from './user-panels/SubscribePanel';
 import { UserSettingsSheet } from './user-panels/UserSettingsSheet';
@@ -59,7 +57,6 @@ export const UserMenu: React.FC = () => {
   const [isFavoritesPanelOpen, setIsFavoritesPanelOpen] = useState(false);
   const [isEmailSettingsOpen, setIsEmailSettingsOpen] = useState(false);
   const [isDeviceManagementOpen, setIsDeviceManagementOpen] = useState(false);
-  const [isEcoAppsOpen, setIsEcoAppsOpen] = useState(false);
   const [isReportOpen, setIsReportOpen] = useState(false);
   const [isDownloadManagementOpen, setIsDownloadManagementOpen] =
     useState(false);
@@ -119,7 +116,6 @@ export const UserMenu: React.FC = () => {
       isOfflineDownloadPanelOpen ||
       isEmailSettingsOpen ||
       isDeviceManagementOpen ||
-      isEcoAppsOpen ||
       isReportOpen ||
       isDownloadManagementOpen ||
       isTVRemoteOpen
@@ -149,7 +145,6 @@ export const UserMenu: React.FC = () => {
     isOfflineDownloadPanelOpen,
     isEmailSettingsOpen,
     isDeviceManagementOpen,
-    isEcoAppsOpen,
     isReportOpen,
     isDownloadManagementOpen,
     isTVRemoteOpen,
@@ -854,18 +849,6 @@ export const UserMenu: React.FC = () => {
             <span className='font-medium'>电视访问</span>
           </button>
 
-          {/* 生态应用按钮 */}
-          <button
-            onClick={() => {
-              setIsOpen(false);
-              setIsEcoAppsOpen(true);
-            }}
-            className='w-full px-3 py-2 text-left flex items-center gap-2.5 text-foreground hover:bg-accent hover:text-accent-foreground transition-colors text-sm'
-          >
-            <Package className='w-4 h-4 text-muted-foreground' />
-            <span className='font-medium'>生态应用</span>
-          </button>
-
           {/* 分割线 */}
           <div className='my-1 border-t border-border'></div>
 
@@ -1062,13 +1045,6 @@ export const UserMenu: React.FC = () => {
         isOpen={isTVRemoteOpen}
         mounted={mounted}
         onClose={() => setIsTVRemoteOpen(false)}
-      />
-
-      {/* 生态应用面板 */}
-      <EcoAppsPanel
-        open={isEcoAppsOpen}
-        onOpenChange={setIsEcoAppsOpen}
-        onOpenReport={() => setIsReportOpen(true)}
       />
 
       {/* 举报信息面板 */}
