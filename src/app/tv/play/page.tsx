@@ -1844,7 +1844,7 @@ function TVPlayClient() {
               <div>
                 <h2 className='text-5xl font-black'>{detail.title}</h2>
                 <div className='mt-4 flex flex-wrap gap-3 text-xl font-bold text-muted-foreground'>
-                  <span className='rounded-full bg-primary px-4 py-2'>
+                  <span className='rounded-full bg-primary px-4 py-2 text-primary-foreground'>
                     {detail.source_name || detail.source}
                   </span>
                   {detail.year && (

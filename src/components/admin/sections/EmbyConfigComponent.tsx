@@ -676,7 +676,7 @@ export const EmbyConfigComponent = ({
                   }}
                   className={`flex-1 px-4 py-2 rounded-lg font-medium transition-colors ${
                     authMode === 'apikey'
-                      ? 'bg-primary text-foreground'
+                      ? 'bg-primary text-primary-foreground'
                       : 'bg-muted  text-foreground  hover:bg-muted '
                   }`}
                 >
@@ -691,7 +691,7 @@ export const EmbyConfigComponent = ({
                   }}
                   className={`flex-1 px-4 py-2 rounded-lg font-medium transition-colors ${
                     authMode === 'password'
-                      ? 'bg-primary text-foreground'
+                      ? 'bg-primary text-primary-foreground'
                       : 'bg-muted  text-foreground  hover:bg-muted '
                   }`}
                 >

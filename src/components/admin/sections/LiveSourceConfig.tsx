@@ -493,7 +493,7 @@ export const LiveSourceConfig = ({
               className={`px-3 py-1.5 text-sm font-medium flex items-center space-x-2 ${
                 isRefreshing || isLoading('refreshLiveSources')
                   ? 'bg-muted  cursor-not-allowed text-foreground rounded-lg'
-                  : 'bg-primary hover:bg-primary   text-foreground rounded-lg transition-colors'
+                  : 'bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg transition-colors'
               }`}
             >
               <span>

@@ -9250,7 +9250,7 @@ function PlayPageClient() {
                       ? router.push(`/search?q=${encodeURIComponent(videoTitle)}`)
                       : router.back()
                   }
-                  className='flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-6 py-3 font-medium text-white shadow-lg transition-all duration-200 hover:scale-105 hover:bg-primary/90 hover:shadow-xl'
+                  className='flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-6 py-3 font-medium text-primary-foreground shadow-lg transition-all duration-200 hover:scale-105 hover:bg-primary/90 hover:shadow-xl'
                 >
                   {videoTitle ? (
                     <>
@@ -9485,7 +9485,7 @@ function PlayPageClient() {
                                   artPlayerRef.current.url = videoUrl;
                                 }
                               }}
-                              className='mt-4 px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-all duration-200'
+                              className='mt-4 px-6 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-all duration-200'
                             >
                               重试
                             </button>
@@ -9506,7 +9506,7 @@ function PlayPageClient() {
                                   proxyAttemptedRef.current = true;
                                   setVideoUrl(proxyUrl);
                                 }}
-                                className='mt-4 ml-3 px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-all duration-200'
+                                className='mt-4 ml-3 px-6 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-all duration-200'
                               >
                                 使用代理播放
                               </button>

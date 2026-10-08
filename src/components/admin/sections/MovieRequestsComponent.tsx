@@ -211,7 +211,7 @@ export const MovieRequestsComponent = ({
             onClick={() => setFilter('pending')}
             className={`px-4 py-2 rounded-lg ${
               filter === 'pending'
-                ? 'bg-primary text-foreground'
+                ? 'bg-primary text-primary-foreground'
                 : 'bg-muted  text-foreground '
             }`}
           >
@@ -221,7 +221,7 @@ export const MovieRequestsComponent = ({
             onClick={() => setFilter('fulfilled')}
             className={`px-4 py-2 rounded-lg ${
               filter === 'fulfilled'
-                ? 'bg-primary text-foreground'
+                ? 'bg-primary text-primary-foreground'
                 : 'bg-muted  text-foreground '
             }`}
           >

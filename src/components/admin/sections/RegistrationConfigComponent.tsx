@@ -744,7 +744,7 @@ export const RegistrationConfigComponent = ({
                   navigator.clipboard.writeText(uri);
                   showSuccess('已复制到剪贴板');
                 }}
-                className='absolute right-2 top-1/2 -translate-y-1/2 px-3 py-1 text-xs bg-primary text-foreground rounded hover:bg-primary transition-colors'
+                className='absolute right-2 top-1/2 -translate-y-1/2 px-3 py-1 text-xs bg-primary text-primary-foreground rounded hover:bg-primary transition-colors'
               >
                 复制
               </button>

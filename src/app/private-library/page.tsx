@@ -637,7 +637,7 @@ export default function PrivateLibraryPage() {
                       onClick={() => setEmbyKey(option.key)}
                       className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors whitespace-nowrap flex-shrink-0 ${
                         embyKey === option.key
-                          ? 'bg-primary text-white'
+                          ? 'bg-primary text-primary-foreground'
                           : 'bg-muted  text-foreground  hover:bg-muted '
                       }`}
                     >
@@ -670,7 +670,7 @@ export default function PrivateLibraryPage() {
                     onClick={() => setOpenlistCategory('all')}
                     className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors whitespace-nowrap flex-shrink-0 ${
                       openlistCategory === 'all'
-                        ? 'bg-primary text-white'
+                        ? 'bg-primary text-primary-foreground'
                         : 'bg-muted  text-foreground  hover:bg-muted '
                     }`}
                   >
@@ -682,7 +682,7 @@ export default function PrivateLibraryPage() {
                       onClick={() => setOpenlistCategory(cat)}
                       className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors whitespace-nowrap flex-shrink-0 ${
                         openlistCategory === cat
-                          ? 'bg-primary text-white'
+                          ? 'bg-primary text-primary-foreground'
                           : 'bg-muted  text-foreground  hover:bg-muted '
                       }`}
                     >
@@ -720,7 +720,7 @@ export default function PrivateLibraryPage() {
                       onClick={() => setSelectedView('all')}
                       className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors whitespace-nowrap flex-shrink-0 ${
                         selectedView === 'all'
-                          ? 'bg-primary text-white'
+                          ? 'bg-primary text-primary-foreground'
                           : 'bg-muted  text-foreground  hover:bg-muted '
                       }`}
                     >
@@ -732,7 +732,7 @@ export default function PrivateLibraryPage() {
                         onClick={() => setSelectedView(view.id)}
                         className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors whitespace-nowrap flex-shrink-0 ${
                           selectedView === view.id
-                            ? 'bg-primary text-white'
+                            ? 'bg-primary text-primary-foreground'
                             : 'bg-muted  text-foreground  hover:bg-muted '
                         }`}
                       >
