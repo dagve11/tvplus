@@ -176,12 +176,24 @@ function getD1Adapter(): any {
   }
 
   // 开发环境：better-sqlite3
-  const Database = require('better-sqlite3');
+  //
+  // better-sqlite3 是原生模块，正常应被 next.config.js 的
+  // serverComponentsExternalPackages 外部化。若配置漏了/失效导致它被打进
+  // server bundle，webpack 的 ESM 互操作会把构造函数塞进 .default，
+  // 直接 new 会报「Database is not a constructor」。这里兼容两种形态，
+  // 免得一个配置疏漏直接把服务起不来。
+  const DatabaseModule = require('better-sqlite3');
+  const Database = DatabaseModule?.default ?? DatabaseModule;
   const path = require('path');
+  const fs = require('fs');
 
   const dbPath =
     process.env.SQLITE_DB_PATH ||
     path.join(process.cwd(), '.data', 'moontv.db');
+
+  // better-sqlite3 不会自动建目录，缺了会报「unable to open database file」。
+  // 容器镜像里由 Dockerfile 建好 /app/.data，裸机/本地跑则靠这一行兜底。
+  fs.mkdirSync(path.dirname(dbPath), { recursive: true });
 
   const db = new Database(dbPath);
   db.pragma('journal_mode = WAL'); // 启用 WAL 模式提升性能

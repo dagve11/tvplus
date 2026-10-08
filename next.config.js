@@ -37,12 +37,19 @@ const createNextConfig = (phase) => {
   // 导致 .open-next 里缺少 web.cjs 并报 Could not resolve "@libsql/isomorphic-ws"。
   // 声明为 server external 后，OpenNext 会完整拷贝这些包并应用 workerd 导出。
   // 参见: https://opennext.js.org/cloudflare/howtos/workerd
+  //
+  // better-sqlite3 是原生模块（.node 绑定）：一旦被 webpack 打进 server bundle，
+  // require() 拿到的是 ESM 包装对象而不是构造函数，运行时报
+  // 「TypeError: Database is not a constructor」。默认 localstorage 模式不会走到
+  // 这条路径，只有 NEXT_PUBLIC_STORAGE_TYPE=d1（自建 SQLite）才会暴露，所以必须
+  // 显式外部化——生产构建 Next 自带默认外部化名单，dev 模式则要靠这里兜住。
   serverExternalPackages: [
     '@libsql/client',
     '@libsql/hrana-client',
     '@libsql/isomorphic-ws',
     '@libsql/isomorphic-fetch',
     'libsql',
+    'better-sqlite3',
   ],
 
   experimental: {
@@ -56,6 +63,7 @@ const createNextConfig = (phase) => {
       '@libsql/isomorphic-ws',
       '@libsql/isomorphic-fetch',
       'libsql',
+      'better-sqlite3',
     ],
   },
 
