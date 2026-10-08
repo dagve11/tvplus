@@ -162,7 +162,13 @@ const createNextConfig = (phase) => {
     };
 
     // Cloudflare 使用 D1，不需要把 better-sqlite3 原生模块带入 Worker 产物。
-    if (isEdgeBuild) {
+    //
+    // 只在实际的边缘构建里替换：`next dev` 一律跳过。否则只要 .env 里留着
+    // BUILD_TARGET=edgeone / CF_PAGES=1（很容易从 .env.edgeone.example 复制过来），
+    // 本地开发也会被套上 Worker 替身——better-sqlite3 被别名成一个「在 Worker 中
+    // 抛错」的空实现，SQLite 模式直接起不来。边缘平台没有 dev server，
+    // 本地预览走的是 pnpm preview:edgeone（production 构建），不受此判断影响。
+    if (isEdgeBuild && !isDevelopment) {
       config.resolve.alias = {
         ...config.resolve.alias,
         ...Object.fromEntries(
